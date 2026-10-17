@@ -1,0 +1,94 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* ---- Design tokens: neutral palette, one accent (teal), SAMPLE amber reserved for provenance ---- */
+:root {
+  --bg: #f7f7f5;
+  --surface: #ffffff;
+  --surface-2: #f1f1ee;
+  --border: #e2e2dd;
+  --text: #1c1d1f;
+  --muted: #5f6368;
+  --faint: #8a8d91;
+  --accent: #0f766e;
+  --accent-soft: #e6f2f0;
+  --grid: #ebebe7;
+
+  --real-bg: #eef1f4;
+  --real-fg: #334155;
+  --real-border: #cbd2da;
+
+  --sample-bg: #fdf3dc;
+  --sample-fg: #8a4b06;
+  --sample-border: #e9b949;
+  --sample-mark: #b7791f;
+
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  --bg: #121314;
+  --surface: #1b1c1e;
+  --surface-2: #232427;
+  --border: #303236;
+  --text: #ececea;
+  --muted: #a3a6ab;
+  --faint: #7d8086;
+  --accent: #3fb8aa;
+  --accent-soft: #15302d;
+  --grid: #2a2c2f;
+
+  --real-bg: #22272e;
+  --real-fg: #c7d0db;
+  --real-border: #3a434e;
+
+  --sample-bg: #33260c;
+  --sample-fg: #f5c96a;
+  --sample-border: #8a6416;
+  --sample-mark: #e0a63a;
+
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-real-bg: var(--real-bg);
+  --color-real-fg: var(--real-fg);
+  --color-real-border: var(--real-border);
+  --color-sample-bg: var(--sample-bg);
+  --color-sample-fg: var(--sample-fg);
+  --color-sample-border: var(--sample-border);
+  --font-sans: ui-sans-serif, "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Cards that contain SAMPLE values get a tinted left edge + hatch, so the cue survives grayscale/colorblindness. */
+.sample-edge {
+  box-shadow: inset 4px 0 0 var(--sample-border);
+  background-image: repeating-linear-gradient(135deg, transparent 0 10px, color-mix(in srgb, var(--sample-border) 10%, transparent) 10px 11px);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
