@@ -19,7 +19,9 @@ export const SEED = 20261016;
 const SOURCE = `scripts/generate_sample.ts seed=${SEED}`;
 const AS_OF = new Date(Date.UTC(2026, 9, 1)); // 2026-10-01, fixed so output is deterministic
 const FIRST_YEAR = 2016; // school year 2016-17
-const LAST_YEAR = 2025; // school year 2025-26
+const LAST_YEAR = 2026; // school year 2026-27 (fall census already taken by the as-of date)
+const CURRENT_FY = 2027; // Jul 2026 - Jun 2027; actuals exist for Jul-Sep only
+const ACTUAL_MONTHS_CURRENT_FY = 3;
 
 const root = join(__dirname, "..");
 mkdirSync(join(root, "data", "sample"), { recursive: true });
@@ -69,7 +71,7 @@ for (const s of schools) {
   grades.forEach((_, i) => weights.push(i === 0 ? 1 : weights[i - 1] * gpr[i]));
   const wSum = weights.reduce((a, b) => a + b, 0);
 
-  const drift = clamp(rng.normal(-0.012, 0.02), -0.05, 0.03);
+  const drift = clamp(rng.normal(-0.006, 0.022), -0.05, 0.035);
   let prev: number[] = weights.map((w) => (total0 / wSum) * w * (1 + rng.normal(0, 0.05)));
   let entry = prev[0];
   const tMap = new Map<number, number>();
@@ -79,7 +81,7 @@ for (const s of schools) {
     let counts: number[];
     if (year === FIRST_YEAR) counts = prev;
     else {
-      let shock = drift + rng.normal(0, 0.05);
+      let shock = drift + rng.normal(0, 0.04);
       if (year === 2020) shock += rng.normal(-0.08, 0.04); // pandemic year dip
       if (year === 2021) shock += 0.03;
       entry = entry * (1 + shock);
@@ -129,8 +131,14 @@ const SEASON: Record<string, number[]> = {
   instructional: [0.6, 2.4, 1.2, 1, 0.9, 0.8, 1, 0.9, 0.8, 0.8, 0.8, 0.8],
   administrative: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 };
-interface BudgetOut { school_id: string; fiscal_year: number; fiscal_month: number; category: string; kind: string; budget: number; actual: number; provenance: string }
+interface BudgetOut { school_id: string; fiscal_year: number; fiscal_month: number; category: string; kind: string; budget: number; actual: number | ""; provenance: string }
 const budget: BudgetOut[] = [];
+interface CashOut { school_id: string; month: string; cash: number; provenance: string }
+const cash: CashOut[] = [];
+interface ARout { school_id: string; as_of: string; current: number; days_30: number; days_60: number; days_90_plus: number; annual_tuition_billed: number; provenance: string }
+const receivables: ARout[] = [];
+const discountOf = new Map<string, number>();
+const structuralOf = new Map<string, number>();
 for (const s of schools) {
   const rng = rngFor(s.id, "budget");
   const isElem = s.governance === "parish_elementary";
@@ -138,7 +146,10 @@ for (const s of schools) {
   const fundraisingPct = rng.range(0.05, 0.12);
   const subsidyPct = isElem ? rng.range(0, 0.08) : 0;
   const structural = rng.normal(0, 0.04); // >0 = expenses run above revenue
-  for (let fy = 2022; fy <= 2026; fy++) {
+  discountOf.set(s.id, discount);
+  structuralOf.set(s.id, structural);
+  const reserveDays = clamp(rng.normal(70 - structural * 600, 30), 8, 180); // weaker schools hold less cash
+  for (let fy = 2023; fy <= CURRENT_FY; fy++) {
     const schoolYear = fy - 1;
     const enr = totals.get(s.id)!.get(schoolYear)!;
     const tuitionRev = enr * tuitionOf.get(s.id)!.get(schoolYear)! * (1 - discount);
@@ -164,11 +175,38 @@ for (const s of schools) {
       for (let m = 1; m <= 12; m++) {
         const b = (annualBudget[cat] * w[m - 1]) / wSum;
         const a = b * (1 + bias + rng.normal(0, 0.05));
+        const hasActual = fy < CURRENT_FY || m <= ACTUAL_MONTHS_CURRENT_FY;
         budget.push({
           school_id: s.id, fiscal_year: fy, fiscal_month: m, category: cat, kind: isRev ? "revenue" : "expense",
-          budget: round(b), actual: round(Math.max(0, a)), provenance: "SAMPLE",
+          budget: round(b), actual: hasActual ? round(Math.max(0, a)) : "", provenance: "SAMPLE",
         });
       }
+    }
+    // Month-end cash: reserve level plus a seasonal swing (tuition arrives Aug-May, payroll is flat).
+    if (fy >= 2026) {
+      const dailyExpense = expTotal / 365;
+      const swing = [0.55, 1.15, 1.25, 1.15, 1.05, 1.0, 0.95, 0.9, 0.85, 0.8, 0.7, 0.5];
+      const drift = fy === CURRENT_FY ? 1 - structural * 2 : 1;
+      for (let m = 1; m <= 12; m++) {
+        if (fy === CURRENT_FY && m > ACTUAL_MONTHS_CURRENT_FY) break;
+        const d = new Date(Date.UTC(fy - 1, 6 + m - 1, 1));
+        cash.push({
+          school_id: s.id, month: iso(d).slice(0, 7),
+          cash: round(Math.max(0, dailyExpense * reserveDays * swing[m - 1] * drift * (1 + rng.normal(0, 0.05))), 100),
+          provenance: "SAMPLE",
+        });
+      }
+    }
+    if (fy === CURRENT_FY) {
+      const delinquency = clamp(rng.normal(0.04 + structural, 0.02), 0.005, 0.15);
+      const outstanding = tuitionRev * delinquency;
+      const late = clamp(rng.normal(0.35 + structural * 3, 0.1), 0.05, 0.8);
+      receivables.push({
+        school_id: s.id, as_of: iso(new Date(Date.UTC(2026, 8, 30))),
+        current: round(outstanding * (1 - late), 100), days_30: round(outstanding * late * 0.45, 100),
+        days_60: round(outstanding * late * 0.25, 100), days_90_plus: round(outstanding * late * 0.3, 100),
+        annual_tuition_billed: round(tuitionRev, 100), provenance: "SAMPLE",
+      });
     }
   }
 }
@@ -179,7 +217,7 @@ const ta: TAOut[] = [];
 for (const s of schools) {
   const rng = rngFor(s.id, "ta");
   const need = rng.range(0.15, 0.45);
-  for (let year = 2021; year <= LAST_YEAR; year++) {
+  for (let year = 2022; year <= LAST_YEAR; year++) {
     const enr = totals.get(s.id)!.get(year)!;
     const applications = Math.round(enr * need * (1 + rng.normal(0, 0.06)));
     const awards = Math.round(applications * rng.range(0.7, 0.92));
@@ -241,9 +279,9 @@ for (const s of schools) {
   const scale = s.isHS ? 2.2 : 1;
   const chosen = rng.shuffle(ASSETS).slice(0, rng.int(7, 11));
   chosen.forEach((a, i) => {
-    const condition = clamp(Math.round(rng.normal(3.1, 1.1)), 1, 5);
+    const condition = clamp(Math.round(rng.normal(3.4, 1.0)), 1, 5);
     const interval = rng.pick([12, 12, 24, 36]);
-    const last = new Date(AS_OF.getTime() - rng.int(30, 1100) * 86400000);
+    const last = new Date(AS_OF.getTime() - rng.int(20, 560) * 86400000);
     const planYear =
       condition === 1 ? 2027 : condition === 2 ? rng.int(2027, 2028) : condition === 3 ? rng.int(2029, 2031) : rng.int(2032, 2036);
     const priority = condition <= 2 ? "High" : condition === 3 ? (rng.float() < 0.3 ? "High" : "Medium") : "Low";
@@ -264,7 +302,7 @@ for (const s of schools) {
   const rng = rngFor(s.id, "audit");
   const enr = totals.get(s.id)!.get(LAST_YEAR)!;
   for (const feed of FEEDS) {
-    const stale = rng.float() < 0.15;
+    const stale = rng.float() < 0.06;
     const days = stale ? rng.int(45, 120) : rng.int(0, 21);
     const completeness = clamp(rng.normal(feed === "SharePoint" ? 84 : 95, 4), 60, 100);
     audit.push({
@@ -276,6 +314,76 @@ for (const s of schools) {
     });
   }
 }
+
+// ---------------------------------------------------------------- re-enrollment
+// Families re-enrolling for school year Y are counted each spring (as of ~Mar 15 of Y).
+// Eligible = last year's students minus the top grade. Kept consistent with the enrollment
+// file: a school whose cohorts shrink also re-enrolls fewer families.
+interface ReOut { school_id: string; year: number; eligible: number; reenrolled: number; provenance: string }
+const reenrollment: ReOut[] = [];
+for (const s of schools) {
+  const rng = rngFor(s.id, "reenroll");
+  const rows = enrollment.filter((r) => r.school_id === s.id);
+  const top = s.isHS ? "12" : "8";
+  const entryGrade = s.isHS ? "9" : "K";
+  for (let year = 2022; year <= LAST_YEAR; year++) {
+    const prev = rows.filter((r) => r.year === year - 1);
+    const cur = rows.filter((r) => r.year === year);
+    const eligible = prev.filter((r) => r.grade !== top).reduce((a, r) => a + r.count, 0);
+    const continuing = cur.filter((r) => r.grade !== entryGrade).reduce((a, r) => a + r.count, 0);
+    const rate = clamp((continuing / eligible) * rng.range(0.9, 0.97), 0.7, 0.99);
+    reenrollment.push({ school_id: s.id, year, eligible, reenrolled: Math.round(eligible * rate), provenance: "SAMPLE" });
+  }
+}
+
+// ---------------------------------------------------------------- turnaround program (roster + actions)
+// The roster is a SAMPLE decision: the five weakest parish schools on a simple screen
+// (5-year enrollment change + budget structure). lib/health.ts computes the live Matrix;
+// the Turnaround page shows both, including schools the Matrix flags that are not enrolled.
+const screen = schools
+  .filter((s) => s.governance === "parish_elementary")
+  .map((s) => {
+    const t = totals.get(s.id)!;
+    const ch5 = (t.get(LAST_YEAR)! - t.get(LAST_YEAR - 5)!) / t.get(LAST_YEAR - 5)!;
+    return { id: s.id, score: ch5 - structuralOf.get(s.id)! * 2 };
+  })
+  .sort((a, b) => a.score - b.score)
+  .slice(0, 5);
+const PHASES = ["Assess", "Plan", "Implement", "Implement", "Monitor"] as const;
+const ACTIONS: { area: string; action: string; owner: string; metric: string }[] = [
+  { area: "Enrollment", action: "Personal re-enrollment conversations with every returning family before the deposit deadline", owner: "Principal", metric: "Re-enrollment rate" },
+  { area: "Enrollment", action: "TK/pre-K feeder outreach with parish ministries and local preschools", owner: "Director of Enrollment", metric: "K applications" },
+  { area: "Marketing", action: "Inquiry follow-up within 48 hours; log every inquiry in the shared pipeline", owner: "Director of Enrollment", metric: "Inquiry-to-tour rate" },
+  { area: "Finance", action: "Bring tuition-assistance discount rate inside the diocesan guideline band", owner: "Business Manager", metric: "Discount rate" },
+  { area: "Finance", action: "Monthly budget-vs-actual review with pastor and principal", owner: "Business Manager", metric: "Expense variance YTD" },
+  { area: "Finance", action: "Collections plan for balances over 60 days (payment plans through TADS)", owner: "Business Manager", metric: "Receivables 60+ days" },
+  { area: "Facilities", action: "Fund and schedule life-safety repairs before any discretionary capital", owner: "Pastor", metric: "Life-safety items open" },
+  { area: "Systems", action: "Clean family records in TADS before the assistance cycle opens", owner: "Office Manager", metric: "Record completeness" },
+];
+interface TOut { school_id: string; entered: string; phase: string; lead: string; next_checkin: string; provenance: string }
+interface TAct { school_id: string; action_id: string; area: string; action: string; owner_role: string; due: string; status: string; metric: string; provenance: string }
+const turnaround: TOut[] = [];
+const turnaroundActions: TAct[] = [];
+screen.forEach((x, i) => {
+  const rng = rngFor(x.id, "turnaround");
+  const phase = PHASES[i];
+  const entered = new Date(Date.UTC(2025, 1 + rng.int(0, 10), 1));
+  turnaround.push({
+    school_id: x.id, entered: iso(entered), phase, lead: "Director of School Operational Vitality",
+    next_checkin: iso(new Date(AS_OF.getTime() + rng.int(5, 40) * 86400000)), provenance: "SAMPLE",
+  });
+  if (phase === "Assess") return; // no action plan yet
+  rng.shuffle(ACTIONS).slice(0, rng.int(4, 6)).forEach((a, j) => {
+    const due = new Date(AS_OF.getTime() + rng.int(-60, 200) * 86400000);
+    const overdue = due < AS_OF;
+    const status = phase === "Plan" ? "Not started"
+      : overdue ? rng.pick(["Done", "Done", "At risk"]) : rng.pick(["On track", "On track", "At risk", "Not started"]);
+    turnaroundActions.push({
+      school_id: x.id, action_id: `${x.id}-T${j + 1}`, area: a.area, action: a.action, owner_role: a.owner,
+      due: iso(due), status, metric: a.metric, provenance: "SAMPLE",
+    });
+  });
+});
 
 // ---------------------------------------------------------------- demographics by ZIP
 interface DemoOut { zip: string; year: number; pop_5_14: number; median_household_income: number; provenance: string; source: string }
@@ -302,12 +410,18 @@ out("tuition_assistance.csv", toCsv(ta, ["school_id", "year", "applications", "a
 out("pipeline.csv", toCsv(pipeline, ["school_id", "month", "inquiries", "tours", "applications", "accepted", "enrolled", "provenance"]));
 out("facilities.csv", toCsv(facilities, ["school_id", "asset_id", "asset", "category", "condition", "last_inspection", "inspection_interval_months", "est_replacement_cost", "priority", "capital_plan_year", "provenance"]));
 out("data_audit.csv", toCsv(audit, ["school_id", "feed", "last_refresh", "row_count", "completeness_pct", "issues", "provenance"]));
+out("reenrollment.csv", toCsv(reenrollment, ["school_id", "year", "eligible", "reenrolled", "provenance"]));
+out("cash_monthly.csv", toCsv(cash, ["school_id", "month", "cash", "provenance"]));
+out("receivables.csv", toCsv(receivables, ["school_id", "as_of", "current", "days_30", "days_60", "days_90_plus", "annual_tuition_billed", "provenance"]));
+out("turnaround.csv", toCsv(turnaround, ["school_id", "entered", "phase", "lead", "next_checkin", "provenance"]));
+out("turnaround_actions.csv", toCsv(turnaroundActions, ["school_id", "action_id", "area", "action", "owner_role", "due", "status", "metric", "provenance"]));
 out("demographics.csv", toCsv(demographics, ["zip", "year", "pop_5_14", "median_household_income", "provenance", "source"]));
 
 console.log(
   [
     `enrollment ${enrollment.length}`, `tuition ${tuition.length}`, `budget_actual ${budget.length}`,
     `tuition_assistance ${ta.length}`, `pipeline ${pipeline.length}`, `facilities ${facilities.length}`,
-    `data_audit ${audit.length}`, `demographics ${demographics.length}`,
+    `data_audit ${audit.length}`, `demographics ${demographics.length}`, `reenrollment ${reenrollment.length}`,
+    `cash ${cash.length}`, `receivables ${receivables.length}`, `turnaround ${turnaround.length}/${turnaroundActions.length}`,
   ].join(" | ")
 );

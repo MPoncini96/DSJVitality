@@ -15,6 +15,19 @@ npm test          # Vitest
 npm run build
 ```
 
+## Pages
+
+- **Radar** (`/`): what needs attention this month. Alerts grouped by school, upcoming deadlines, Turnaround check-ins, the Enrollment & Finance Matrix, and system figures.
+- **Turnaround Program** (`/turnaround`): the process (identify, assess, plan, implement, monitor, exit), the roster, schools flagged but not enrolled, and action plans with owners and due dates.
+- **School profile** (`/schools/[id]`): overview with score breakdowns, then enrollment, finance and tuition, facilities, and data quality tabs.
+
+## Scores and alerts
+
+- `lib/metrics.ts` computes each school's numbers. `lib/health.ts` turns them into scores; every factor, threshold and weight is written out there and shown on the school page.
+- **Enrollment Vitality** uses only inputs that have a public source, so it can become REAL. The **Composite** adds finance and facilities and stays illustrative.
+- `lib/radar.ts` holds the alert rules. Thresholds are starting points, not policy.
+- A risk flag (alert, tier, quadrant, Turnaround status) built on SAMPLE data never shows a real school name, even when the Names switch is on.
+
 ## Data
 
 - `data/raw/`: dated snapshots of public sources (directory, geocoder results).

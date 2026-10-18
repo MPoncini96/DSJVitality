@@ -3,8 +3,9 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import {
-  anonymousLabels, clearCache, consecutiveDeclines, enrollmentTotals, getBudget, getDataAudit, getDemographics,
-  getEnrollment, getFacilities, getPipeline, getSchools, getTuition, getTuitionAssistance, median, provenanceOf, systemTrend,
+  anonymousLabels, clearCache, consecutiveDeclines, enrollmentTotals, getBudget, getCash, getDataAudit, getDemographics,
+  getEnrollment, getFacilities, getPipeline, getReceivables, getReenrollment, getSchools, getTuition, getTuitionAssistance,
+  getTurnaround, getTurnaroundActions, median, provenanceOf, systemTrend,
 } from "../lib/data";
 import { Rng } from "../lib/rng";
 
@@ -39,7 +40,10 @@ describe("schools", () => {
 });
 
 describe("provenance", () => {
-  const datasets = { getEnrollment, getTuition, getBudget, getTuitionAssistance, getPipeline, getFacilities, getDataAudit, getDemographics };
+  const datasets = {
+    getEnrollment, getTuition, getBudget, getTuitionAssistance, getPipeline, getFacilities, getDataAudit, getDemographics,
+    getReenrollment, getCash, getReceivables, getTurnaround, getTurnaroundActions,
+  };
   for (const [name, fn] of Object.entries(datasets)) {
     it(`${name}: every row is tagged REAL or SAMPLE and covers known schools`, () => {
       const rows = fn() as { provenance: string; schoolId?: string }[];
@@ -87,9 +91,9 @@ describe("provenance", () => {
 });
 
 describe("derived metrics", () => {
-  it("systemTrend has 10 years for the default view", () => {
+  it("systemTrend has 11 years for the default view", () => {
     const t = systemTrend(getSchools().map((s) => s.id));
-    expect(t.map((x) => x.year)).toEqual([2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025]);
+    expect(t.map((x) => x.year)).toEqual([2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026]);
   });
 
   it("consecutiveDeclines counts the trailing run only", () => {

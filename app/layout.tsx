@@ -12,11 +12,13 @@ export const metadata: Metadata = {
 };
 
 const NAV = [
-  { href: "/", label: "Overview", ready: true },
+  { href: "/", label: "Radar", ready: true },
+  { href: "/turnaround", label: "Turnaround", ready: true },
   { href: "/enrollment", label: "Enrollment", ready: false },
   { href: "/finance", label: "Finance", ready: false },
   { href: "/facilities", label: "Facilities", ready: false },
   { href: "/systems", label: "Systems", ready: false },
+  { href: "/calendar", label: "Calendar", ready: false },
   { href: "/about", label: "About", ready: false },
 ];
 
@@ -36,21 +38,21 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             Skip to content
           </a>
           <header className="border-b border-border bg-surface">
-            <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-6 gap-y-3 px-4 py-3 sm:px-6">
+            <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-5 gap-y-2 px-4 py-3 sm:px-6 lg:flex-nowrap">
               <Link href="/" className="flex items-baseline gap-2">
                 <span className="text-[15px] font-semibold tracking-tight">School Vitality</span>
-                <span className="text-xs text-muted">independent prototype</span>
+                <span className="hidden text-xs text-muted xl:inline">independent prototype</span>
               </Link>
-              <nav aria-label="Main" className="order-3 w-full overflow-x-auto sm:order-none sm:w-auto">
-                <ul className="flex gap-1 text-sm">
+              <nav aria-label="Main" className="order-3 w-full overflow-x-auto lg:order-none lg:w-auto lg:flex-1">
+                <ul className="flex gap-0.5 text-sm">
                   {NAV.map((n) => (
                     <li key={n.href}>
                       {n.ready ? (
-                        <Link href={n.href} className="rounded-md px-2.5 py-1.5 text-text hover:bg-surface-2">
+                        <Link href={n.href} className="rounded-md px-2 py-1.5 whitespace-nowrap text-text hover:bg-surface-2">
                           {n.label}
                         </Link>
                       ) : (
-                        <span className="cursor-default rounded-md px-2.5 py-1.5 text-faint" title="Coming in Phase 2">
+                        <span className="cursor-default rounded-md px-2 py-1.5 whitespace-nowrap text-faint" title="Coming next">
                           {n.label}
                         </span>
                       )}

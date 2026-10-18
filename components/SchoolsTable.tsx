@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { ProvenanceBadge } from "./ProvenanceBadge";
-import { SchoolLocation, SchoolName, useNames } from "./Names";
+import { SchoolLink, SchoolLocation, useNames } from "./Names";
 import type { MixedProvenance } from "@/lib/data";
 
 export interface SchoolTableRow {
@@ -43,7 +43,7 @@ function Sparkline({ values, sample }: { values: number[]; sample: boolean }) {
   );
 }
 
-export function SchoolsTable({ rows }: { rows: SchoolTableRow[] }) {
+export function SchoolsTable({ rows, latestLabel = "Enrollment" }: { rows: SchoolTableRow[]; latestLabel?: string }) {
   const { anonymize, labels } = useNames();
   const [sort, setSort] = useState<{ key: SortKey; dir: 1 | -1 }>({ key: "name", dir: 1 });
 
@@ -89,7 +89,7 @@ export function SchoolsTable({ rows }: { rows: SchoolTableRow[] }) {
             {header("name", "School")}
             {header("city", "City")}
             {header("type", "Type")}
-            {header("latest", "Enrollment 2025-26", "right")}
+            {header("latest", latestLabel, "right")}
             {header("change5", "5-yr change", "right")}
             <th scope="col" className="px-3 py-2 text-left font-medium">Trend</th>
             <th scope="col" className="px-3 py-2 text-left font-medium">Data</th>
@@ -100,7 +100,7 @@ export function SchoolsTable({ rows }: { rows: SchoolTableRow[] }) {
             const sample = r.provenance !== "REAL";
             return (
               <tr key={r.id} className="border-b border-border last:border-0 hover:bg-surface-2">
-                <td className="px-3 py-2 font-medium"><SchoolName id={r.id} name={r.name} /></td>
+                <td className="px-3 py-2"><SchoolLink id={r.id} name={r.name} /></td>
                 <td className="px-3 py-2 text-muted"><SchoolLocation text={r.city} /></td>
                 <td className="px-3 py-2 text-muted">{r.type}</td>
                 <td className="px-3 py-2 text-right">{r.latest?.toLocaleString() ?? "—"}</td>

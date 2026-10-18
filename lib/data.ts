@@ -13,8 +13,9 @@ import { join } from "node:path";
 import { parseCsv } from "./csv";
 import { Rng } from "./rng";
 import type {
-  BudgetCategory, BudgetRow, DataAuditRow, DemographicsRow, EnrollmentRow, FacilityRow, Feed,
-  Governance, PipelineRow, Provenance, School, TuitionAssistanceRow, TuitionRow,
+  BudgetCategory, BudgetRow, CashRow, DataAuditRow, DemographicsRow, EnrollmentRow, FacilityRow, Feed,
+  Governance, PipelineRow, Provenance, ReceivableRow, ReenrollmentRow, School, TuitionAssistanceRow, TuitionRow,
+  TurnaroundAction, TurnaroundPhase, TurnaroundRow,
 } from "./types";
 
 const dataDir = () => process.env.VITALITY_DATA_DIR ?? join(process.cwd(), "data");
@@ -120,7 +121,7 @@ export const getBudget = () =>
     "budget_actual",
     (r, f) => ({
       schoolId: r.school_id, fiscalYear: num(r.fiscal_year), fiscalMonth: num(r.fiscal_month), category: r.category as BudgetCategory,
-      kind: r.kind as "revenue" | "expense", budget: num(r.budget), actual: num(r.actual), provenance: asProvenance(r.provenance, f),
+      kind: r.kind as "revenue" | "expense", budget: num(r.budget), actual: r.actual === "" ? null : num(r.actual), provenance: asProvenance(r.provenance, f),
     }),
     (x) => `${x.schoolId}|${x.fiscalYear}|${x.fiscalMonth}|${x.category}`
   );
@@ -169,6 +170,47 @@ export const getDemographics = () =>
     "demographics",
     (r, f) => ({ zip: r.zip, year: num(r.year), pop5to14: num(r.pop_5_14), medianHouseholdIncome: num(r.median_household_income), provenance: asProvenance(r.provenance, f), source: r.source }),
     (x) => `${x.zip}|${x.year}`
+  );
+
+export const getReenrollment = () =>
+  loadMerged<ReenrollmentRow>(
+    "reenrollment",
+    (r, f) => ({ schoolId: r.school_id, year: num(r.year), eligible: num(r.eligible), reenrolled: num(r.reenrolled), provenance: asProvenance(r.provenance, f) }),
+    (x) => `${x.schoolId}|${x.year}`
+  );
+
+export const getCash = () =>
+  loadMerged<CashRow>(
+    "cash_monthly",
+    (r, f) => ({ schoolId: r.school_id, month: r.month, cash: num(r.cash), provenance: asProvenance(r.provenance, f) }),
+    (x) => `${x.schoolId}|${x.month}`
+  );
+
+export const getReceivables = () =>
+  loadMerged<ReceivableRow>(
+    "receivables",
+    (r, f) => ({
+      schoolId: r.school_id, asOf: r.as_of, current: num(r.current), days30: num(r.days_30), days60: num(r.days_60),
+      days90Plus: num(r.days_90_plus), annualTuitionBilled: num(r.annual_tuition_billed), provenance: asProvenance(r.provenance, f),
+    }),
+    (x) => `${x.schoolId}|${x.asOf}`
+  );
+
+export const getTurnaround = () =>
+  loadMerged<TurnaroundRow>(
+    "turnaround",
+    (r, f) => ({ schoolId: r.school_id, entered: r.entered, phase: r.phase as TurnaroundPhase, lead: r.lead, nextCheckin: r.next_checkin, provenance: asProvenance(r.provenance, f) }),
+    (x) => x.schoolId
+  );
+
+export const getTurnaroundActions = () =>
+  loadMerged<TurnaroundAction>(
+    "turnaround_actions",
+    (r, f) => ({
+      schoolId: r.school_id, actionId: r.action_id, area: r.area, action: r.action, ownerRole: r.owner_role, due: r.due,
+      status: r.status as TurnaroundAction["status"], metric: r.metric, provenance: asProvenance(r.provenance, f),
+    }),
+    (x) => x.actionId
   );
 
 // ---------------------------------------------------------------- derived helpers
@@ -253,6 +295,13 @@ export function anonymousLabels(schools: School[]): Record<string, string> {
     i < 26 ? String.fromCharCode(65 + i) : String.fromCharCode(65 + Math.floor(i / 26) - 1) + String.fromCharCode(65 + (i % 26));
   return Object.fromEntries(order.map((s, i) => [s.id, `School ${label(i)}`]));
 }
+
+/** Latest school year present in the enrollment data. */
+export function latestEnrollmentYear(): number {
+  return Math.max(...getEnrollment().map((r) => r.year));
+}
+
+export const schoolYearLabel = (y: number) => `${y}-${String((y + 1) % 100).padStart(2, "0")}`;
 
 export const GOVERNANCE_LABEL: Record<Governance, string> = {
   parish_elementary: "Parish elementary",

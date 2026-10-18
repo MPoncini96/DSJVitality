@@ -24,6 +24,14 @@
   --sample-border: #e9b949;
   --sample-mark: #b7791f;
 
+  --good: #0ca30c;
+  --warning: #fab219;
+  --serious: #ec835a;
+  --critical: #d03b3b;
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
+  --series-3: #1baf7a;
+
   color-scheme: light;
 }
 
@@ -47,6 +55,10 @@
   --sample-fg: #f5c96a;
   --sample-border: #8a6416;
   --sample-mark: #e0a63a;
+
+  --series-1: #3987e5;
+  --series-2: #d95926;
+  --series-3: #199e70;
 
   color-scheme: dark;
 }

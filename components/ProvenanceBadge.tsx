@@ -7,7 +7,7 @@ const TEXT: Record<MixedProvenance, { label: string; title: string }> = {
 };
 
 /** Provenance badge. Shape + text + color, so it never relies on color alone. */
-export function ProvenanceBadge({ p, className = "" }: { p: MixedProvenance; className?: string }) {
+export function ProvenanceBadge({ p, className = "", compact = false }: { p: MixedProvenance; className?: string; compact?: boolean }) {
   const t = TEXT[p];
   const real = p === "REAL";
   return (
@@ -23,7 +23,7 @@ export function ProvenanceBadge({ p, className = "" }: { p: MixedProvenance; cla
       }
     >
       <span aria-hidden="true">{real ? "✓" : "◇"}</span>
-      {t.label}
+      {compact ? <span className="sr-only">{t.label}</span> : t.label}
       <span className="sr-only">: {t.title}</span>
     </span>
   );

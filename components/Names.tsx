@@ -1,6 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import type { MixedProvenance } from "@/lib/data";
 
 interface NamesState {
   anonymize: boolean;
@@ -91,4 +93,61 @@ export function AnonymizeToggle() {
       {anonymize ? "Names hidden" : "Names shown"}
     </button>
   );
+}
+
+/**
+ * A school reference inside a RISK context (alert, tier, Matrix, Turnaround).
+ * Rule: a risk flag built on any SAMPLE input never shows a real school name,
+ * whatever the Names switch says. When names are switched on, such references are
+ * also not linked, so the anonymous letter can't be matched to a named profile.
+ */
+export function RiskSchoolRef({
+  id, name, provenance, href,
+}: { id: string; name: string; provenance: MixedProvenance; href?: string }) {
+  const { anonymize, labels } = useNames();
+  const forced = provenance !== "REAL";
+  const label = anonymize || forced ? labels[id] ?? "School" : name;
+  const linkable = href && (anonymize || !forced);
+  const title = forced && !anonymize ? "Name hidden: this flag uses SAMPLE data" : undefined;
+  return linkable ? (
+    <Link href={href} className="font-medium text-text underline decoration-border underline-offset-2 hover:decoration-accent">
+      {label}
+    </Link>
+  ) : (
+    <span className="font-medium" title={title}>{label}</span>
+  );
+}
+
+/** Plain (non-risk) school link that follows the Names switch. */
+export function SchoolLink({ id, name }: { id: string; name: string }) {
+  const { anonymize, labels } = useNames();
+  return (
+    <Link href={`/schools/${id}`} className="font-medium text-text underline decoration-border underline-offset-2 hover:decoration-accent">
+      {anonymize ? labels[id] ?? "School" : name}
+    </Link>
+  );
+}
+
+/**
+ * Wraps risk content (scores, tiers, alerts) on a page that is about one named school.
+ * If names are shown and the content uses SAMPLE inputs, the content is withheld.
+ */
+export function RiskGate({ provenance, children }: { provenance: MixedProvenance; children: ReactNode }) {
+  const { anonymize, setAnonymize } = useNames();
+  if (anonymize || provenance === "REAL") return <>{children}</>;
+  return (
+    <div className="rounded-lg border border-dashed border-sample-border bg-sample-bg p-4 text-sm text-sample-fg">
+      Scores and risk flags for this school use SAMPLE data, so they are not shown next to its real name.{" "}
+      <button type="button" onClick={() => setAnonymize(true)} className="font-semibold underline underline-offset-2">
+        Hide names to view them
+      </button>
+      .
+    </div>
+  );
+}
+
+/** Text that is shown only when names are visible (address, phone, website). */
+export function WhenNamed({ children, fallback = null }: { children: ReactNode; fallback?: ReactNode }) {
+  const { anonymize } = useNames();
+  return <>{anonymize ? fallback : children}</>;
 }

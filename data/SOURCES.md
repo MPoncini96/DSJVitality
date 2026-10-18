@@ -12,6 +12,7 @@ REAL files live in `data/`. SAMPLE files live in `data/sample/`. When both have 
 | Dataset | Source | URL | Data year | Retrieved | Notes |
 |---|---|---|---|---|---|
 | School list (`schools.csv`): name, website, address, city, ZIP, phone | Diocese of San José, "Find a School" | https://www.dsj.org/find-a-school/ | Current listing | 2026-10-16 | 33 schools. Snapshot: `raw/dsj_find_a_school_2026-10-16.csv`. One ZIP is blank on the page (St. Mary of the Immaculate Conception, Los Gatos) and was filled from the geocoder; see `corrections.csv`. |
+| Private School Affidavit filing window (Oct 1–15), shown on the Radar calendar | California Department of Education | https://www.cde.ca.gov/SP/PS/affidavit.asp | Statutory (Education Code §33190) | 2026-10-18 | Other calendar items are typical timings, marked SAMPLE. |
 | Latitude/longitude | US Census Geocoder, benchmark `Public_AR_Current` | https://geocoding.geo.census.gov/geocoder/ | Current | 2026-10-16 | Snapshot: `raw/geocode_census_2026-10-16.csv`. One ambiguous match (St. Nicholas, El Monte Rd vs. Ave) is flagged for review. |
 
 ## Not from a source (flagged for review)
@@ -33,5 +34,12 @@ REAL files live in `data/`. SAMPLE files live in `data/sample/`. When both have 
 | `sample/pipeline.csv` | No public source. Stays SAMPLE. |
 | `sample/facilities.csv` | No public source. Stays SAMPLE. |
 | `sample/data_audit.csv` | No public source. Stays SAMPLE. |
+| `sample/reenrollment.csv` | No public source (school systems). Stays SAMPLE. Cohort retention, computed from state grade-level enrollment, is the public-source stand-in used in the Enrollment Vitality score. |
+| `sample/cash_monthly.csv`, `sample/receivables.csv` | No public source. Stays SAMPLE. |
+| `sample/turnaround.csv`, `sample/turnaround_actions.csv` | Illustrative program roster and action plans. Stays SAMPLE. |
 
 School size in the SAMPLE enrollment is assigned at random from generic bands (small 140–210, medium 210–300, large 300–420 students for elementary schools); it is **not** an estimate of any real school's size.
+
+## The sample "as of" date
+
+SAMPLE data describes a system as of **October 1, 2026**: fall 2026 enrollment is in, fiscal year 2026 (July 2025–June 2026) is closed, and FY2027 has three months of actuals (July–September).

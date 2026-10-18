@@ -75,7 +75,8 @@ export interface BudgetRow {
   category: BudgetCategory;
   kind: "revenue" | "expense";
   budget: number;
-  actual: number;
+  /** null for months that have not closed yet */
+  actual: number | null;
   provenance: Provenance;
 }
 
@@ -135,4 +136,56 @@ export interface DemographicsRow {
   medianHouseholdIncome: number;
   provenance: Provenance;
   source: string;
+}
+
+/** Families re-enrolling for school year `year`, counted in spring. */
+export interface ReenrollmentRow {
+  schoolId: string;
+  year: number;
+  eligible: number;
+  reenrolled: number;
+  provenance: Provenance;
+}
+
+export interface CashRow {
+  schoolId: string;
+  /** YYYY-MM, month-end balance */
+  month: string;
+  cash: number;
+  provenance: Provenance;
+}
+
+/** Tuition receivable aging snapshot. */
+export interface ReceivableRow {
+  schoolId: string;
+  asOf: string;
+  current: number;
+  days30: number;
+  days60: number;
+  days90Plus: number;
+  annualTuitionBilled: number;
+  provenance: Provenance;
+}
+
+export type TurnaroundPhase = "Assess" | "Plan" | "Implement" | "Monitor";
+
+export interface TurnaroundRow {
+  schoolId: string;
+  entered: string;
+  phase: TurnaroundPhase;
+  lead: string;
+  nextCheckin: string;
+  provenance: Provenance;
+}
+
+export interface TurnaroundAction {
+  schoolId: string;
+  actionId: string;
+  area: string;
+  action: string;
+  ownerRole: string;
+  due: string;
+  status: "Not started" | "On track" | "At risk" | "Done";
+  metric: string;
+  provenance: Provenance;
 }
