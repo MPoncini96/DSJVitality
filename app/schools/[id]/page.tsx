@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { GradeBandChart, SimpleBars, SimpleLine } from "@/components/charts";
-import { RiskGate, SchoolName, WhenNamed } from "@/components/Names";
+import { SchoolName } from "@/components/Names";
 import { ProvenanceBadge } from "@/components/ProvenanceBadge";
 import { Tabs } from "@/components/Tabs";
 import { TrendChart } from "@/components/TrendChart";
@@ -22,14 +22,14 @@ const asP = (p: MixedProvenance) => ({ provenance: p === "REAL" ? ("REAL" as con
 function FactorTable({ r }: { r: ScoreResult }) {
   return (
     <div className="relative overflow-x-auto">
-      <table className="w-full min-w-[520px] text-sm tabular">
+      <table className="w-full min-w-[480px] text-sm tabular">
         <thead className="text-xs text-muted">
           <tr>
             <th scope="col" className="py-1 pr-3 text-left font-medium">Factor</th>
             <th scope="col" className="py-1 pr-3 text-right font-medium">Value</th>
             <th scope="col" className="py-1 pr-3 text-left font-medium">Sub-score</th>
             <th scope="col" className="py-1 pr-3 text-right font-medium">Weight</th>
-            <th scope="col" className="py-1 text-left font-medium">Data</th>
+            <th scope="col" className="py-1 text-left font-medium"><span className="sr-only">Data</span></th>
           </tr>
         </thead>
         <tbody>
@@ -91,7 +91,6 @@ export default async function SchoolPage({ params }: { params: Promise<{ id: str
   const gradesL = e.byGrade.filter((g) => g.year === L);
   const staff = getStaffing().filter((x) => x.schoolId === id).sort((a, b) => a.year - b.year);
   const staffL = staff.at(-1);
-  const riskP = provenanceOf([h.vitality, h.financial, h.facilities].map((x) => asP(x.provenance)));
   const alertsP = provenanceOf(v.alerts.map((a) => asP(a.provenance)));
 
   const overview = (
@@ -104,7 +103,7 @@ export default async function SchoolPage({ params }: { params: Promise<{ id: str
         <Stat label="Facility condition index" value={pct(fac.fci)} sub="lower is better" p={fac.provenance} />
       </div>
 
-      <RiskGate provenance={riskP}>
+      <>
         <div className="grid gap-6 lg:grid-cols-2">
           <Card title="Enrollment Vitality" p={h.vitality.provenance} id="vit-h">
             <ScoreHead label="from public data" r={h.vitality} />
@@ -150,17 +149,15 @@ export default async function SchoolPage({ params }: { params: Promise<{ id: str
             <ul className="mt-2 list-disc space-y-1 pl-5">{RULES.map((r) => <li key={r.description}><span className="font-medium">{r.area}:</span> {r.description}</li>)}</ul>
           </details>
         </Card>
-      </RiskGate>
+      </>
 
       <Card title="About this school" p="REAL" id="loc-h">
         <dl className="grid gap-x-6 gap-y-2 text-sm sm:grid-cols-2">
           <div><dt className="text-xs text-muted">Type</dt><dd>{GOVERNANCE_LABEL[school.governance]} <span className="text-xs text-faint">({school.governanceBasis})</span></dd></div>
           <div><dt className="text-xs text-muted">Grades in data</dt><dd>{gradesL.length ? `${gradesL[0].grade}–${gradesL.at(-1)!.grade}` : "—"}</dd></div>
-          <WhenNamed fallback={<div className="sm:col-span-2 text-xs text-muted">Address, phone and website are hidden while names are hidden.</div>}>
             <div><dt className="text-xs text-muted">Address</dt><dd>{school.address}, {school.city} {school.zip}</dd></div>
             <div><dt className="text-xs text-muted">Phone</dt><dd>{school.phone}</dd></div>
             <div><dt className="text-xs text-muted">Website</dt><dd><a href={school.website} className="text-accent underline underline-offset-2">{school.website.replace(/^https?:\/\//, "").replace(/\/$/, "")}</a></dd></div>
-          </WhenNamed>
           <div><dt className="text-xs text-muted">Source</dt><dd><a href={school.sourceUrl} className="text-accent underline underline-offset-2">School directory</a>, retrieved {school.retrieved}</dd></div>
         </dl>
       </Card>
@@ -353,8 +350,8 @@ export default async function SchoolPage({ params }: { params: Promise<{ id: str
     <div className="space-y-6">
       <nav aria-label="Breadcrumb" className="text-xs text-muted"><Link href="/" className="underline underline-offset-2">Radar</Link> / School</nav>
       <div className="space-y-1">
-        <h1 className="text-2xl font-semibold tracking-tight"><SchoolName id={school.id} name={school.name} /></h1>
-        <p className="text-sm text-muted">{GOVERNANCE_LABEL[school.governance]} · <WhenNamed fallback="location hidden">{school.city}</WhenNamed></p>
+        <h1 className="text-2xl font-semibold tracking-tight"><SchoolName name={school.name} /></h1>
+        <p className="text-sm text-muted">{GOVERNANCE_LABEL[school.governance]} · {school.city}</p>
       </div>
       <SampleBanner />
       <Tabs tabs={[

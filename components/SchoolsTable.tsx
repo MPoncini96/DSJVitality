@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { ProvenanceBadge } from "./ProvenanceBadge";
-import { SchoolLink, SchoolLocation, useNames } from "./Names";
+import { SchoolLink } from "./Names";
 import type { MixedProvenance } from "@/lib/data";
 
 export interface SchoolTableRow {
@@ -14,12 +14,6 @@ export interface SchoolTableRow {
   change5: number | null;
   spark: number[];
   provenance: MixedProvenance;
-}
-
-/** "School C" -> 2, "School AA" -> 26, so anonymous labels sort A..Z, AA.. */
-function labelIndex(label: string | undefined): number {
-  const L = (label ?? "").replace("School ", "");
-  return L.length === 1 ? L.charCodeAt(0) - 65 : (L.charCodeAt(0) - 64) * 26 + (L.charCodeAt(1) - 65);
 }
 
 type SortKey = "name" | "city" | "type" | "latest" | "change5";
@@ -44,14 +38,13 @@ function Sparkline({ values, sample }: { values: number[]; sample: boolean }) {
 }
 
 export function SchoolsTable({ rows, latestLabel = "Enrollment" }: { rows: SchoolTableRow[]; latestLabel?: string }) {
-  const { anonymize, labels } = useNames();
   const [sort, setSort] = useState<{ key: SortKey; dir: 1 | -1 }>({ key: "name", dir: 1 });
 
   const sorted = useMemo(() => {
     const val = (r: SchoolTableRow) => {
       switch (sort.key) {
-        case "name": return anonymize ? labelIndex(labels[r.id]) : r.name;
-        case "city": return anonymize ? "" : r.city;
+        case "name": return r.name;
+        case "city": return r.city;
         case "type": return r.type;
         case "latest": return r.latest ?? -Infinity;
         case "change5": return r.change5 ?? -Infinity;
@@ -62,7 +55,7 @@ export function SchoolsTable({ rows, latestLabel = "Enrollment" }: { rows: Schoo
       const c = typeof x === "number" && typeof y === "number" ? x - y : String(x).localeCompare(String(y), undefined, { numeric: true });
       return c * sort.dir;
     });
-  }, [rows, sort, anonymize, labels]);
+  }, [rows, sort]);
 
   const header = (key: SortKey, label: string, align: "left" | "right" = "left") => {
     const active = sort.key === key;
@@ -101,7 +94,7 @@ export function SchoolsTable({ rows, latestLabel = "Enrollment" }: { rows: Schoo
             return (
               <tr key={r.id} className="border-b border-border last:border-0 hover:bg-surface-2">
                 <td className="px-3 py-2"><SchoolLink id={r.id} name={r.name} /></td>
-                <td className="px-3 py-2 text-muted"><SchoolLocation text={r.city} /></td>
+                <td className="px-3 py-2 text-muted">{r.city}</td>
                 <td className="px-3 py-2 text-muted">{r.type}</td>
                 <td className="px-3 py-2 text-right">{r.latest?.toLocaleString() ?? "—"}</td>
                 <td className="px-3 py-2 text-right">

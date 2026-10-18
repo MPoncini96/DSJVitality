@@ -5,7 +5,6 @@ import {
   Bar, BarChart, CartesianGrid, Cell, Legend, Line, LineChart, ReferenceArea, ReferenceLine, ResponsiveContainer,
   Scatter, ScatterChart, Tooltip, XAxis, YAxis, ZAxis,
 } from "recharts";
-import { useNames } from "./Names";
 import type { MixedProvenance } from "@/lib/data";
 import type { Quadrant } from "@/lib/health";
 import { niceTicks } from "./TrendChart";
@@ -31,16 +30,12 @@ export interface MatrixPoint {
 }
 
 /**
- * Enrollment & Finance Matrix. Labels are always anonymous when the plot uses SAMPLE
- * inputs; when names are switched on, dots are not clickable (see RiskSchoolRef).
+ * Enrollment & Finance Matrix. Click a dot to open the school. The financial axis is
+ * simulated, which the card badge and the tooltip both say.
  */
 export function MatrixChart({ points, height = 380 }: { points: MatrixPoint[]; height?: number }) {
   const router = useRouter();
-  const { anonymize, labels } = useNames();
-  const data = points.map((p) => {
-    const forced = p.provenance !== "REAL";
-    return { ...p, xPct: p.x * 100, label: anonymize || forced ? labels[p.id] : p.name, clickable: anonymize || !forced };
-  });
+  const data = points.map((p) => ({ ...p, xPct: p.x * 100, label: p.name, clickable: true }));
   const maxAbs = Math.max(4, ...data.map((d) => Math.abs(d.xPct)));
   const xr = Math.ceil((maxAbs + 0.5) / 5) * 5;
   const xTicks = Array.from({ length: (2 * xr) / 5 + 1 }, (_, i) => -xr + i * 5);

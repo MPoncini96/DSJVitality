@@ -15,7 +15,7 @@
  *
  *   COMPOSITE (illustrative): Vitality 50% + Financial 35% + Facilities 15%.
  *     Finance and facilities inputs have no public source, so the composite stays
- *     SAMPLE. Risk labels derived from it are never shown next to real names.
+ *     SAMPLE and is always badged as illustrative.
  *
  * Thresholds are starting points for discussion with the Department of Catholic
  * Schools, not policy.

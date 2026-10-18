@@ -174,8 +174,8 @@ export default function Turnaround() {
       </section>
 
       <p className="text-xs text-muted">
-        The Matrix itself is on the <Link href="/" className="underline underline-offset-2">Radar</Link>. School names on this page are
-        always hidden while the inputs are simulated.
+        The Matrix itself is on the <Link href="/" className="underline underline-offset-2">Radar</Link>. Roster, phases and action plans
+        here are simulated.
       </p>
     </div>
   );

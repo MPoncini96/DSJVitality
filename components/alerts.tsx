@@ -66,6 +66,7 @@ export function SchoolAlerts({ id, name, alerts }: { id: string; name: string; a
               <span className="sr-only">{a.severity}: </span>
               <span className="min-w-0">
                 <span className="text-muted">{a.area}:</span> {a.title}
+                {a.provenance !== "REAL" && <span className="ml-1.5 rounded border border-dashed border-sample-border px-1 text-[10px] font-semibold text-sample-fg">simulated</span>}
                 {a.detail && <span className="block text-xs text-muted">{a.detail}</span>}
               </span>
             </li>

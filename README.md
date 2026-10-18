@@ -50,5 +50,5 @@ All reads go through `lib/data.ts`, so moving from CSV files to a database later
 ## Provenance rules
 
 - Every value shows a **REAL** (solid, slate, ✓) or **SIMULATED** (dashed, amber, ◇) badge. Charts with simulated data draw dashed lines. (In the data files and code the tag is `SAMPLE`.)
-- School names (and city) are hidden by default while enrollment is SAMPLE. The "Names" switch in the header changes this per viewer.
+- Real school names are shown everywhere. Flags and scores that rest on simulated data carry a SIMULATED badge, an "illustrative" label, or a ◇ marker next to the school name.
 - No logos, seals or diocesan branding. No API keys in the repo.

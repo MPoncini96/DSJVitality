@@ -104,8 +104,8 @@ export function SampleBanner() {
       <strong className="font-semibold">Enrollment is real; most other numbers are simulated.</strong> Parish-school enrollment
       and staffing come from the California Department of Education. Finance, tuition, re-enrollment, admissions, facilities
       and data-audit figures are simulated to show how the dashboard works and are not real figures for any school.{" "}
-      <ProvenanceBadge p="SAMPLE" /> is simulated; <ProvenanceBadge p="REAL" /> comes from a cited public source. Any flag
-      that uses simulated data never appears next to a real school name.
+      <ProvenanceBadge p="SAMPLE" /> is simulated; <ProvenanceBadge p="REAL" /> comes from a cited public source. A ◇ next
+      to a school name means that flag rests at least partly on simulated data.
     </div>
   );
 }

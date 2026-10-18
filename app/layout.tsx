@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import "./globals.css";
-import { AnonymizeToggle, NamesProvider } from "@/components/Names";
 import { ThemeToggle, themeInitScript } from "@/components/ThemeToggle";
-import { anonymousLabels, getEnrollment, getSchools, provenanceOf } from "@/lib/data";
 
 export const metadata: Metadata = {
   title: "School Vitality Prototype",
@@ -24,18 +22,12 @@ const NAV = [
 ];
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const labels = anonymousLabels(getSchools("all"));
-  // Names default to hidden unless enrollment for the default view (parish schools) is all REAL.
-  const parish = new Set(getSchools().map((s) => s.id));
-  const defaultAnonymize = provenanceOf(getEnrollment().filter((r) => parish.has(r.schoolId))) !== "REAL";
-
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
       <body className="min-h-screen">
-        <NamesProvider labels={labels} defaultAnonymize={defaultAnonymize}>
           <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-2 focus:z-50 focus:rounded focus:bg-surface focus:px-3 focus:py-2">
             Skip to content
           </a>
@@ -63,7 +55,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 </ul>
               </nav>
               <div className="ml-auto flex items-center gap-2">
-                <AnonymizeToggle />
                 <ThemeToggle />
               </div>
             </div>
@@ -78,7 +69,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               Independent prototype by Matthew Poncini. Not affiliated with or endorsed by the Diocese of San José.
             </div>
           </footer>
-        </NamesProvider>
       </body>
     </html>
   );
