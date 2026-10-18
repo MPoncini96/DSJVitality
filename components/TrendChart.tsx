@@ -61,7 +61,7 @@ export function TrendChart({ data, label }: { data: TrendPoint[]; label: string 
               cursor={{ stroke: "var(--faint)", strokeDasharray: "2 3" }}
               contentStyle={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 8, fontSize: 12, color: "var(--text)" }}
               labelFormatter={(y) => `School year ${schoolYear(Number(y))}`}
-              formatter={(v) => [Number(v).toLocaleString() + (sample ? " (SAMPLE)" : ""), "Students"]}
+              formatter={(v) => [Number(v).toLocaleString() + (sample ? " (simulated)" : ""), "Students"]}
             />
             <Line
               type="monotone"

@@ -52,7 +52,7 @@ export default function Turnaround() {
     <div className="space-y-8">
       <PageHeader
         title="Turnaround Program"
-        sub="How schools are identified, supported and brought back to stability. The roster, action plans and dates below are SAMPLE data; the process is a proposal."
+        sub="How schools are identified, supported and brought back to stability. The roster, action plans and dates below are simulated; the process is a proposal."
       />
       <SampleBanner />
 
@@ -175,7 +175,7 @@ export default function Turnaround() {
 
       <p className="text-xs text-muted">
         The Matrix itself is on the <Link href="/" className="underline underline-offset-2">Radar</Link>. School names on this page are
-        always hidden while the inputs are SAMPLE data.
+        always hidden while the inputs are simulated.
       </p>
     </div>
   );

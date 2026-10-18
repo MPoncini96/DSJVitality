@@ -101,11 +101,11 @@ export function PageHeader({ title, sub, children }: { title: string; sub?: Reac
 export function SampleBanner() {
   return (
     <div role="note" className="sample-edge rounded-xl border border-sample-border bg-sample-bg px-4 py-3 text-sm text-sample-fg">
-      <strong className="font-semibold">Enrollment is real; most other numbers are SAMPLE data.</strong> Parish-school enrollment
+      <strong className="font-semibold">Enrollment is real; most other numbers are simulated.</strong> Parish-school enrollment
       and staffing come from the California Department of Education. Finance, tuition, re-enrollment, admissions, facilities
       and data-audit figures are simulated to show how the dashboard works and are not real figures for any school.{" "}
       <ProvenanceBadge p="SAMPLE" /> is simulated; <ProvenanceBadge p="REAL" /> comes from a cited public source. Any flag
-      that uses SAMPLE data never appears next to a real school name.
+      that uses simulated data never appears next to a real school name.
     </div>
   );
 }

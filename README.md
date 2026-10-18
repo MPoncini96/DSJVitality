@@ -17,7 +17,8 @@ npm run build
 
 ## Pages
 
-- **Radar** (`/`): what needs attention this month. Alerts grouped by school, upcoming deadlines, Turnaround check-ins, the Enrollment & Finance Matrix, and system figures.
+- **Radar** (`/`): system figures, alert counts by area, the Enrollment & Finance Matrix, upcoming deadlines, Turnaround check-ins, and the enrollment trend and school table.
+- **Alerts** (`/alerts`): every school with an item that needs attention, worst first, filterable by area, plus the rules that raise them.
 - **Turnaround Program** (`/turnaround`): the process (identify, assess, plan, implement, monitor, exit), the roster, schools flagged but not enrolled, and action plans with owners and due dates.
 - **School profile** (`/schools/[id]`): overview with score breakdowns, then enrollment, finance and tuition, facilities, and data quality tabs.
 
@@ -48,6 +49,6 @@ All reads go through `lib/data.ts`, so moving from CSV files to a database later
 
 ## Provenance rules
 
-- Every value shows a **REAL** (solid, slate, ✓) or **SAMPLE** (dashed, amber, ◇) badge. Charts with SAMPLE data draw dashed lines.
+- Every value shows a **REAL** (solid, slate, ✓) or **SIMULATED** (dashed, amber, ◇) badge. Charts with simulated data draw dashed lines. (In the data files and code the tag is `SAMPLE`.)
 - School names (and city) are hidden by default while enrollment is SAMPLE. The "Names" switch in the header changes this per viewer.
 - No logos, seals or diocesan branding. No API keys in the repo.

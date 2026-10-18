@@ -2,8 +2,8 @@ import type { MixedProvenance } from "@/lib/data";
 
 const TEXT: Record<MixedProvenance, { label: string; title: string }> = {
   REAL: { label: "REAL", title: "From a public source. See /about for the citation." },
-  SAMPLE: { label: "SAMPLE", title: "Simulated data (fixed seed). Not real figures for any school." },
-  MIXED: { label: "PARTLY SAMPLE", title: "Combines public data with simulated data." },
+  SAMPLE: { label: "SIMULATED", title: "Simulated data (fixed seed). Not real figures for any school." },
+  MIXED: { label: "PARTLY SIMULATED", title: "Combines public data with simulated data." },
 };
 
 /** Provenance badge. Shape + text + color, so it never relies on color alone. */

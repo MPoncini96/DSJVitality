@@ -79,7 +79,7 @@ export function MatrixChart({ points, height = 380 }: { points: MatrixPoint[]; h
                     <div>{d.quadrant}</div>
                     <div style={{ color: "var(--muted)" }}>
                       Trend {d.xPct > 0 ? "+" : ""}{d.xPct.toFixed(1)}%/yr · Financial {d.y}
-                      {d.provenance !== "REAL" ? " · SAMPLE" : ""}
+                      {d.provenance !== "REAL" ? " · simulated" : ""}
                     </div>
                     {d.clickable && <div style={{ color: "var(--muted)" }}>Click to open</div>}
                   </div>
@@ -131,7 +131,7 @@ export function GradeBandChart({ rows, sample }: { rows: { year: number; [band: 
             <CartesianGrid stroke="var(--grid)" vertical={false} />
             <XAxis dataKey="year" tickFormatter={sy} tick={axisTick} tickLine={false} axisLine={{ stroke: "var(--border)" }} />
             <YAxis tick={axisTick} axisLine={false} tickLine={false} width={44} />
-            <Tooltip contentStyle={tooltipStyle} labelFormatter={(y) => `School year ${sy(Number(y))}${sample ? " (SAMPLE)" : ""}`} cursor={{ fill: "var(--surface-2)" }} />
+            <Tooltip contentStyle={tooltipStyle} labelFormatter={(y) => `School year ${sy(Number(y))}${sample ? " (simulated)" : ""}`} cursor={{ fill: "var(--surface-2)" }} />
             <Legend wrapperStyle={{ fontSize: 12, color: "var(--muted)" }} iconType="square" />
             {bands.map((b, i) => (
               <Bar key={b} dataKey={b} stackId="g" fill={colors[i % 3]} stroke="var(--surface)" strokeWidth={1} isAnimationActive={false}
@@ -156,7 +156,7 @@ export function SimpleBars({
           <CartesianGrid stroke="var(--grid)" vertical={false} />
           <XAxis dataKey={xKey} tick={axisTick} tickLine={false} axisLine={{ stroke: "var(--border)" }} />
           <YAxis tick={axisTick} axisLine={false} tickLine={false} width={52} tickFormatter={fmt} />
-          <Tooltip contentStyle={tooltipStyle} cursor={{ fill: "var(--surface-2)" }} formatter={(v) => [fmt(Number(v)) + (sample ? " (SAMPLE)" : ""), label]} />
+          <Tooltip contentStyle={tooltipStyle} cursor={{ fill: "var(--surface-2)" }} formatter={(v) => [fmt(Number(v)) + (sample ? " (simulated)" : ""), label]} />
           <Bar dataKey={yKey} fill={sample ? "var(--sample-mark)" : "var(--accent)"} radius={[4, 4, 0, 0]} isAnimationActive={false} />
         </BarChart>
       </ResponsiveContainer>
@@ -179,7 +179,7 @@ export function SimpleLine({
           <XAxis dataKey="x" tick={axisTick} tickLine={false} axisLine={{ stroke: "var(--border)" }} />
           <YAxis tick={axisTick} axisLine={false} tickLine={false} width={56} tickFormatter={fmt}
             domain={format === "pct" ? ["auto", "auto"] : [ticks[0], ticks.at(-1)!]} ticks={format === "pct" ? undefined : ticks} />
-          <Tooltip contentStyle={tooltipStyle} formatter={(v) => [fmt(Number(v)) + (sample ? " (SAMPLE)" : ""), label]} />
+          <Tooltip contentStyle={tooltipStyle} formatter={(v) => [fmt(Number(v)) + (sample ? " (simulated)" : ""), label]} />
           <Line dataKey="y" stroke={stroke} strokeWidth={2} strokeDasharray={sample ? "6 4" : undefined} dot={{ r: 3, fill: stroke, strokeWidth: 0 }} isAnimationActive={false} />
         </LineChart>
       </ResponsiveContainer>

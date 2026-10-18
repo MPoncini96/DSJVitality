@@ -1,80 +1,26 @@
 import Link from "next/link";
 import { MatrixChart, type MatrixPoint } from "@/components/charts";
+import { AreaTiles, ScopeToggle, groupBySchool } from "@/components/alerts";
 import { RiskSchoolRef } from "@/components/Names";
 import { ProvenanceBadge } from "@/components/ProvenanceBadge";
 import { SchoolsTable, type SchoolTableRow } from "@/components/SchoolsTable";
 import { TrendChart } from "@/components/TrendChart";
-import { Card, Illustrative, PageHeader, SampleBanner, SeverityPill, Stat } from "@/components/ui";
+import { Card, Illustrative, PageHeader, SampleBanner, Stat } from "@/components/ui";
 import { upcoming } from "@/lib/calendar";
 import { GOVERNANCE_LABEL, getTuition, median, provenanceOf, systemTrend, type SchoolScope } from "@/lib/data";
 import { dateLong, dateShort, money, schoolYear, signedPct } from "@/lib/format";
 import { AS_OF } from "@/lib/metrics";
-import { SEVERITY_ORDER, type Alert, type Area, type Severity } from "@/lib/radar";
-import { alertsProvenance, systemView } from "@/lib/system";
+import { systemView } from "@/lib/system";
 
-const AREAS: Area[] = ["Enrollment", "Finance", "Facilities", "Systems"];
-
-function ScopeToggle({ scope, area }: { scope: SchoolScope; area?: string }) {
-  const href = (s: SchoolScope) => `/?${new URLSearchParams({ ...(s === "all" ? { scope: "all" } : {}), ...(area ? { area } : {}) })}`;
-  const cls = (on: boolean) =>
-    `rounded-full border px-3 py-1 ${on ? "border-accent bg-accent-soft text-accent" : "border-border text-muted hover:bg-surface-2"}`;
-  return (
-    <div className="flex flex-wrap items-center gap-2 text-sm" role="group" aria-label="Which schools to include">
-      <span className="text-muted">Schools:</span>
-      <Link href={href("default")} aria-current={scope === "default" ? "page" : undefined} className={cls(scope === "default")}>25 parish elementary</Link>
-      <Link href={href("all")} aria-current={scope === "all" ? "page" : undefined} className={cls(scope === "all")}>All 33 listed</Link>
-    </div>
-  );
-}
-
-function SchoolAlerts({ id, name, alerts }: { id: string; name: string; alerts: Alert[] }) {
-  const worst = alerts[0].severity;
-  const shown = alerts.slice(0, 4);
-  return (
-    <li className="flex flex-col gap-2 border-b border-border py-3 last:border-0 sm:flex-row sm:gap-3">
-      <div className="w-24 shrink-0"><SeverityPill s={worst} /></div>
-      <div className="min-w-0 flex-1">
-        <div className="text-sm">
-          <RiskSchoolRef id={id} name={name} provenance={provenanceOf(alerts.map((a) => ({ provenance: a.provenance === "REAL" ? "REAL" : "SAMPLE" })))} href={`/schools/${id}`} />
-          <span className="text-faint"> · {alerts.length} item{alerts.length > 1 ? "s" : ""}</span>
-        </div>
-        <ul className="mt-1 space-y-0.5">
-          {shown.map((a, i) => (
-            <li key={i} className="flex gap-2 text-sm">
-              <span aria-hidden="true" style={{ color: `var(--${a.severity})` }}>{a.severity === "critical" ? "▲" : a.severity === "serious" ? "◆" : "●"}</span>
-              <span className="sr-only">{a.severity}: </span>
-              <span className="min-w-0"><span className="text-muted">{a.area}:</span> {a.title}</span>
-            </li>
-          ))}
-          {alerts.length > shown.length && <li className="pl-5 text-xs text-muted">+{alerts.length - shown.length} more on the school page</li>}
-        </ul>
-      </div>
-    </li>
-  );
-}
-
-export default async function Radar({ searchParams }: { searchParams: Promise<{ scope?: string; area?: string }> }) {
+export default async function Radar({ searchParams }: { searchParams: Promise<{ scope?: string }> }) {
   const sp = await searchParams;
   const scope: SchoolScope = sp.scope === "all" ? "all" : "default";
-  const area = AREAS.find((a) => a === sp.area);
   const views = systemView(scope);
-  const nameOf = new Map(views.map((v) => [v.school.id, v.school.name]));
   const ids = views.map((v) => v.school.id);
-
   const allAlerts = views.flatMap((v) => v.alerts);
-  const shown = allAlerts
-    .filter((a) => !area || a.area === area)
-    .sort((a, b) => SEVERITY_ORDER[a.severity] - SEVERITY_ORDER[b.severity] || a.area.localeCompare(b.area));
-  const bySchool = new Map<string, Alert[]>();
-  for (const a of shown) (bySchool.get(a.schoolId) ?? bySchool.set(a.schoolId, []).get(a.schoolId)!).push(a);
-  const n = (al: Alert[], s: Severity) => al.filter((a) => a.severity === s).length;
-  const groups = [...bySchool.entries()].sort(
-    ([, x], [, y]) => n(y, "critical") - n(x, "critical") || n(y, "serious") - n(x, "serious") || y.length - x.length
-  );
-  const urgent = groups.filter(([, al]) => al[0].severity !== "warning");
-  const watch = groups.filter(([, al]) => al[0].severity === "warning");
-  const countBy = (ar: Area, s: Severity) => allAlerts.filter((a) => a.area === ar && a.severity === s).length;
-  const aProv = alertsProvenance(views);
+  const groups = groupBySchool(allAlerts);
+  const urgentSchools = groups.filter(([, al]) => al[0].severity !== "warning").length;
+  const criticalSchools = groups.filter(([, al]) => al[0].severity === "critical").length;
 
   // System figures
   const trend = systemTrend(ids);
@@ -105,61 +51,41 @@ export default async function Radar({ searchParams }: { searchParams: Promise<{ 
   });
 
   const checkins = views.filter((v) => v.turnaround).sort((a, b) => a.turnaround!.nextCheckin.localeCompare(b.turnaround!.nextCheckin));
-  const areaHref = (a?: Area) => `/?${new URLSearchParams({ ...(scope === "all" ? { scope: "all" } : {}), ...(a ? { area: a } : {}) })}`;
+  const alertsHref = scope === "all" ? "/alerts?scope=all" : "/alerts";
 
   return (
     <div className="space-y-8">
-      <PageHeader title="Radar" sub={<>What needs attention across {views.length} schools, as of {dateLong(AS_OF)}. Exceptions first; everything else is a click away.</>}>
-        <ScopeToggle scope={scope} area={area} />
+      <PageHeader title="Radar" sub={<>The state of {views.length} schools as of {dateLong(AS_OF)}: where they stand, what is coming up, and where to look first.</>}>
+        <ScopeToggle base="/" scope={scope} />
       </PageHeader>
 
       <SampleBanner />
 
-      <section aria-label="Alerts by area" className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        {AREAS.map((ar) => {
-          const on = area === ar;
-          return (
-            <Link key={ar} href={on ? areaHref() : areaHref(ar)} aria-pressed={on}
-              className={`rounded-xl border bg-surface p-4 hover:bg-surface-2 ${on ? "border-accent ring-1 ring-accent" : "border-border"}`}>
-              <div className="flex items-center justify-between text-xs font-medium text-muted">
-                <span>{ar}</span>
-                <span className="text-faint">{on ? "Filtered ✕" : "Filter"}</span>
-              </div>
-              <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-sm tabular">
-                <span><span aria-hidden="true" style={{ color: "var(--critical)" }}>▲</span> {countBy(ar, "critical")} critical</span>
-                <span><span aria-hidden="true" style={{ color: "var(--serious)" }}>◆</span> {countBy(ar, "serious")} serious</span>
-                <span className="text-muted"><span aria-hidden="true" style={{ color: "var(--warning)" }}>●</span> {countBy(ar, "warning")} watch</span>
-              </div>
-            </Link>
-          );
-        })}
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <Stat label="Schools" value={String(views.length)} sub="from the public school directory" p="REAL" />
+        <Stat label={`Enrollment, ${schoolYear(L)}`} value={latest ? latest.total.toLocaleString() : "—"} sub={`${signedPct(yoy)} vs ${schoolYear(L - 1)}`} p={enrollP} />
+        <Stat label="Median re-enrollment" value={reRates.length ? `${Math.round(median(reRates)! * 100)}%` : "—"} sub="families returning this fall" p={provenanceOf(views.map((v) => ({ provenance: v.metrics.reenrollment.provenance === "REAL" ? "REAL" : "SAMPLE" })))} />
+        <Stat label={`Median tuition, ${schoolYear(L)}`} value={money(median(tuitionL.map((t) => t.tuition!)))} sub={`${tuitionL.length} schools reporting`} p={provenanceOf(tuitionL)} />
+      </div>
+
+      <section aria-labelledby="att-h" className="space-y-3">
+        <div className="flex flex-wrap items-baseline justify-between gap-2">
+          <h2 id="att-h" className="text-lg font-semibold tracking-tight">Alerts</h2>
+          <Link href={alertsHref} className="text-sm text-accent underline underline-offset-2">
+            {urgentSchools} schools need attention{criticalSchools ? `, ${criticalSchools} critical` : ""} →
+          </Link>
+        </div>
+        <AreaTiles alerts={allAlerts} scope={scope} />
       </section>
 
       <div className="grid gap-6 lg:grid-cols-3">
-        <Card className="lg:col-span-2" id="alerts-h" p={aProv}
-          title={<>Schools needing attention{area ? ` · ${area}` : ""} <span className="font-normal text-muted">({urgent.length})</span></>}>
-          {urgent.length === 0 ? (
-            <p className="text-sm text-muted">No school has a critical or serious item{area ? ` in ${area}` : ""}.</p>
-          ) : (
-            <>
-              <ul>{urgent.slice(0, 8).map(([id, al]) => <SchoolAlerts key={id} id={id} name={nameOf.get(id)!} alerts={al} />)}</ul>
-              {urgent.length > 8 && (
-                <details className="border-t border-border pt-3">
-                  <summary className="cursor-pointer text-sm text-muted">{urgent.length - 8} more schools with critical or serious items</summary>
-                  <ul className="mt-1">{urgent.slice(8).map(([id, al]) => <SchoolAlerts key={id} id={id} name={nameOf.get(id)!} alerts={al} />)}</ul>
-                </details>
-              )}
-            </>
-          )}
-          {watch.length > 0 && (
-            <details className="mt-3 border-t border-border pt-3">
-              <summary className="cursor-pointer text-sm text-muted">{watch.length} more school{watch.length > 1 ? "s" : ""} with watch items only</summary>
-              <ul className="mt-1">{watch.map(([id, al]) => <SchoolAlerts key={id} id={id} name={nameOf.get(id)!} alerts={al} />)}</ul>
-            </details>
-          )}
-          <p className="mt-4 text-xs text-muted">
-            Alert rules and thresholds are listed on each school page and in <code>lib/radar.ts</code>. They are starting points, not policy.
+        <Card className="lg:col-span-2" id="matrix-h" p={matrixP} title={<>Enrollment &amp; Finance Matrix {matrixP !== "REAL" && <Illustrative />}</>}>
+          <p className="mb-3 text-sm text-muted">
+            Each dot is a school: five-year enrollment trend across, financial score up. Shrinking schools with weak finances
+            (bottom left) are Turnaround Program candidates. {qCount("Turnaround candidate")} in that quadrant,{" "}
+            {qCount("Watch")} to watch, {qCount("Growth opportunity")} growing but financially weak, {qCount("Stable")} stable.
           </p>
+          <MatrixChart points={matrix} />
         </Card>
 
         <div className="space-y-6">
@@ -178,7 +104,7 @@ export default async function Radar({ searchParams }: { searchParams: Promise<{ 
                 </li>
               ))}
             </ul>
-            <p className="mt-3 text-xs text-muted">Items marked SAMPLE are typical timings, to be confirmed with the Department of Catholic Schools.</p>
+            <p className="mt-3 text-xs text-muted">Items marked SIMULATED are typical timings, to be confirmed with the Department of Catholic Schools.</p>
           </Card>
 
           <Card title="Turnaround check-ins" id="ta-h" p={provenanceOf(checkins.map((c) => c.turnaround!))}
@@ -197,23 +123,8 @@ export default async function Radar({ searchParams }: { searchParams: Promise<{ 
         </div>
       </div>
 
-      <Card id="matrix-h" p={matrixP} title={<>Enrollment &amp; Finance Matrix {matrixP !== "REAL" && <Illustrative />}</>}>
-        <p className="mb-3 max-w-3xl text-sm text-muted">
-          Each dot is a school: five-year enrollment trend across, financial score up. Shrinking schools with weak finances
-          (bottom left) are Turnaround Program candidates. {qCount("Turnaround candidate")} in that quadrant,{" "}
-          {qCount("Watch")} to watch, {qCount("Growth opportunity")} growing but financially weak, {qCount("Stable")} stable.
-        </p>
-        <MatrixChart points={matrix} />
-      </Card>
-
       <section aria-labelledby="sys-h" className="space-y-4">
-        <h2 id="sys-h" className="text-lg font-semibold tracking-tight">System at a glance</h2>
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          <Stat label="Schools" value={String(views.length)} sub="from the public school directory" p="REAL" />
-          <Stat label={`Enrollment, ${schoolYear(L)}`} value={latest ? latest.total.toLocaleString() : "—"} sub={`${signedPct(yoy)} vs ${schoolYear(L - 1)}`} p={enrollP} />
-          <Stat label="Median re-enrollment" value={reRates.length ? `${Math.round(median(reRates)! * 100)}%` : "—"} sub="families returning this fall" p={provenanceOf(views.map((v) => ({ provenance: v.metrics.reenrollment.provenance === "REAL" ? "REAL" : "SAMPLE" })))} />
-          <Stat label={`Median tuition, ${schoolYear(L)}`} value={money(median(tuitionL.map((t) => t.tuition!)))} sub={`${tuitionL.length} schools reporting`} p={provenanceOf(tuitionL)} />
-        </div>
+        <h2 id="sys-h" className="text-lg font-semibold tracking-tight">Enrollment</h2>
         <Card title={`System enrollment, ${schoolYear(trend[0]?.year ?? 0)} to ${schoolYear(L)}`} p={enrollP} id="trend-h">
           <TrendChart data={trend} label="System enrollment" />
         </Card>

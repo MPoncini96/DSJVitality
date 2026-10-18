@@ -108,7 +108,7 @@ export default async function SchoolPage({ params }: { params: Promise<{ id: str
         <div className="grid gap-6 lg:grid-cols-2">
           <Card title="Enrollment Vitality" p={h.vitality.provenance} id="vit-h">
             <ScoreHead label="from public data" r={h.vitality} />
-            <p className="mt-2 text-xs text-muted">Built only from REAL public inputs: state enrollment by grade (CDE). Inputs that are still SAMPLE, such as Census population, are skipped rather than used.</p>
+            <p className="mt-2 text-xs text-muted">Built only from REAL public inputs: state enrollment by grade (CDE). Inputs that are still simulated, such as Census population, are skipped rather than used.</p>
             <div className="mt-3"><FactorTable r={h.vitality} /></div>
           </Card>
           <Card title="Composite health" p={h.composite.provenance} id="comp-h">
@@ -213,7 +213,7 @@ export default async function SchoolPage({ params }: { params: Promise<{ id: str
         </Card>
         <Card title="Re-enrollment rate" p={m.reenrollment.provenance} id="en5">
           <SimpleLine rows={m.reenrollment.series.map((x) => ({ x: String(x.year).slice(2), y: x.rate }))} format="pct" label="Re-enrollment" sample={m.reenrollment.provenance !== "REAL"} />
-          <p className="text-xs text-muted">Families returning, counted in spring. No public source; this stays SAMPLE until a school system feeds it.</p>
+          <p className="text-xs text-muted">Families returning, counted in spring. No public source; this stays simulated until a school system feeds it.</p>
         </Card>
         <Card title={`Children 5–14 in ${school.zip}`} p={m.market.provenance} id="en6">
           <SimpleLine rows={m.market.series.map((x) => ({ x: String(x.year).slice(2), y: x.pop }))} format="number" label="Children aged 5–14" sample={m.market.provenance !== "REAL"} />

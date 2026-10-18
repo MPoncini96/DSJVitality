@@ -108,7 +108,7 @@ export function RiskSchoolRef({
   const forced = provenance !== "REAL";
   const label = anonymize || forced ? labels[id] ?? "School" : name;
   const linkable = href && (anonymize || !forced);
-  const title = forced && !anonymize ? "Name hidden: this flag uses SAMPLE data" : undefined;
+  const title = forced && !anonymize ? "Name hidden: this flag uses simulated data" : undefined;
   return linkable ? (
     <Link href={href} className="font-medium text-text underline decoration-border underline-offset-2 hover:decoration-accent">
       {label}
@@ -137,7 +137,7 @@ export function RiskGate({ provenance, children }: { provenance: MixedProvenance
   if (anonymize || provenance === "REAL") return <>{children}</>;
   return (
     <div className="rounded-lg border border-dashed border-sample-border bg-sample-bg p-4 text-sm text-sample-fg">
-      Scores and risk flags for this school use SAMPLE data, so they are not shown next to its real name.{" "}
+      Scores and risk flags for this school use simulated data, so they are not shown next to its real name.{" "}
       <button type="button" onClick={() => setAnonymize(true)} className="font-semibold underline underline-offset-2">
         Hide names to view them
       </button>
