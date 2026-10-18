@@ -35,7 +35,7 @@ function SchoolAlerts({ id, name, alerts }: { id: string; name: string; alerts: 
       <div className="w-24 shrink-0"><SeverityPill s={worst} /></div>
       <div className="min-w-0 flex-1">
         <div className="text-sm">
-          <RiskSchoolRef id={id} name={name} provenance={alerts[0].provenance} href={`/schools/${id}`} />
+          <RiskSchoolRef id={id} name={name} provenance={provenanceOf(alerts.map((a) => ({ provenance: a.provenance === "REAL" ? "REAL" : "SAMPLE" })))} href={`/schools/${id}`} />
           <span className="text-faint"> · {alerts.length} item{alerts.length > 1 ? "s" : ""}</span>
         </div>
         <ul className="mt-1 space-y-0.5">

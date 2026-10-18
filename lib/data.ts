@@ -15,7 +15,7 @@ import { Rng } from "./rng";
 import type {
   BudgetCategory, BudgetRow, CashRow, DataAuditRow, DemographicsRow, EnrollmentRow, FacilityRow, Feed,
   Governance, PipelineRow, Provenance, ReceivableRow, ReenrollmentRow, School, TuitionAssistanceRow, TuitionRow,
-  TurnaroundAction, TurnaroundPhase, TurnaroundRow,
+  StaffingRow, TurnaroundAction, TurnaroundPhase, TurnaroundRow,
 } from "./types";
 
 const dataDir = () => process.env.VITALITY_DATA_DIR ?? join(process.cwd(), "data");
@@ -38,7 +38,13 @@ const num = (v: string) => (v === "" || v === undefined ? NaN : Number(v));
 function loadMerged<T extends { provenance: Provenance }>(
   name: string,
   map: (r: Raw, file: string) => T,
-  key: (row: T) => string
+  key: (row: T) => string,
+  /**
+   * Optional grouping (e.g. by school). When a group has ANY REAL rows, all SAMPLE
+   * rows in that group are dropped, so a REAL series is never stitched onto
+   * simulated history.
+   */
+  group?: (row: T) => string
 ): T[] {
   const memo = `${dataDir()}::${name}`;
   if (cache.has(memo)) return cache.get(memo) as T[];
@@ -55,7 +61,11 @@ function loadMerged<T extends { provenance: Provenance }>(
     if (row.provenance !== "REAL") throw new Error(`${realPath}: only REAL rows belong outside data/sample/`);
     merged.set(key(row), row);
   }
-  const rows = [...merged.values()];
+  let rows = [...merged.values()];
+  if (group) {
+    const realGroups = new Set(rows.filter((r) => r.provenance === "REAL").map(group));
+    rows = rows.filter((r) => r.provenance === "REAL" || !realGroups.has(group(r)));
+  }
   cache.set(memo, rows);
   return rows;
 }
@@ -106,7 +116,19 @@ export const getEnrollment = () =>
   loadMerged<EnrollmentRow>(
     "enrollment",
     (r, f) => ({ schoolId: r.school_id, year: num(r.year), grade: r.grade, count: num(r.count), provenance: asProvenance(r.provenance, f), source: r.source }),
-    (x) => `${x.schoolId}|${x.year}|${x.grade}`
+    (x) => `${x.schoolId}|${x.year}|${x.grade}`,
+    (x) => x.schoolId
+  );
+
+/** Staffing from the CDE affidavit (REAL only; no SAMPLE equivalent). */
+export const getStaffing = () =>
+  loadMerged<StaffingRow>(
+    "staffing",
+    (r, f) => ({
+      schoolId: r.school_id, year: num(r.year), ftTeachers: num(r.ft_teachers), ptTeachers: num(r.pt_teachers),
+      admins: num(r.admins), otherStaff: num(r.other_staff), provenance: asProvenance(r.provenance, f), source: r.source,
+    }),
+    (x) => `${x.schoolId}|${x.year}`
   );
 
 export const getTuition = () =>
@@ -251,15 +273,43 @@ export function enrollmentTotals(schoolIds?: string[]): SchoolYearTotal[] {
 }
 
 /** System-wide enrollment by year for the given schools. */
-export function systemTrend(schoolIds: string[]): { year: number; total: number; provenance: MixedProvenance }[] {
+export function systemTrend(
+  schoolIds: string[]
+): { year: number; total: number; provenance: MixedProvenance; carriedForward: string[] }[] {
   const byYear = new Map<number, SchoolYearTotal[]>();
-  for (const t of enrollmentTotals(schoolIds)) (byYear.get(t.year) ?? byYear.set(t.year, []).get(t.year)!).push(t);
+  const totals = enrollmentTotals(schoolIds);
+  for (const t of totals) (byYear.get(t.year) ?? byYear.set(t.year, []).get(t.year)!).push(t);
+  // Only years in which every school with data reports; otherwise the total jumps when a
+  // school's series starts or ends. A school missing a single interior year (a gap in the
+  // source) is carried at its prior year's value, and the year reports how many values
+  // were carried forward (`imputed`) so the chart can say so.
+  const reporting = new Set(totals.map((t) => t.schoolId));
+  const years = [...byYear.keys()].sort((a, b) => a - b);
+  const firstOf = new Map<string, number>(), lastOf = new Map<string, number>();
+  for (const t of totals) {
+    firstOf.set(t.schoolId, Math.min(firstOf.get(t.schoolId) ?? Infinity, t.year));
+    lastOf.set(t.schoolId, Math.max(lastOf.get(t.schoolId) ?? -Infinity, t.year));
+  }
+  const lo = Math.max(...firstOf.values()), hi = Math.min(...lastOf.values());
+  const imputed = new Map<number, string[]>();
+  for (const y of years) {
+    if (y < lo || y > hi) { byYear.delete(y); continue; }
+    const present = new Set(byYear.get(y)!.map((t) => t.schoolId));
+    for (const id of reporting) {
+      if (present.has(id)) continue;
+      const prior = totals.filter((t) => t.schoolId === id && t.year < y).sort((a, b) => b.year - a.year)[0];
+      if (prior) {
+        byYear.get(y)!.push({ ...prior, year: y });
+        imputed.set(y, [...(imputed.get(y) ?? []), id]);
+      }
+    }
+  }
   return [...byYear.entries()]
     .sort((a, b) => a[0] - b[0])
     .map(([year, ts]) => {
       const provs = new Set(ts.map((t) => t.provenance));
       const provenance: MixedProvenance = provs.size === 1 ? [...provs][0] : "MIXED";
-      return { year, total: ts.reduce((a, t) => a + t.total, 0), provenance };
+      return { year, total: ts.reduce((a, t) => a + t.total, 0), provenance, carriedForward: imputed.get(year) ?? [] };
     });
 }
 

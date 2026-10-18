@@ -24,8 +24,9 @@ const NAV = [
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const labels = anonymousLabels(getSchools("all"));
-  // Names default to hidden unless every enrollment row is REAL.
-  const defaultAnonymize = provenanceOf(getEnrollment()) !== "REAL";
+  // Names default to hidden unless enrollment for the default view (parish schools) is all REAL.
+  const parish = new Set(getSchools().map((s) => s.id));
+  const defaultAnonymize = provenanceOf(getEnrollment().filter((r) => parish.has(r.schoolId))) !== "REAL";
 
   return (
     <html lang="en" suppressHydrationWarning>

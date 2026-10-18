@@ -2,7 +2,7 @@
   "name": "school-vitality-prototype",
   "version": "0.1.0",
   "private": true,
-  "description": "Independent prototype: operational-vitality dashboard for Catholic schools in Santa Clara County. Not affiliated with or endorsed by the Diocese of San José.",
+  "description": "Independent prototype: operational-vitality dashboard for Catholic schools in Santa Clara County. Not affiliated with or endorsed by the Diocese of San Jos\u00e9.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -10,7 +10,8 @@
     "test": "vitest run",
     "data:schools": "tsx scripts/build_schools.ts",
     "data:sample": "tsx scripts/generate_sample.ts",
-    "data": "npm run data:schools && npm run data:sample"
+    "data": "npm run data:schools && npm run data:cde && npm run data:sample",
+    "data:cde": "tsx scripts/import_cde_enrollment.ts"
   },
   "dependencies": {
     "next": "16.4.2",

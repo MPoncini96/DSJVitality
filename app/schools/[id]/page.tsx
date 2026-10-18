@@ -6,7 +6,7 @@ import { ProvenanceBadge } from "@/components/ProvenanceBadge";
 import { Tabs } from "@/components/Tabs";
 import { TrendChart } from "@/components/TrendChart";
 import { Card, Illustrative, SampleBanner, SeverityPill, Stat, TierPill } from "@/components/ui";
-import { GOVERNANCE_LABEL, getSchool, getSchools, provenanceOf, type MixedProvenance } from "@/lib/data";
+import { GOVERNANCE_LABEL, getSchool, getSchools, getStaffing, provenanceOf, type MixedProvenance } from "@/lib/data";
 import { dateShort, money, moneyShort, pct, schoolYear, signedPct } from "@/lib/format";
 import { COMPOSITE_WEIGHTS, TIER_CUTS, type ScoreResult } from "@/lib/health";
 import { AS_OF } from "@/lib/metrics";
@@ -89,6 +89,8 @@ export default async function SchoolPage({ params }: { params: Promise<{ id: str
     return row;
   });
   const gradesL = e.byGrade.filter((g) => g.year === L);
+  const staff = getStaffing().filter((x) => x.schoolId === id).sort((a, b) => a.year - b.year);
+  const staffL = staff.at(-1);
   const riskP = provenanceOf([h.vitality, h.financial, h.facilities].map((x) => asP(x.provenance)));
   const alertsP = provenanceOf(v.alerts.map((a) => asP(a.provenance)));
 
@@ -105,8 +107,8 @@ export default async function SchoolPage({ params }: { params: Promise<{ id: str
       <RiskGate provenance={riskP}>
         <div className="grid gap-6 lg:grid-cols-2">
           <Card title="Enrollment Vitality" p={h.vitality.provenance} id="vit-h">
-            <ScoreHead label="from public-source inputs" r={h.vitality} />
-            <p className="mt-2 text-xs text-muted">Built only from inputs with a public source (state enrollment by grade, Census). It becomes REAL when those files are loaded.</p>
+            <ScoreHead label="from public data" r={h.vitality} />
+            <p className="mt-2 text-xs text-muted">Built only from REAL public inputs: state enrollment by grade (CDE). Inputs that are still SAMPLE, such as Census population, are skipped rather than used.</p>
             <div className="mt-3"><FactorTable r={h.vitality} /></div>
           </Card>
           <Card title="Composite health" p={h.composite.provenance} id="comp-h">
@@ -169,7 +171,21 @@ export default async function SchoolPage({ params }: { params: Promise<{ id: str
     <div className="space-y-6">
       <Card title="Total enrollment" p={e.provenance} id="en1">
         <TrendChart data={e.series.map((s) => ({ ...s, provenance: e.provenance }))} label="Total enrollment" />
+        {e.provenance === "REAL" && (
+          <p className="mt-1 text-xs text-muted">
+            Source: <a className="text-accent underline underline-offset-2" href="https://www.cde.ca.gov/ds/si/ps/">California Department of Education, Private School Affidavit</a>.
+            Self-reported by the school each October; totals are the sum of grades K–8.
+          </p>
+        )}
       </Card>
+      {staffL && (
+        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+          <Stat label={`Full-time teachers, ${schoolYear(staffL.year)}`} value={staffL.ftTeachers} sub={`${staffL.ptTeachers} part-time`} p={staffL.provenance} />
+          <Stat label="Students per full-time teacher" value={e.latest && staffL.ftTeachers ? (e.latest / staffL.ftTeachers).toFixed(1) : "—"} sub={staff.length > 1 ? `${(staff[0].ftTeachers ? (e.series.find((x) => x.year === staff[0].year)?.total ?? 0) / staff[0].ftTeachers : 0).toFixed(1)} in ${schoolYear(staff[0].year)}` : ""} p={staffL.provenance} />
+          <Stat label="Administrators" value={staffL.admins} sub="reported to CDE" p={staffL.provenance} />
+          <Stat label="Other staff" value={staffL.otherStaff} sub="reported to CDE" p={staffL.provenance} />
+        </div>
+      )}
       <div className="grid gap-6 lg:grid-cols-2">
         <Card title="Enrollment by grade band" p={e.provenance} id="en2">
           <GradeBandChart rows={bandRows} sample={e.provenance !== "REAL"} />

@@ -7,6 +7,8 @@ export interface TrendPoint {
   year: number;
   total: number;
   provenance: MixedProvenance;
+  /** schools whose value for this year was carried forward from the prior year */
+  carriedForward?: string[];
 }
 
 const schoolYear = (y: number) => `${y}-${String((y + 1) % 100).padStart(2, "0")}`;
@@ -87,12 +89,17 @@ export function TrendChart({ data, label }: { data: TrendPoint[]; label: string 
             {data.map((d) => (
               <tr key={d.year}>
                 <td className="pr-6">{schoolYear(d.year)}</td>
-                <td className="text-right">{d.total.toLocaleString()}</td>
+                <td className="text-right">{d.total.toLocaleString()}{d.carriedForward?.length ? "*" : ""}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </details>
+      {data.some((d) => d.carriedForward?.length) && (
+        <figcaption className="mt-1 text-xs text-muted">
+          {data.filter((d) => d.carriedForward?.length).map((d) => `${schoolYear(d.year)} carries ${d.carriedForward!.length} school${d.carriedForward!.length > 1 ? "s" : ""} forward from the prior year (missing from the source file).`).join(" ")}
+        </figcaption>
+      )}
     </figure>
   );
 }

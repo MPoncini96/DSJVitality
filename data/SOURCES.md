@@ -13,6 +13,7 @@ REAL files live in `data/`. SAMPLE files live in `data/sample/`. When both have 
 |---|---|---|---|---|---|
 | School list (`schools.csv`): name, website, address, city, ZIP, phone | Diocese of San José, "Find a School" | https://www.dsj.org/find-a-school/ | Current listing | 2026-10-16 | 33 schools. Snapshot: `raw/dsj_find_a_school_2026-10-16.csv`. One ZIP is blank on the page (St. Mary of the Immaculate Conception, Los Gatos) and was filled from the geocoder; see `corrections.csv`. |
 | Private School Affidavit filing window (Oct 1–15), shown on the Radar calendar | California Department of Education | https://www.cde.ca.gov/SP/PS/affidavit.asp | Statutory (Education Code §33190) | 2026-10-18 | Other calendar items are typical timings, marked SAMPLE. |
+| Enrollment by grade, K–8 (`enrollment.csv`) and staffing (`staffing.csv`), 25 parish schools, 2019-20 to 2025-26 | California Department of Education, Private School Affidavit data files | https://www.cde.ca.gov/ds/si/ps/ | 2019-20 – 2025-26 | 2026-10-18 | Snapshot: `raw/cde_enrollment_2026-10-18.json`, written by `scripts/fetch_cde_enrollment.py` and imported by `scripts/import_cde_enrollment.ts`. Schools matched by 14-digit CDS code. Self-reported each October by schools with 6+ students. 2026-27 affidavits (filed Oct 1–15, 2026) are not yet published. See `match_review.csv` for flagged items. |
 | Latitude/longitude | US Census Geocoder, benchmark `Public_AR_Current` | https://geocoding.geo.census.gov/geocoder/ | Current | 2026-10-16 | Snapshot: `raw/geocode_census_2026-10-16.csv`. One ambiguous match (St. Nicholas, El Monte Rd vs. Ave) is flagged for review. |
 
 ## Not from a source (flagged for review)
@@ -26,7 +27,7 @@ REAL files live in `data/`. SAMPLE files live in `data/sample/`. When both have 
 
 | File | Planned REAL source |
 |---|---|
-| `sample/enrollment.csv` | California Department of Education, Private School Affidavit data files (enrollment by grade, annual); NCES Private School Survey as a cross-check |
+| `sample/enrollment.csv` | Now REAL for the 25 parish schools (see above); SAMPLE rows remain only for the 8 high schools and order-run/independent schools. A school with any REAL enrollment has its SAMPLE series dropped entirely. Next: CDE `.xls` files before 2019-20 for a 10-year history; NCES Private School Survey as a cross-check. |
 | `sample/tuition.csv` | Each school's published tuition page (current year; history via Internet Archive where available). Blank where not published. |
 | `sample/demographics.csv` | US Census ACS 5-year, by ZCTA: ages 5–14 (B01001), median household income (B19013) |
 | `sample/budget_actual.csv` | No public source. Stays SAMPLE. |
@@ -43,3 +44,10 @@ School size in the SAMPLE enrollment is assigned at random from generic bands (s
 ## The sample "as of" date
 
 SAMPLE data describes a system as of **October 1, 2026**: fall 2026 enrollment is in, fiscal year 2026 (July 2025–June 2026) is closed, and FY2027 has three months of actuals (July–September).
+
+## Known issues in the REAL enrollment (also in `match_review.csv`)
+
+- **St. Joseph of Cupertino** has no record in the 2022-23 file. System totals carry its 2021-22 value forward for that year, and the chart says so.
+- **St. Martin of Tours and St. Nicholas, 2019-20:** the reported total is higher than the sum of grades K–8 (by 31 and 19), most likely TK or ungraded students. The dashboard uses the K–8 grade sum everywhere.
+- **Large one-year swings** (St. Joseph of Cupertino 2021-22→2023-24, St. Justin 2023-24→2024-25, St. Lawrence 2021-22→2022-23) are reported as filed; worth confirming with the schools.
+- Names differ between the directory and CDE for several schools (e.g. "St. Lawrence Elementary and Middle School" vs "St. Lawrence School"). Matching is by CDS code, not name.

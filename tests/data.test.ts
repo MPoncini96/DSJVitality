@@ -63,7 +63,7 @@ describe("provenance", () => {
     expect(provenanceOf([])).toBe("SAMPLE");
   });
 
-  it("a REAL row in data/<name>.csv replaces the matching SAMPLE row", () => {
+  it("a REAL row in data/<name>.csv replaces the matching SAMPLE row (and REAL enrollment replaces a school's whole SAMPLE series)", () => {
     const dir = mkdtempSync(join(tmpdir(), "vitality-"));
     mkdirSync(join(dir, "sample"));
     writeFileSync(join(dir, "schools.csv"), readFileSync(join(DATA, "schools.csv")));
@@ -76,8 +76,11 @@ describe("provenance", () => {
     clearCache();
     const rows = getEnrollment();
     expect(rows.find((r) => r.grade === "K")).toMatchObject({ count: 31, provenance: "REAL" });
+    // Enrollment is grouped by school: once a school has any REAL rows, its SAMPLE rows
+    // are dropped entirely, so the simulated grade 1 does not get stitched onto real data.
     const [total] = enrollmentTotals(["st-victor"]);
-    expect(total).toMatchObject({ total: 43, provenance: "MIXED" });
+    expect(total).toMatchObject({ total: 31, provenance: "REAL" });
+    expect(rows.find((r) => r.grade === "1")).toBeUndefined();
   });
 
   it("rejects a REAL tag inside data/sample/", () => {
@@ -90,10 +93,40 @@ describe("provenance", () => {
   });
 });
 
+describe("REAL enrollment", () => {
+  it("all 25 parish schools have REAL enrollment and no SAMPLE rows mixed into their series", () => {
+    const rows = getEnrollment();
+    for (const s of getSchools()) {
+      const mine = rows.filter((r) => r.schoolId === s.id);
+      expect(mine.length).toBeGreaterThan(0);
+      expect(mine.every((r) => r.provenance === "REAL")).toBe(true);
+    }
+  });
+  it("schools without REAL data keep their SAMPLE series", () => {
+    const rows = getEnrollment().filter((r) => r.schoolId === "archbishop-mitty");
+    expect(rows.length).toBeGreaterThan(0);
+    expect(rows.every((r) => r.provenance === "SAMPLE")).toBe(true);
+  });
+  it("spot-check against the source file: Holy Family 2025-26 total is 218", () => {
+    const t = enrollmentTotals(["holy-family"]).find((x) => x.year === 2025)!;
+    expect(t).toMatchObject({ total: 218, provenance: "REAL" });
+  });
+});
+
 describe("derived metrics", () => {
-  it("systemTrend has 11 years for the default view", () => {
+  it("systemTrend for the default view is the REAL CDE years 2019-20..2025-26", () => {
     const t = systemTrend(getSchools().map((s) => s.id));
-    expect(t.map((x) => x.year)).toEqual([2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026]);
+    expect(t.map((x) => x.year)).toEqual([2019, 2020, 2021, 2022, 2023, 2024, 2025]);
+    expect(t.every((x) => x.provenance === "REAL")).toBe(true);
+    // St. Joseph of Cupertino is missing 2022-23 in the CDE file and is carried forward
+    expect(t.find((x) => x.year === 2022)!.carriedForward).toEqual(["st-joseph-cupertino"]);
+  });
+
+  it("system totals match the CDE grade sums", () => {
+    const t = systemTrend(getSchools().map((s) => s.id));
+    expect(t.find((x) => x.year === 2025)!.total).toBe(
+      getEnrollment().filter((r) => r.year === 2025 && getSchools().some((s) => s.id === r.schoolId)).reduce((a, r) => a + r.count, 0)
+    );
   });
 
   it("consecutiveDeclines counts the trailing run only", () => {

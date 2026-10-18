@@ -41,8 +41,9 @@ export function MatrixChart({ points, height = 380 }: { points: MatrixPoint[]; h
     const forced = p.provenance !== "REAL";
     return { ...p, xPct: p.x * 100, label: anonymize || forced ? labels[p.id] : p.name, clickable: anonymize || !forced };
   });
-  const maxAbs = Math.max(4, ...data.map((d) => Math.abs(d.xPct))) + 0.5;
-  const xr = Math.ceil(maxAbs);
+  const maxAbs = Math.max(4, ...data.map((d) => Math.abs(d.xPct)));
+  const xr = Math.ceil((maxAbs + 0.5) / 5) * 5;
+  const xTicks = Array.from({ length: (2 * xr) / 5 + 1 }, (_, i) => -xr + i * 5);
   return (
     <figure>
       <div style={{ height }} className="relative" role="img" aria-label="Scatter plot of schools by five-year enrollment trend and financial score, divided into four quadrants">
@@ -61,7 +62,7 @@ export function MatrixChart({ points, height = 380 }: { points: MatrixPoint[]; h
             <ReferenceArea x1={0} x2={xr} y1={50} y2={100} fill="var(--good)" fillOpacity={0.05} stroke="none" />
             <ReferenceLine x={0} stroke="var(--faint)" />
             <ReferenceLine y={50} stroke="var(--faint)" />
-            <XAxis type="number" dataKey="xPct" domain={[-xr, xr]} tick={axisTick} tickFormatter={(v: number) => `${v > 0 ? "+" : ""}${v}%`}
+            <XAxis type="number" dataKey="xPct" domain={[-xr, xr]} ticks={xTicks} tick={axisTick} tickFormatter={(v: number) => `${v > 0 ? "+" : ""}${v}%`}
               label={{ value: "5-year enrollment trend (CAGR)", position: "bottom", offset: 8, fill: "var(--muted)", fontSize: 11 }} />
             <YAxis type="number" dataKey="y" domain={[0, 100]} ticks={[0, 25, 50, 75, 100]} tick={axisTick} width={40}
               label={{ value: "Financial score", angle: -90, position: "insideLeft", offset: 12, fill: "var(--muted)", fontSize: 11 }} />

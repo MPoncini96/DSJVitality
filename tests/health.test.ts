@@ -41,7 +41,15 @@ describe("tiers and quadrants", () => {
 describe("healthOf on real metrics objects", () => {
   const ids = getSchools().map((s) => s.id);
 
-  it("every parish school gets scores in 0-100, and SAMPLE inputs make them non-REAL", () => {
+  it("Enrollment Vitality is REAL for every parish school and skips SAMPLE inputs", () => {
+    for (const id of ids) {
+      const v = healthOf(schoolMetrics(id)).vitality;
+      expect(v.provenance).toBe("REAL");
+      expect(v.factors.filter((f) => f.sub !== null).every((f) => f.provenance === "REAL")).toBe(true);
+    }
+  });
+
+  it("every parish school gets scores in 0-100, and SAMPLE inputs make the composite non-REAL", () => {
     for (const id of ids) {
       const h = healthOf(schoolMetrics(id));
       for (const s of [h.vitality.score, h.financial.score, h.facilities.score, h.composite.score]) {

@@ -9,9 +9,9 @@
  *
  * Two headline scores, on purpose:
  *
- *   ENROLLMENT VITALITY: built only from inputs that have a public source
- *     (state enrollment by grade, Census population). Once those files are REAL,
- *     this score is REAL and can sit next to a school's name.
+ *   ENROLLMENT VITALITY: built only from REAL inputs (state enrollment by grade,
+ *     Census population). Any input that is still SAMPLE is skipped rather than
+ *     used, so this score is REAL whenever it exists and can sit next to a name.
  *
  *   COMPOSITE (illustrative): Vitality 50% + Financial 35% + Facilities 15%.
  *     Finance and facilities inputs have no public source, so the composite stays
@@ -96,7 +96,17 @@ export function tierOf(score: number | null): Tier | null {
   return score >= TIER_CUTS.stable ? "Stable" : score >= TIER_CUTS.watch ? "Watch" : "Turnaround candidate";
 }
 
-function combine(defs: FactorDef[], values: Record<string, { value: number | null; provenance: MixedProvenance }>): ScoreResult {
+function combine(
+  defs: FactorDef[],
+  values: Record<string, { value: number | null; provenance: MixedProvenance }>,
+  /** treat any non-REAL input as not yet available (used by Enrollment Vitality) */
+  realOnly = false
+): ScoreResult {
+  if (realOnly) {
+    values = Object.fromEntries(
+      Object.entries(values).map(([k, v]) => [k, v.provenance === "REAL" ? v : { value: null, provenance: v.provenance }])
+    );
+  }
   const present = defs.filter((d) => d.weight > 0 && values[d.key]?.value !== null && values[d.key]?.value !== undefined);
   const totalW = present.reduce((a, d) => a + d.weight, 0);
   const factors: Factor[] = defs.map((d) => {
@@ -133,7 +143,7 @@ export function healthOf(m: SchoolMetrics): Health {
     entryTrend3: { value: m.enrollment.entryTrend3, provenance: e },
     pop5to14Change5: { value: m.market.pop5to14Change5, provenance: m.market.provenance },
     capacityUtilization: { value: null, provenance: "SAMPLE" },
-  });
+  }, true);
   const f = m.finance.provenance;
   const financial = combine(FINANCIAL, {
     operatingMargin: { value: m.finance.operatingMargin, provenance: f },

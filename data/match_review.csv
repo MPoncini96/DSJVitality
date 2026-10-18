@@ -1,0 +1,26 @@
+school_id,directory_name,cde_name,former_cde_names,cds_code,public_district,years,match_basis,name_check,issues,needs_review
+holy-family,Holy Family School,Holy Family School,,43696667019169,San Jose Unified,2019-20..2025-26,CDS code (fixed list in scripts/fetch_cde_enrollment.py),same,,no
+holy-spirit,Holy Spirit School,Holy Spirit,,43696667101579,San Jose Unified,2019-20..2025-26,CDS code (fixed list in scripts/fetch_cde_enrollment.py),same,,no
+most-holy-trinity,Most Holy Trinity School,Most Holy Trinity School,,43693696979371,Alum Rock Union Elementary,2019-20..2025-26,CDS code (fixed list in scripts/fetch_cde_enrollment.py),same,,no
+queen-of-apostles,Queen of Apostles School,Queen of Apostles School,,43694196979421,Cupertino Union,2019-20..2025-26,CDS code (fixed list in scripts/fetch_cde_enrollment.py),same,,no
+sacred-heart-saratoga,Sacred Heart School,Sacred Heart School,,43696826979462,Saratoga Union Elementary,2019-20..2025-26,CDS code (fixed list in scripts/fetch_cde_enrollment.py),same,,no
+st-catherine,St. Catherine School,St. Catherine Elementary,,43695836980403,Morgan Hill Unified,2019-20..2025-26,CDS code (fixed list in scripts/fetch_cde_enrollment.py),same,,no
+st-christopher,St. Christopher School,St. Christopher Catholic School,,43696666980411,San Jose Unified,2019-20..2025-26,CDS code (fixed list in scripts/fetch_cde_enrollment.py),same,,no
+st-clare,St. Clare School,St. Clare Elementary,,43696746980429,Santa Clara Unified,2019-20..2025-26,CDS code (fixed list in scripts/fetch_cde_enrollment.py),same,,no
+st-elizabeth-seton,St. Elizabeth Seton School,St. Elizabeth Seton,,43696416979470,Palo Alto Unified,2019-20..2025-26,CDS code (fixed list in scripts/fetch_cde_enrollment.py),same,,no
+st-frances-cabrini,St. Frances Cabrini School,St. Frances Cabrini Elementary School,,43693856980445,Cambrian,2019-20..2025-26,CDS code (fixed list in scripts/fetch_cde_enrollment.py),same,,no
+st-john-the-baptist,St. John the Baptist School,St. John the Baptist Catholic,,43733877028806,Milpitas Unified,2019-20..2025-26,CDS code (fixed list in scripts/fetch_cde_enrollment.py),same,,no
+st-john-vianney,St. John Vianney School,St. John Vianney School,St. John Vianney Catholic School,43693696980452,Alum Rock Union Elementary,2019-20..2025-26,CDS code (fixed list in scripts/fetch_cde_enrollment.py),same,,no
+st-joseph-cupertino,St. Joseph of Cupertino School,St. Joseph Cupertino,St. Joseph of Cupertino Elementary; St. Joseph of Cupertino,43694196980460,Cupertino Union,2019-20..2025-26,CDS code (fixed list in scripts/fetch_cde_enrollment.py),differs,"2022-23: missing from the CDE file | 2021-22→2023-24: total changed -68%, confirm with the school | 2024-25→2025-26: total changed 34%, confirm with the school",yes
+st-joseph-mv,St. Joseph School,St Joseph Catholic School,St. Joseph Elementary; St. Joseph Elementary - Mountain View; St Joseph Mountain View; St. Joseph Catholic School,43695916980478,Mountain View Whisman,2019-20..2025-26,CDS code (fixed list in scripts/fetch_cde_enrollment.py),same,,no
+st-justin,St. Justin School,St. Justin,,43696746980494,Santa Clara Unified,2019-20..2025-26,CDS code (fixed list in scripts/fetch_cde_enrollment.py),same,"2023-24→2024-25: total changed -33%, confirm with the school",yes
+st-lawrence,St. Lawrence Elementary and Middle School,St. Lawrence School,St. Lawrence Elementary and Middle School,43696746980502,Santa Clara Unified,2019-20..2025-26,CDS code (fixed list in scripts/fetch_cde_enrollment.py),same,"2021-22→2022-23: total changed -33%, confirm with the school",yes
+st-leo,St. Leo the Great School,St. Leo the Great School,,43696666980510,San Jose Unified,2019-20..2025-26,CDS code (fixed list in scripts/fetch_cde_enrollment.py),same,,no
+st-lucy,St. Lucy School,St. Lucy Parish School,,43693936980528,Campbell Union,2019-20..2025-26,CDS code (fixed list in scripts/fetch_cde_enrollment.py),same,,no
+st-martin-of-tours,St. Martin of Tours School,St. Martin of Tours School,St. Martin of Tours,43693936980544,Campbell Union,2019-20..2025-26,CDS code (fixed list in scripts/fetch_cde_enrollment.py),same,"2019-20: reported total 345 vs grade sum 314 (difference 31, likely TK/ungraded)",yes
+st-mary-los-gatos,St. Mary of the Immaculate Conception School,St. Mary of the Immaculate Conception,,43695266980551,Los Gatos Union Elementary,2019-20..2025-26,CDS code (fixed list in scripts/fetch_cde_enrollment.py),same,,no
+st-mary-gilroy,St. Mary School - Gilroy,"St. Mary, Gilroy",,43694846966147,Gilroy Unified,2019-20..2025-26,CDS code (fixed list in scripts/fetch_cde_enrollment.py),same,,no
+st-nicholas,St. Nicholas School,St. Nicholas Elementary,,43695186980213,Los Altos Elementary,2019-20..2025-26,CDS code (fixed list in scripts/fetch_cde_enrollment.py),same,"2019-20: reported total 251 vs grade sum 232 (difference 19, likely TK/ungraded)",yes
+st-patrick,St. Patrick School,St. Patrick Elementary,,43696666980221,San Jose Unified,2019-20..2025-26,CDS code (fixed list in scripts/fetch_cde_enrollment.py),same,,no
+st-simon,St. Simon School,Saint Simon Parish School,,43694196980239,Cupertino Union,2019-20..2025-26,CDS code (fixed list in scripts/fetch_cde_enrollment.py),same,,no
+st-victor,St. Victor School,St. Victor School,,43693776980247,Berryessa Union Elementary,2019-20..2025-26,CDS code (fixed list in scripts/fetch_cde_enrollment.py),same,,no

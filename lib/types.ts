@@ -189,3 +189,15 @@ export interface TurnaroundAction {
   metric: string;
   provenance: Provenance;
 }
+
+/** Staff counts reported on the CDE Private School Affidavit. */
+export interface StaffingRow {
+  schoolId: string;
+  year: number;
+  ftTeachers: number;
+  ptTeachers: number;
+  admins: number;
+  otherStaff: number;
+  provenance: Provenance;
+  source: string;
+}

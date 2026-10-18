@@ -9,7 +9,7 @@
  * Deterministic: same SEED -> byte-identical output.
  * Run: npm run data:sample
  */
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { parseCsv, toCsv } from "../lib/csv";
 import { Rng, hashString } from "../lib/rng";
@@ -97,6 +97,30 @@ for (const s of schools) {
   }
   totals.set(s.id, tMap);
   entryByYear.set(s.id, eMap);
+}
+
+// ---------------------------------------------------------------- scale off REAL enrollment where it exists
+// For schools with REAL enrollment (data/enrollment.csv), every other SAMPLE figure
+// (budgets, assistance, pipeline, re-enrollment) is scaled off the real counts.
+// Their SAMPLE enrollment rows are still written, but the data layer drops them.
+// Years outside the real range carry the nearest real value (for scaling only).
+const realPath = join(root, "data", "enrollment.csv");
+const realRows = existsSync(realPath)
+  ? parseCsv(readFileSync(realPath, "utf8")).map((r) => ({ school_id: r.school_id, year: Number(r.year), grade: r.grade, count: Number(r.count) }))
+  : [];
+const realIds = new Set(realRows.map((r) => r.school_id));
+for (const id of realIds) {
+  const rows = realRows.filter((r) => r.school_id === id);
+  const yrs = [...new Set(rows.map((r) => r.year))].sort();
+  const tMap = new Map<number, number>(), eMap = new Map<number, number>();
+  for (let year = FIRST_YEAR; year <= LAST_YEAR; year++) {
+    const near = yrs.reduce((best, y) => (Math.abs(y - year) < Math.abs(best - year) ? y : best), yrs[0]);
+    const rs = rows.filter((r) => r.year === near);
+    tMap.set(year, rs.reduce((a, r) => a + r.count, 0));
+    eMap.set(year, rs.find((r) => r.grade === "K")?.count ?? 0);
+  }
+  totals.set(id, tMap);
+  entryByYear.set(id, eMap);
 }
 
 // ---------------------------------------------------------------- tuition
@@ -323,14 +347,18 @@ interface ReOut { school_id: string; year: number; eligible: number; reenrolled:
 const reenrollment: ReOut[] = [];
 for (const s of schools) {
   const rng = rngFor(s.id, "reenroll");
-  const rows = enrollment.filter((r) => r.school_id === s.id);
+  const rows: { year: number; grade: string; count: number }[] = realIds.has(s.id)
+    ? realRows.filter((r) => r.school_id === s.id)
+    : enrollment.filter((r) => r.school_id === s.id);
+  const lastYear = Math.max(...rows.map((r) => r.year));
   const top = s.isHS ? "12" : "8";
   const entryGrade = s.isHS ? "9" : "K";
-  for (let year = 2022; year <= LAST_YEAR; year++) {
+  for (let year = 2022; year <= lastYear; year++) {
     const prev = rows.filter((r) => r.year === year - 1);
     const cur = rows.filter((r) => r.year === year);
     const eligible = prev.filter((r) => r.grade !== top).reduce((a, r) => a + r.count, 0);
     const continuing = cur.filter((r) => r.grade !== entryGrade).reduce((a, r) => a + r.count, 0);
+    if (!eligible || !continuing) continue; // a year missing from the source
     const rate = clamp((continuing / eligible) * rng.range(0.9, 0.97), 0.7, 0.99);
     reenrollment.push({ school_id: s.id, year, eligible, reenrolled: Math.round(eligible * rate), provenance: "SAMPLE" });
   }

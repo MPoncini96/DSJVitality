@@ -9,7 +9,7 @@ A dashboard of operational health (enrollment, finance, facilities, data quality
 
 ```bash
 npm install
-npm run data      # rebuild data/schools.csv and regenerate data/sample/*
+npm run data      # rebuild schools.csv, import CDE enrollment, regenerate data/sample/*
 npm run dev       # http://localhost:3000
 npm test          # Vitest
 npm run build
@@ -33,7 +33,16 @@ npm run build
 - `data/raw/`: dated snapshots of public sources (directory, geocoder results).
 - `data/schools.csv`: built by `scripts/build_schools.ts` from the snapshots. Any value not taken directly from the directory is logged in `data/corrections.csv`.
 - `data/sample/`: SAMPLE data from `scripts/generate_sample.ts` (fixed seed, deterministic).
-- `data/<name>.csv`: REAL data. Rows here replace SAMPLE rows with the same key, so real data can arrive one school or one year at a time.
+- `data/<name>.csv`: REAL data. Rows here replace SAMPLE rows with the same key, so real data can arrive one school or one year at a time. For enrollment, a school with any REAL rows has its whole SAMPLE series dropped.
+- `data/enrollment.csv`, `data/staffing.csv`: REAL, from the CDE Private School Affidavit. To refresh each year after CDE posts the new file:
+
+  ```bash
+  pip install requests openpyxl
+  python scripts/fetch_cde_enrollment.py --out data/raw/cde_enrollment_$(date +%F).json
+  npm run data      # validates, writes enrollment.csv / staffing.csv / match_review.csv, rescales SAMPLE data
+  ```
+
+  The import stops with a list of problems if any value fails validation (non-integer counts, unknown schools, malformed years). Review `data/match_review.csv` after each refresh.
 
 All reads go through `lib/data.ts`, so moving from CSV files to a database later means changing that file only.
 

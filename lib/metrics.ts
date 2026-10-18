@@ -118,8 +118,8 @@ export interface SchoolMetrics {
 const gradeOrder = (g: string) => (g === "K" ? 0 : Number(g));
 
 function enrollmentMetrics(schoolId: string): EnrollmentMetrics {
-  const L = latestEnrollmentYear();
   const rows = getEnrollment().filter((r) => r.schoolId === schoolId);
+  const L = rows.length ? Math.max(...rows.map((r) => r.year)) : latestEnrollmentYear();
   const totals = enrollmentTotals([schoolId]);
   const t = new Map(totals.map((x) => [x.year, x.total]));
   const grades = [...new Set(rows.map((r) => r.grade))].sort((a, b) => gradeOrder(a) - gradeOrder(b));
