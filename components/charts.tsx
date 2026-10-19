@@ -162,8 +162,9 @@ export function SimpleBars({
 /** Small single-series line with its own formatter (tuition, rates, population). */
 export function SimpleLine({
   rows, format, label, sample,
-}: { rows: { x: string; y: number }[]; format: "money" | "pct" | "number"; label: string; sample: boolean }) {
-  const fmt = (v: number) => (format === "money" ? `$${Math.round(v).toLocaleString()}` : format === "pct" ? `${(v * 100).toFixed(0)}%` : Math.round(v).toLocaleString());
+}: { rows: { x: string; y: number }[]; format: "money" | "pct" | "pct2" | "number"; label: string; sample: boolean }) {
+  const fmt = (v: number) =>
+    format === "money" ? `$${Math.round(v).toLocaleString()}` : format === "pct" ? `${(v * 100).toFixed(0)}%` : format === "pct2" ? `${(v * 100).toFixed(2)}%` : Math.round(v).toLocaleString();
   const ticks = niceTicks(rows.map((r) => r.y), 4);
   const stroke = sample ? "var(--sample-mark)" : "var(--accent)";
   return (
@@ -173,9 +174,41 @@ export function SimpleLine({
           <CartesianGrid stroke="var(--grid)" vertical={false} />
           <XAxis dataKey="x" tick={axisTick} tickLine={false} axisLine={{ stroke: "var(--border)" }} />
           <YAxis tick={axisTick} axisLine={false} tickLine={false} width={56} tickFormatter={fmt}
-            domain={format === "pct" ? ["auto", "auto"] : [ticks[0], ticks.at(-1)!]} ticks={format === "pct" ? undefined : ticks} />
+            domain={format.startsWith("pct") ? ["auto", "auto"] : [ticks[0], ticks.at(-1)!]} ticks={format.startsWith("pct") ? undefined : ticks} />
           <Tooltip contentStyle={tooltipStyle} formatter={(v) => [fmt(Number(v)) + (sample ? " (simulated)" : ""), label]} />
           <Line dataKey="y" stroke={stroke} strokeWidth={2} strokeDasharray={sample ? "6 4" : undefined} dot={{ r: 3, fill: stroke, strokeWidth: 0 }} isAnimationActive={false} />
+        </LineChart>
+      </ResponsiveContainer>
+    </div>
+  );
+}
+
+/**
+ * Actual enrollment (solid) followed by projected enrollment (dashed, accent). The two
+ * series share the latest actual year so the line is continuous.
+ */
+export function ProjectionChart({
+  actual, projected, label,
+}: { actual: { year: number; total: number }[]; projected: { year: number; total: number }[]; label: string }) {
+  const last = actual.at(-1);
+  const rows = [
+    ...actual.map((a) => ({ year: a.year, actual: a.total, projected: a.year === last?.year ? a.total : undefined })),
+    ...projected.map((p) => ({ year: p.year, actual: undefined, projected: p.total })),
+  ];
+  const ticks = niceTicks([...actual, ...projected].map((r) => r.total));
+  return (
+    <div className="h-64" role="img" aria-label={label}>
+      <ResponsiveContainer width="100%" height="100%">
+        <LineChart data={rows} margin={{ top: 8, right: 12, bottom: 0, left: 0 }}>
+          <CartesianGrid stroke="var(--grid)" vertical={false} />
+          <XAxis dataKey="year" tickFormatter={sy} tick={axisTick} tickLine={false} axisLine={{ stroke: "var(--border)" }} />
+          <YAxis tick={axisTick} axisLine={false} tickLine={false} width={48} domain={[ticks[0], ticks.at(-1)!]} ticks={ticks} />
+          <Tooltip contentStyle={tooltipStyle} labelFormatter={(y) => `School year ${sy(Number(y))}`}
+            formatter={(v, name) => [Number(v).toLocaleString(), name === "projected" ? "Projected" : "Actual (CDE)"]} />
+          <Legend wrapperStyle={{ fontSize: 12, color: "var(--muted)" }} formatter={(v) => (v === "projected" ? "Projected" : "Actual (CDE)")} />
+          {last && <ReferenceLine x={last.year} stroke="var(--faint)" strokeDasharray="2 3" />}
+          <Line dataKey="actual" stroke="var(--accent)" strokeWidth={2} dot={{ r: 3, fill: "var(--accent)", strokeWidth: 0 }} isAnimationActive={false} connectNulls={false} />
+          <Line dataKey="projected" stroke="var(--accent)" strokeWidth={2} strokeDasharray="6 4" dot={{ r: 3, fill: "var(--surface)", stroke: "var(--accent)", strokeWidth: 1.5 }} isAnimationActive={false} connectNulls={false} />
         </LineChart>
       </ResponsiveContainer>
     </div>

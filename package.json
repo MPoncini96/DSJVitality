@@ -10,8 +10,10 @@
     "test": "vitest run",
     "data:schools": "tsx scripts/build_schools.ts",
     "data:sample": "tsx scripts/generate_sample.ts",
-    "data": "npm run data:schools && npm run data:cde && npm run data:sample",
-    "data:cde": "tsx scripts/import_cde_enrollment.ts"
+    "data": "npm run data:schools && npm run data:cde && npm run data:births && npm run data:tuition && npm run data:sample",
+    "data:cde": "tsx scripts/import_cde_enrollment.ts",
+    "data:births": "tsx scripts/import_births.ts",
+    "data:tuition": "tsx scripts/import_tuition.ts"
   },
   "dependencies": {
     "next": "16.4.2",

@@ -1,0 +1,211 @@
+{
+ "retrieved": "2026-10-18",
+ "confidence_key": {
+  "school": "school's own current page/PDF",
+  "school_undated": "school's own page, year not stated",
+  "third_party": "PrivateSchoolReview/Niche, unverified",
+  "not_found": "not published or unreadable"
+ },
+ "schools": {
+  "holy-family": {
+   "school_year": null,
+   "catholic_rate": null,
+   "standard_rate": null,
+   "confidence": "not_found",
+   "source_url": "https://www.holyfamilyschoolsj.com/apps/pages/index.jsp?uREC_ID=697793&type=d&pREC_ID=1132223",
+   "notes": "Rates only in linked PDFs that couldn't be read; Niche lists $16,100 (unverified)."
+  },
+  "holy-spirit": {
+   "school_year": "2026-27",
+   "catholic_rate": null,
+   "standard_rate": null,
+   "confidence": "not_found",
+   "source_url": "https://www.holyspirit-school.org/apps/pages/Tuition",
+   "notes": "2026-27 PDF linked on the page but couldn't be read; third-party figures conflict ($9,150 vs $17,400)."
+  },
+  "most-holy-trinity": {
+   "school_year": "2026-27",
+   "catholic_rate": 12900,
+   "standard_rate": 12900,
+   "confidence": "school",
+   "source_url": "https://www.mht.school/tuitionandfinancialaid",
+   "notes": "Single rate; registration $440."
+  },
+  "queen-of-apostles": {
+   "school_year": "2026-27",
+   "catholic_rate": 16650,
+   "standard_rate": 17650,
+   "confidence": "school",
+   "source_url": "https://www.qofa-school.org/admission",
+   "notes": "$1,000 parish discount per family; $1,000 sibling discount."
+  },
+  "sacred-heart-saratoga": {
+   "school_year": "2026-27",
+   "catholic_rate": 15800,
+   "standard_rate": 19500,
+   "confidence": "school",
+   "source_url": "http://school.sacredheartsaratoga.org/wp-content/uploads/2026/02/2026-2027-Sacred-Heart-Tuition-Details.pdf",
+   "notes": "Parishioner rate varies by grade (K-2 $14,100, 3-5 $15,800, 6-8 $16,350); requires $40/wk parish giving."
+  },
+  "st-catherine": {
+   "school_year": "2026-27",
+   "catholic_rate": 13675,
+   "standard_rate": 16475,
+   "confidence": "school",
+   "source_url": "https://stcatherinemh.org/tuition-fees",
+   "notes": "$2,000 off 2nd-4th child; $500 enrollment fee; service-hour and scrip obligations."
+  },
+  "st-christopher": {
+   "school_year": null,
+   "catholic_rate": null,
+   "standard_rate": null,
+   "confidence": "not_found",
+   "source_url": "https://www.stchris.us/admissions",
+   "notes": "Tuition not published; school says to call. Niche lists $16,050 (unverified)."
+  },
+  "st-clare": {
+   "school_year": "2026-27",
+   "catholic_rate": 15050,
+   "standard_rate": 15800,
+   "confidence": "school",
+   "source_url": "https://www.stclare.school/tuition-and-fees",
+   "notes": "$750 Catholic-parish discount; sibling discounts."
+  },
+  "st-elizabeth-seton": {
+   "school_year": null,
+   "catholic_rate": null,
+   "standard_rate": null,
+   "confidence": "not_found",
+   "source_url": "https://www.setonpaloalto.org/",
+   "notes": "No tuition published; heavy aid model (TADS, BASIC Fund). Niche lists $19,000 (unverified)."
+  },
+  "st-frances-cabrini": {
+   "school_year": "2026-27",
+   "catholic_rate": null,
+   "standard_rate": 15950,
+   "confidence": "school",
+   "source_url": "https://sfcschool.org/admissions/tuition-and-financial-aid",
+   "notes": "TK-5 $15,950; grades 6-8 $16,425."
+  },
+  "st-john-the-baptist": {
+   "school_year": "2026-27",
+   "catholic_rate": null,
+   "standard_rate": 17750,
+   "confidence": "school",
+   "source_url": "https://www.sjbs.org/page/tuition",
+   "notes": "Fundraising obligation $435+; service buyout $800."
+  },
+  "st-john-vianney": {
+   "school_year": "2026-27",
+   "catholic_rate": null,
+   "standard_rate": 15100,
+   "confidence": "school",
+   "source_url": "https://sjvsj.org/st-john-vianney-admissions/tuition/",
+   "notes": "Up from $13,900 in 2025-26 (+8.6%)."
+  },
+  "st-joseph-cupertino": {
+   "school_year": null,
+   "catholic_rate": null,
+   "standard_rate": 16630,
+   "confidence": "third_party",
+   "source_url": "https://www.niche.com/k12/st-joseph-of-cupertino-elementary-school-cupertino-ca/",
+   "notes": "School's 2026-27 rates are in an image only; Niche figure, no year."
+  },
+  "st-joseph-mv": {
+   "school_year": "2026-27",
+   "catholic_rate": null,
+   "standard_rate": 16900,
+   "confidence": "school",
+   "source_url": "https://www.sjmv.org/admissions",
+   "notes": "Single TK-8 rate (2026-27 Tuition Schedule doc linked from admissions page)."
+  },
+  "st-justin": {
+   "school_year": "2026-27",
+   "catholic_rate": null,
+   "standard_rate": 10300,
+   "confidence": "third_party",
+   "source_url": "https://www.privateschoolreview.com/st-justin-elementary-school-profile",
+   "notes": "School site says 'coming soon'; PrivateSchoolReview $10,300 vs Niche $13,900 \u2014 unverified."
+  },
+  "st-lawrence": {
+   "school_year": null,
+   "catholic_rate": null,
+   "standard_rate": 15400,
+   "confidence": "school_undated",
+   "source_url": "https://saintlawrenceschool.org/tuition-financial-aid",
+   "notes": "$600 deposit + $14,800 balance; year not stated (likely 2025-26)."
+  },
+  "st-leo": {
+   "school_year": "2026-27",
+   "catholic_rate": null,
+   "standard_rate": 16100,
+   "confidence": "school",
+   "source_url": "https://stleosj.org/live-pages/admissions/",
+   "notes": "Up from $15,100 (+6.6%); grades 5-8 +$500; Parish Support Grant for parishioners."
+  },
+  "st-lucy": {
+   "school_year": "2026-27",
+   "catholic_rate": 15400,
+   "standard_rate": 18200,
+   "confidence": "school",
+   "source_url": "https://www.stlucyschool.org/admissions/",
+   "notes": "$1,000 enrollment fee; 40 service hours; scrip obligation."
+  },
+  "st-martin-of-tours": {
+   "school_year": "2026-27",
+   "catholic_rate": 13970,
+   "standard_rate": 16021,
+   "confidence": "third_party",
+   "source_url": "https://www.privateschoolreview.com/st-martin-of-tours-school-profile",
+   "notes": "School site lists no amounts (all-inclusive model)."
+  },
+  "st-mary-los-gatos": {
+   "school_year": "2026-27",
+   "catholic_rate": null,
+   "standard_rate": 19000,
+   "confidence": "school",
+   "source_url": "https://smslg.org/financial-aid/",
+   "notes": "Single rate."
+  },
+  "st-mary-gilroy": {
+   "school_year": "2026-27",
+   "catholic_rate": null,
+   "standard_rate": 12300,
+   "confidence": "third_party",
+   "source_url": "https://stmarygilroy.org/tuition-and-assistance/",
+   "notes": "School's rates are in an image; $12,300 from PrivateSchoolReview."
+  },
+  "st-nicholas": {
+   "school_year": "2026-27",
+   "catholic_rate": 15500,
+   "standard_rate": 17500,
+   "confidence": "school",
+   "source_url": "https://www.stnicholaslah.com/tuition",
+   "notes": "$1,400 enrollment fee; $3,000 entrance fee for new TK/6-8."
+  },
+  "st-patrick": {
+   "school_year": "2026-27",
+   "catholic_rate": null,
+   "standard_rate": 16275,
+   "confidence": "school",
+   "source_url": "https://www.stpatrickschool.org/tuition",
+   "notes": "Published as 'cost to educate'; most families receive a Daughters of Charity discount via TADS."
+  },
+  "st-simon": {
+   "school_year": "2026-27",
+   "catholic_rate": 13575,
+   "standard_rate": 17175,
+   "confidence": "school",
+   "source_url": "https://stsimon.school/admissions-submenu-parent-only/school-fee/",
+   "notes": "$850 enrollment fee; $2,000 new middle-school surcharge."
+  },
+  "st-victor": {
+   "school_year": null,
+   "catholic_rate": null,
+   "standard_rate": 16300,
+   "confidence": "school_undated",
+   "source_url": "https://www.stvictorschool.org/tuition-and-financial-aid",
+   "notes": "Single rate, year not stated (likely 2026-27)."
+  }
+ }
+}

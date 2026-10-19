@@ -1,0 +1,20 @@
+school_id,year,tuition,parish_rate,year_stated,confidence,notes,provenance,source_url
+most-holy-trinity,2026,12900,12900,yes,school,Single rate; registration $440.,REAL,https://www.mht.school/tuitionandfinancialaid
+queen-of-apostles,2026,17650,16650,yes,school,"$1,000 parish discount per family; $1,000 sibling discount.",REAL,https://www.qofa-school.org/admission
+sacred-heart-saratoga,2026,19500,15800,yes,school,"Parishioner rate varies by grade (K-2 $14,100, 3-5 $15,800, 6-8 $16,350); requires $40/wk parish giving.",REAL,http://school.sacredheartsaratoga.org/wp-content/uploads/2026/02/2026-2027-Sacred-Heart-Tuition-Details.pdf
+st-catherine,2026,16475,13675,yes,school,"$2,000 off 2nd-4th child; $500 enrollment fee; service-hour and scrip obligations.",REAL,https://stcatherinemh.org/tuition-fees
+st-clare,2026,15800,15050,yes,school,$750 Catholic-parish discount; sibling discounts.,REAL,https://www.stclare.school/tuition-and-fees
+st-frances-cabrini,2026,15950,,yes,school,"TK-5 $15,950; grades 6-8 $16,425.",REAL,https://sfcschool.org/admissions/tuition-and-financial-aid
+st-john-the-baptist,2026,17750,,yes,school,Fundraising obligation $435+; service buyout $800.,REAL,https://www.sjbs.org/page/tuition
+st-john-vianney,2026,15100,,yes,school,"Up from $13,900 in 2025-26 (+8.6%).",REAL,https://sjvsj.org/st-john-vianney-admissions/tuition/
+st-john-vianney,2025,13900,,yes,school,Prior-year rate quoted on the 2026-27 page.,REAL,https://sjvsj.org/st-john-vianney-admissions/tuition/
+st-joseph-mv,2026,16900,,yes,school,Single TK-8 rate (2026-27 Tuition Schedule doc linked from admissions page).,REAL,https://www.sjmv.org/admissions
+st-lawrence,2025,15400,,no,school_undated,"$600 deposit + $14,800 balance; year not stated (likely 2025-26).",REAL,https://saintlawrenceschool.org/tuition-financial-aid
+st-leo,2026,16100,,yes,school,"Up from $15,100 (+6.6%); grades 5-8 +$500; Parish Support Grant for parishioners.",REAL,https://stleosj.org/live-pages/admissions/
+st-leo,2025,15100,,no,school,Prior-year rate quoted on the 2026-27 page.,REAL,https://stleosj.org/live-pages/admissions/
+st-lucy,2026,18200,15400,yes,school,"$1,000 enrollment fee; 40 service hours; scrip obligation.",REAL,https://www.stlucyschool.org/admissions/
+st-mary-los-gatos,2026,19000,,yes,school,Single rate.,REAL,https://smslg.org/financial-aid/
+st-nicholas,2026,17500,15500,yes,school,"$1,400 enrollment fee; $3,000 entrance fee for new TK/6-8.",REAL,https://www.stnicholaslah.com/tuition
+st-patrick,2026,16275,,yes,school,Published as 'cost to educate'; most families receive a Daughters of Charity discount via TADS.,REAL,https://www.stpatrickschool.org/tuition
+st-simon,2026,17175,13575,yes,school,"$850 enrollment fee; $2,000 new middle-school surcharge.",REAL,https://stsimon.school/admissions-submenu-parent-only/school-fee/
+st-victor,2026,16300,,no,school_undated,"Single rate, year not stated (likely 2026-27).",REAL,https://www.stvictorschool.org/tuition-and-financial-aid

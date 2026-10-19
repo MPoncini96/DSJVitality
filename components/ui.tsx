@@ -1,13 +1,13 @@
 import type { ReactNode } from "react";
-import { ProvenanceBadge } from "./ProvenanceBadge";
+import { ProvenanceBadge, type BadgeKind } from "./ProvenanceBadge";
 import type { MixedProvenance } from "@/lib/data";
 import type { Severity } from "@/lib/radar";
 import type { Quadrant, Tier } from "@/lib/health";
 
 export function Card({
   title, p, children, className = "", action, id,
-}: { title?: ReactNode; p?: MixedProvenance; children: ReactNode; className?: string; action?: ReactNode; id?: string }) {
-  const sample = p !== undefined && p !== "REAL";
+}: { title?: ReactNode; p?: BadgeKind; children: ReactNode; className?: string; action?: ReactNode; id?: string }) {
+  const sample = p === "SAMPLE" || p === "MIXED";
   return (
     <section aria-labelledby={id} className={`rounded-xl border border-border bg-surface p-5 ${sample ? "sample-edge" : ""} ${className}`}>
       {(title || p) && (
@@ -24,8 +24,8 @@ export function Card({
   );
 }
 
-export function Stat({ label, value, sub, p }: { label: string; value: ReactNode; sub?: ReactNode; p: MixedProvenance }) {
-  const sample = p !== "REAL";
+export function Stat({ label, value, sub, p }: { label: string; value: ReactNode; sub?: ReactNode; p: BadgeKind }) {
+  const sample = p === "SAMPLE" || p === "MIXED";
   return (
     <div className={`rounded-xl border border-border bg-surface p-4 ${sample ? "sample-edge" : ""}`}>
       <div className="flex items-start justify-between gap-2">
@@ -101,9 +101,10 @@ export function PageHeader({ title, sub, children }: { title: string; sub?: Reac
 export function SampleBanner() {
   return (
     <div role="note" className="sample-edge rounded-xl border border-sample-border bg-sample-bg px-4 py-3 text-sm text-sample-fg">
-      <strong className="font-semibold">Enrollment is real; most other numbers are simulated.</strong> Parish-school enrollment
-      and staffing come from the California Department of Education. Finance, tuition, re-enrollment, admissions, facilities
-      and data-audit figures are simulated to show how the dashboard works and are not real figures for any school.{" "}
+      <strong className="font-semibold">Enrollment, births and published tuition are real; other numbers are simulated.</strong>{" "}
+      Enrollment and staffing come from the California Department of Education, births from the California Department of
+      Public Health, and tuition from each school&apos;s own site. Budgets, assistance, re-enrollment, admissions, facilities and
+      data audits are simulated to show how the dashboard works and are not real figures for any school.{" "}
       <ProvenanceBadge p="SAMPLE" /> is simulated; <ProvenanceBadge p="REAL" /> comes from a cited public source. A ◇ next
       to a school name means that flag rests at least partly on simulated data.
     </div>

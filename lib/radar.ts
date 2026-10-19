@@ -75,6 +75,21 @@ export const RULES: Rule[] = [
     },
   },
   {
+    area: "Enrollment",
+    description: "Projected enrollment down 10%+ by the last projected year (20%+ is serious); from real births and grade data, skipped when the projection is low-confidence",
+    check: (m) => {
+      const p = m.projection;
+      if (p.change === null || p.change > -0.1 || p.lowConfidence.length) return null;
+      const last = p.years.at(-1)!;
+      return {
+        severity: p.change <= -0.2 ? "serious" : "warning",
+        title: `Projected ${pct(p.change)} by ${last.year}-${String((last.year + 1) % 100).padStart(2, "0")}`,
+        detail: `${last.total} students projected, ${last.k} in kindergarten.`,
+        provenance: p.inputs,
+      };
+    },
+  },
+  {
     area: "Finance",
     description: "Operating deficit in the last closed fiscal year (worse than -4% is critical)",
     check: (m) => {

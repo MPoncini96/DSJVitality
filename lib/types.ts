@@ -51,9 +51,35 @@ export interface EnrollmentRow {
 export interface TuitionRow {
   schoolId: string;
   year: number;
+  /** standard (non-parishioner) published rate */
   tuition: number | null;
+  /** parishioner / Catholic rate, when the school publishes one */
+  parishRate: number | null;
+  /** false when the page does not state the year (taken from the reviewer's note) */
+  yearStated: boolean;
+  notes: string;
   provenance: Provenance;
   sourceUrl: string;
+}
+
+/** A third-party tuition listing (Niche, PrivateSchoolReview). Shown labeled UNVERIFIED; never used in metrics. */
+export interface UnverifiedTuition {
+  schoolId: string;
+  schoolYear: string;
+  tuition: number;
+  parishRate: number | null;
+  notes: string;
+  sourceUrl: string;
+}
+
+/** Births near a school (CDPH, mother's residence) in a 4-mile catchment of ZIPs. */
+export interface BirthsRow {
+  schoolId: string;
+  birthYear: number;
+  births: number;
+  catchmentZips: string[];
+  provenance: Provenance;
+  source: string;
 }
 
 export type BudgetCategory =

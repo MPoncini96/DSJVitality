@@ -93,11 +93,13 @@ describe("radar rules", () => {
     Object.assign(healthy.finance, { operatingMargin: 0.03, daysCash: 120, expenseVarianceYtd: 0, receivables60PlusPct: 0.01, taDependency: 0.1 });
     Object.assign(healthy.facilities, { lifeSafetyOpen: [], fci: 0.1, overdueInspections: 0 });
     Object.assign(healthy.systems, { staleFeeds: [], feeds: healthy.systems.feeds.map((f) => ({ ...f, completenessPct: 99 })) });
+    Object.assign(healthy.projection, { change: 0.02 });
     expect(alertsFor(healthy)).toHaveLength(0);
 
     const bad = structuredClone(healthy);
     Object.assign(bad.enrollment, { change1: -0.1, consecutiveDeclines: 5, thinGrades: [{ grade: "7", count: 10 }] });
     bad.finance.daysCash = 10;
+    Object.assign(bad.projection, { change: -0.25, lowConfidence: [], years: [{ year: 2029, k: 10, total: 100 }] });
     bad.facilities.lifeSafetyOpen = [{ asset: "Fire alarm system", condition: 1 }, { asset: "Access control & cameras", condition: 2 }];
     const a = alertsFor(bad);
     expect(a.filter((x) => x.severity === "critical").length).toBeGreaterThanOrEqual(4);

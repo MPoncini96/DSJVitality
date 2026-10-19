@@ -15,7 +15,7 @@ import { Rng } from "./rng";
 import type {
   BudgetCategory, BudgetRow, CashRow, DataAuditRow, DemographicsRow, EnrollmentRow, FacilityRow, Feed,
   Governance, PipelineRow, Provenance, ReceivableRow, ReenrollmentRow, School, TuitionAssistanceRow, TuitionRow,
-  StaffingRow, TurnaroundAction, TurnaroundPhase, TurnaroundRow,
+  BirthsRow, StaffingRow, TurnaroundAction, TurnaroundPhase, TurnaroundRow, UnverifiedTuition,
 } from "./types";
 
 const dataDir = () => process.env.VITALITY_DATA_DIR ?? join(process.cwd(), "data");
@@ -134,9 +134,45 @@ export const getStaffing = () =>
 export const getTuition = () =>
   loadMerged<TuitionRow>(
     "tuition",
-    (r, f) => ({ schoolId: r.school_id, year: num(r.year), tuition: r.tuition === "" ? null : num(r.tuition), provenance: asProvenance(r.provenance, f), sourceUrl: r.source_url }),
-    (x) => `${x.schoolId}|${x.year}`
+    (r, f) => ({
+      schoolId: r.school_id, year: num(r.year), tuition: r.tuition === "" ? null : num(r.tuition),
+      parishRate: r.parish_rate ? num(r.parish_rate) : null, yearStated: r.year_stated !== "no", notes: r.notes ?? "",
+      provenance: asProvenance(r.provenance, f), sourceUrl: r.source_url,
+    }),
+    (x) => `${x.schoolId}|${x.year}`,
+    (x) => x.schoolId
   );
+
+/** Third-party tuition listings: displayed with an UNVERIFIED label only. */
+export function getTuitionUnverified(): UnverifiedTuition[] {
+  return readCsv(join(dataDir(), "tuition_unverified.csv")).map((r) => ({
+    schoolId: r.school_id, schoolYear: r.school_year, tuition: num(r.tuition), parishRate: r.parish_rate ? num(r.parish_rate) : null,
+    notes: r.notes, sourceUrl: r.source_url,
+  }));
+}
+
+/** Per-school tuition review (what was found and why). */
+export function getTuitionReview(): { schoolId: string; confidence: string; outcome: string; notes: string; sourceUrl: string }[] {
+  return readCsv(join(dataDir(), "tuition_review.csv")).map((r) => ({
+    schoolId: r.school_id, confidence: r.confidence, outcome: r.outcome, notes: r.notes, sourceUrl: r.source_url,
+  }));
+}
+
+export const getBirths = () =>
+  loadMerged<BirthsRow>(
+    "births",
+    (r, f) => ({
+      schoolId: r.school_id, birthYear: num(r.birth_year), births: num(r.births), catchmentZips: r.catchment_zips.split(" "),
+      provenance: asProvenance(r.provenance, f), source: r.source,
+    }),
+    (x) => `${x.schoolId}|${x.birthYear}`
+  );
+
+export function getCountyBirths(): { birthYear: number; births: number; provenance: Provenance }[] {
+  return readCsv(join(dataDir(), "county_births.csv")).map((r) => ({
+    birthYear: num(r.birth_year), births: num(r.births), provenance: asProvenance(r.provenance, "county_births.csv"),
+  }));
+}
 
 export const getBudget = () =>
   loadMerged<BudgetRow>(

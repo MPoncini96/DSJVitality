@@ -9,7 +9,7 @@ A dashboard of operational health (enrollment, finance, facilities, data quality
 
 ```bash
 npm install
-npm run data      # rebuild schools.csv, import CDE enrollment, regenerate data/sample/*
+npm run data      # schools, CDE enrollment, CDPH births, published tuition, then data/sample/*
 npm run dev       # http://localhost:3000
 npm test          # Vitest
 npm run build
@@ -25,7 +25,8 @@ npm run build
 ## Scores and alerts
 
 - `lib/metrics.ts` computes each school's numbers. `lib/health.ts` turns them into scores; every factor, threshold and weight is written out there and shown on the school page.
-- **Enrollment Vitality** uses only inputs that have a public source, so it can become REAL. The **Composite** adds finance and facilities and stays illustrative.
+- **Enrollment Vitality** uses only REAL inputs: 5-year enrollment trend, 1-year change, cohort retention, kindergarten share of local births (trend) and births within 4 miles (5-year change). The **Composite** adds finance and facilities and stays illustrative.
+- **Projections** (PROJECTED badge) run through 2029-30 from births already on record and real grade-to-grade rates.
 - `lib/radar.ts` holds the alert rules. Thresholds are starting points, not policy.
 - A risk flag (alert, tier, quadrant, Turnaround status) built on SAMPLE data never shows a real school name, even when the Names switch is on.
 

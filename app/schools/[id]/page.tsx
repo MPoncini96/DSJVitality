@@ -1,17 +1,17 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { GradeBandChart, SimpleBars, SimpleLine } from "@/components/charts";
+import { GradeBandChart, ProjectionChart, SimpleBars, SimpleLine } from "@/components/charts";
 import { SchoolName } from "@/components/Names";
 import { ProvenanceBadge } from "@/components/ProvenanceBadge";
 import { Tabs } from "@/components/Tabs";
 import { TrendChart } from "@/components/TrendChart";
 import { Card, Illustrative, SampleBanner, SeverityPill, Stat, TierPill } from "@/components/ui";
-import { GOVERNANCE_LABEL, getSchool, getSchools, getStaffing, provenanceOf, type MixedProvenance } from "@/lib/data";
+import { GOVERNANCE_LABEL, getSchool, getSchools, getStaffing, getTuitionReview, provenanceOf, type MixedProvenance } from "@/lib/data";
 import { dateShort, money, moneyShort, pct, schoolYear, signedPct } from "@/lib/format";
 import { COMPOSITE_WEIGHTS, TIER_CUTS, type ScoreResult } from "@/lib/health";
 import { AS_OF } from "@/lib/metrics";
 import { RULES } from "@/lib/radar";
-import { systemView } from "@/lib/system";
+import { systemView, type SchoolView } from "@/lib/system";
 
 export function generateStaticParams() {
   return getSchools("all").map((s) => ({ id: s.id }));
@@ -71,6 +71,55 @@ function ScoreHead({ label, r, illustrative }: { label: string; r: { score: numb
   );
 }
 
+function TuitionValue({ f }: { f: SchoolView["metrics"]["finance"] }) {
+  if (f.tuitionLatest) return <>{money(f.tuitionLatest.tuition)}</>;
+  if (f.tuitionUnverified) return <span className="text-muted">{money(f.tuitionUnverified.tuition)}</span>;
+  return <span className="text-muted">Not published</span>;
+}
+
+function tuitionBadge(f: SchoolView["metrics"]["finance"]) {
+  return f.tuitionLatest ? f.tuitionLatest.provenance : f.tuitionUnverified ? ("UNVERIFIED" as const) : ("REAL" as const);
+}
+
+function TuitionCard({ f, review }: { f: SchoolView["metrics"]["finance"]; review?: { outcome: string; notes: string; sourceUrl: string } }) {
+  const t = f.tuitionLatest, u = f.tuitionUnverified;
+  const prior = t ? f.tuitionSeries.find((x) => x.year === t.year - 1) : undefined;
+  const link = (href: string, text: string) => <a href={href} className="text-accent underline underline-offset-2">{text}</a>;
+  return (
+    <Card title="Published tuition" p={tuitionBadge(f)} id="fi3">
+      {t ? (
+        <div className="space-y-2 text-sm">
+          <div className="flex flex-wrap items-baseline gap-x-3">
+            <span className="text-3xl font-semibold tabular">{money(t.tuition)}</span>
+            <span className="text-muted">standard rate, {schoolYear(t.year)}{!t.yearStated && " (year not stated on the page)"}</span>
+          </div>
+          {t.parishRate !== null && t.parishRate !== t.tuition && (
+            <div>Parishioner rate <strong className="tabular">{money(t.parishRate)}</strong> <span className="text-muted">({money(t.tuition - t.parishRate)} less)</span></div>
+          )}
+          {prior && <div>Up from <strong className="tabular">{money(prior.tuition)}</strong> in {schoolYear(prior.year)} <span className="text-muted">({signedPct(t.tuition / prior.tuition - 1)})</span></div>}
+          {t.notes.replace(/Up from \$[\d,]+(?: in \d{4}-\d{2})?(?: \([^)]*\))?[.;]?\s*/, "").trim() && <p className="text-xs text-muted">{t.notes.replace(/Up from \$[\d,]+(?: in \d{4}-\d{2})?(?: \([^)]*\))?[.;]?\s*/, "").trim()}</p>}
+          {t.sourceUrl && <p className="text-xs">{link(t.sourceUrl, "School's tuition page")}</p>}
+        </div>
+      ) : u ? (
+        <div className="space-y-2 text-sm">
+          <div className="flex flex-wrap items-baseline gap-x-3">
+            <span className="text-3xl font-semibold tabular text-muted">{money(u.tuition)}</span>
+            <span className="text-muted">third-party listing{u.schoolYear ? `, ${u.schoolYear}` : ", year unknown"}</span>
+          </div>
+          <p className="text-xs text-muted">Not confirmed on the school&apos;s own site, so it is shown for reference only and left out of every median and score. {u.notes}</p>
+          {u.sourceUrl && <p className="text-xs">{link(u.sourceUrl, "Listing")}</p>}
+        </div>
+      ) : (
+        <div className="space-y-2 text-sm">
+          <p><strong>Not published.</strong> No rate could be confirmed on the school&apos;s site, and none is estimated here.</p>
+          {review?.notes && <p className="text-xs text-muted">{review.notes}</p>}
+          {review?.sourceUrl && <p className="text-xs">{link(review.sourceUrl, "Page checked")}</p>}
+        </div>
+      )}
+    </Card>
+  );
+}
+
 export default async function SchoolPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const school = getSchool(id);
@@ -89,6 +138,7 @@ export default async function SchoolPage({ params }: { params: Promise<{ id: str
     return row;
   });
   const gradesL = e.byGrade.filter((g) => g.year === L);
+  const tuitionReview = getTuitionReview().find((r) => r.schoolId === id);
   const staff = getStaffing().filter((x) => x.schoolId === id).sort((a, b) => a.year - b.year);
   const staffL = staff.at(-1);
   const alertsP = provenanceOf(v.alerts.map((a) => asP(a.provenance)));
@@ -98,7 +148,7 @@ export default async function SchoolPage({ params }: { params: Promise<{ id: str
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">
         <Stat label={`Enrollment ${schoolYear(L)}`} value={e.latest ?? "—"} sub={`${signedPct(e.change1)} vs last fall`} p={e.provenance} />
         <Stat label="Re-enrollment" value={pct(m.reenrollment.rate)} sub={m.reenrollment.year ? `for ${schoolYear(m.reenrollment.year)}` : ""} p={m.reenrollment.provenance} />
-        <Stat label={`Tuition ${f.tuitionSeries.at(-1) ? schoolYear(f.tuitionSeries.at(-1)!.year) : ""}`} value={money(f.tuitionSeries.at(-1)?.tuition)} sub="published rate" p={f.provenance} />
+        <Stat label={`Tuition${f.tuitionLatest ? ` ${schoolYear(f.tuitionLatest.year)}` : ""}`} value={<TuitionValue f={f} />} sub={f.tuitionLatest ? "school's published rate" : f.tuitionUnverified ? "third-party listing" : "school does not publish it"} p={tuitionBadge(f)} />
         <Stat label="Days cash on hand" value={f.daysCash === null ? "—" : Math.round(f.daysCash)} sub="latest month-end" p={f.provenance} />
         <Stat label="Facility condition index" value={pct(fac.fci)} sub="lower is better" p={fac.provenance} />
       </div>
@@ -107,7 +157,7 @@ export default async function SchoolPage({ params }: { params: Promise<{ id: str
         <div className="grid gap-6 lg:grid-cols-2">
           <Card title="Enrollment Vitality" p={h.vitality.provenance} id="vit-h">
             <ScoreHead label="from public data" r={h.vitality} />
-            <p className="mt-2 text-xs text-muted">Built only from REAL public inputs: state enrollment by grade (CDE). Inputs that are still simulated, such as Census population, are skipped rather than used.</p>
+            <p className="mt-2 text-xs text-muted">Built only from REAL public inputs: state enrollment by grade (CDE) and births by ZIP (CDPH). Any input that is not REAL is skipped rather than used.</p>
             <div className="mt-3"><FactorTable r={h.vitality} /></div>
           </Card>
           <Card title="Composite health" p={h.composite.provenance} id="comp-h">
@@ -204,19 +254,66 @@ export default async function SchoolPage({ params }: { params: Promise<{ id: str
         </Card>
       </div>
       <div className="grid gap-6 lg:grid-cols-3">
-        <Card title={`${e.entryGrade === "K" ? "Kindergarten" : "9th-grade"} intake`} p={e.provenance} id="en4">
-          <SimpleLine rows={e.entrySeries.map((x) => ({ x: String(x.year).slice(2), y: x.count }))} format="number" label="Entry-grade students" sample={e.provenance !== "REAL"} />
-          <p className="text-xs text-muted">3-year trend {signedPct(e.entryTrend3)} per year. Cohort retention {pct(e.cohortRetention, 1)}.</p>
+        <Card title="Births within 4 miles" p={m.market.provenance} id="en4">
+          {m.market.births.length ? (
+            <>
+              <SimpleLine rows={m.market.births.map((x) => ({ x: String(x.year).slice(2), y: x.births }))} format="number" label="Births in the school's catchment by year" sample={m.market.provenance !== "REAL"} />
+              <p className="text-xs text-muted">
+                {signedPct(m.market.births5Change)} from {(m.market.latestBirthYear ?? 0) - 5} to {m.market.latestBirthYear}. Births in a year set the
+                kindergarten pool about five years later. ZIPs: {m.market.catchmentZips.join(", ")}.
+              </p>
+            </>
+          ) : <p className="text-sm text-muted">No births data for this school.</p>}
         </Card>
-        <Card title="Re-enrollment rate" p={m.reenrollment.provenance} id="en5">
+        <Card title="Kindergarten share of local births" p={m.market.provenance} id="en5">
+          {m.market.kShare.length ? (
+            <>
+              <SimpleLine rows={m.market.kShare.map((x) => ({ x: String(x.year).slice(2), y: x.share }))} format="pct2" label="Kindergartners divided by births five years earlier" sample={m.market.provenance !== "REAL"} />
+              <p className="text-xs text-muted">
+                {m.market.kShare.at(-1)!.k} kindergartners in {schoolYear(m.market.kShare.at(-1)!.year)} from {m.market.kShare.at(-1)!.births.toLocaleString()} births
+                in {m.market.kShare.at(-1)!.year - 5}. Trend {signedPct(m.market.shareTrend)} a year. Compare over time, not across schools:
+                catchments overlap and differ in size.
+              </p>
+            </>
+          ) : <p className="text-sm text-muted">Needs REAL kindergarten and births data.</p>}
+        </Card>
+        <Card title="Re-enrollment rate" p={m.reenrollment.provenance} id="en6">
           <SimpleLine rows={m.reenrollment.series.map((x) => ({ x: String(x.year).slice(2), y: x.rate }))} format="pct" label="Re-enrollment" sample={m.reenrollment.provenance !== "REAL"} />
           <p className="text-xs text-muted">Families returning, counted in spring. No public source; this stays simulated until a school system feeds it.</p>
         </Card>
-        <Card title={`Children 5–14 in ${school.zip}`} p={m.market.provenance} id="en6">
-          <SimpleLine rows={m.market.series.map((x) => ({ x: String(x.year).slice(2), y: x.pop }))} format="number" label="Children aged 5–14" sample={m.market.provenance !== "REAL"} />
-          <p className="text-xs text-muted">5-year change {signedPct(m.market.pop5to14Change5)}. Median household income {money(m.market.medianIncome)}.</p>
-        </Card>
       </div>
+      {m.projection.years.length > 0 && (
+        <Card title={`Projected enrollment to ${schoolYear(m.projection.years.at(-1)!.year)}`} p="PROJECTED" id="en-proj">
+          <ProjectionChart actual={e.series} projected={m.projection.years} label={`Actual enrollment through ${schoolYear(L)}, then projected through ${schoolYear(m.projection.years.at(-1)!.year)}`} />
+          <div className="mt-3 relative overflow-x-auto">
+            <table className="w-full min-w-[420px] text-sm tabular">
+              <thead className="text-xs text-muted"><tr>
+                <th scope="col" className="py-1 text-left font-medium">School year</th>
+                <th scope="col" className="py-1 text-right font-medium">Kindergarten</th>
+                <th scope="col" className="py-1 text-right font-medium">Total K–8</th>
+                <th scope="col" className="py-1 text-right font-medium">vs {schoolYear(L)}</th>
+              </tr></thead>
+              <tbody>
+                {m.projection.years.map((y) => (
+                  <tr key={y.year} className="border-t border-border">
+                    <td className="py-1.5">{schoolYear(y.year)}</td><td className="py-1.5 text-right">{y.k}</td><td className="py-1.5 text-right">{y.total}</td>
+                    <td className="py-1.5 text-right">{e.latest ? signedPct(y.total / e.latest - 1) : "—"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {m.projection.lowConfidence.length > 0 && (
+            <p className="mt-2 rounded-md border border-dashed border-border px-3 py-2 text-xs text-muted">
+              <strong className="text-text">Low confidence:</strong> {m.projection.lowConfidence.join("; ")}.
+            </p>
+          )}
+          <p className="mt-2 text-xs text-muted">
+            {m.projection.method} Assumes this school keeps its recent share and continuation rates; it is a planning baseline, not a prediction
+            of what the school will do. Inputs: <ProvenanceBadge p={m.projection.inputs} compact /> state enrollment and births.
+          </p>
+        </Card>
+      )}
       <Card title="Admissions pipeline" p={m.pipeline.provenance} id="en7">
         <p className="text-sm">
           Current cycle to date: <strong className="tabular">{m.pipeline.inquiriesYtd}</strong> inquiries vs <span className="tabular">{m.pipeline.inquiriesPriorYtd}</span> at the same point last cycle ({signedPct(m.pipeline.inquiryPacing)}).
@@ -260,10 +357,7 @@ export default async function SchoolPage({ params }: { params: Promise<{ id: str
           <SimpleBars rows={f.receivablesAging} xKey="bucket" yKey="amount" format="money" label="Outstanding tuition" sample={f.provenance !== "REAL"} />
           <p className="text-xs text-muted">60+ days late: {pct(f.receivables60PlusPct, 1)} of annual billing. As of {dateShort("2026-09-30")}.</p>
         </Card>
-        <Card title="Tuition history" p={f.provenance} id="fi3">
-          <SimpleLine rows={f.tuitionSeries.map((x) => ({ x: String(x.year).slice(2), y: x.tuition }))} format="money" label="Tuition" sample={f.provenance !== "REAL"} />
-          <p className="text-xs text-muted">Published rate. Real values will come from each school&apos;s tuition page; years not published stay blank.</p>
-        </Card>
+        <TuitionCard f={f} review={tuitionReview} />
         <Card title={<>Tuition assistance <span className="font-normal text-muted">(TADS-style)</span></>} p={f.provenance} id="fi4">
           <table className="w-full text-sm tabular">
             <thead className="text-xs text-muted"><tr><th scope="col" className="py-1 text-left font-medium">Year</th><th scope="col" className="py-1 text-right font-medium">Applications</th><th scope="col" className="py-1 text-right font-medium">Awards</th><th scope="col" className="py-1 text-right font-medium">Awarded</th><th scope="col" className="py-1 text-right font-medium">Avg award</th></tr></thead>

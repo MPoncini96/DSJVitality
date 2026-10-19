@@ -127,16 +127,32 @@ for (const id of realIds) {
 interface TuitionOut { school_id: string; year: number; tuition: number; provenance: string; source_url: string }
 const tuition: TuitionOut[] = [];
 const tuitionOf = new Map<string, Map<number, number>>();
+// Anchor for scaling: a REAL published rate if there is one, else a third-party listing.
+// Parish schools get NO simulated tuition rows: where nothing is published, tuition is
+// shown blank, never invented. The simulated series below is used only to scale budgets.
+const anchorOf = new Map<string, { year: number; tuition: number }>();
+const readIf = (f: string) => (existsSync(join(root, "data", f)) ? parseCsv(readFileSync(join(root, "data", f), "utf8")) : []);
+for (const r of readIf("tuition_unverified.csv")) anchorOf.set(r.school_id, { year: Number(r.school_year.slice(0, 4)) || LAST_YEAR, tuition: Number(r.tuition) });
+for (const r of readIf("tuition.csv")) {
+  const cur = anchorOf.get(r.school_id);
+  if (!cur || Number(r.year) >= cur.year) anchorOf.set(r.school_id, { year: Number(r.year), tuition: Number(r.tuition) });
+}
 for (const s of schools) {
   const rng = rngFor(s.id, "tuition");
   const isHS = s.isHS;
   let t = isHS ? rng.range(16000, 22000) : rng.range(9000, 15000);
-  const m = new Map<number, number>();
+  const growth: number[] = [];
+  const raw = new Map<number, number>();
   for (let year = FIRST_YEAR; year <= LAST_YEAR; year++) {
-    if (year > FIRST_YEAR) t *= 1 + rng.range(0.03, 0.065);
-    const v = round(t, 50);
-    m.set(year, v);
-    tuition.push({ school_id: s.id, year, tuition: v, provenance: "SAMPLE", source_url: "" });
+    if (year > FIRST_YEAR) { const g = rng.range(0.03, 0.065); growth.push(g); t *= 1 + g; }
+    raw.set(year, t);
+  }
+  const anchor = anchorOf.get(s.id);
+  const scale = anchor ? anchor.tuition / raw.get(Math.min(Math.max(anchor.year, FIRST_YEAR), LAST_YEAR))! : 1;
+  const m = new Map<number, number>();
+  for (const [year, v] of raw) {
+    m.set(year, round(v * scale, 50));
+    if (s.governance !== "parish_elementary") tuition.push({ school_id: s.id, year, tuition: round(v * scale, 50), provenance: "SAMPLE", source_url: "" });
   }
   tuitionOf.set(s.id, m);
 }

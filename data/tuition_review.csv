@@ -1,0 +1,26 @@
+school_id,confidence,outcome,notes,source_url
+holy-family,not_found,not published or unreadable,"Rates only in linked PDFs that couldn't be read; Niche lists $16,100 (unverified).",https://www.holyfamilyschoolsj.com/apps/pages/index.jsp?uREC_ID=697793&type=d&pREC_ID=1132223
+holy-spirit,not_found,not published or unreadable,"2026-27 PDF linked on the page but couldn't be read; third-party figures conflict ($9,150 vs $17,400).",https://www.holyspirit-school.org/apps/pages/Tuition
+most-holy-trinity,school,published by school,Single rate; registration $440.,https://www.mht.school/tuitionandfinancialaid
+queen-of-apostles,school,published by school,"$1,000 parish discount per family; $1,000 sibling discount.",https://www.qofa-school.org/admission
+sacred-heart-saratoga,school,published by school,"Parishioner rate varies by grade (K-2 $14,100, 3-5 $15,800, 6-8 $16,350); requires $40/wk parish giving.",http://school.sacredheartsaratoga.org/wp-content/uploads/2026/02/2026-2027-Sacred-Heart-Tuition-Details.pdf
+st-catherine,school,published by school,"$2,000 off 2nd-4th child; $500 enrollment fee; service-hour and scrip obligations.",https://stcatherinemh.org/tuition-fees
+st-christopher,not_found,not published or unreadable,"Tuition not published; school says to call. Niche lists $16,050 (unverified).",https://www.stchris.us/admissions
+st-clare,school,published by school,$750 Catholic-parish discount; sibling discounts.,https://www.stclare.school/tuition-and-fees
+st-elizabeth-seton,not_found,not published or unreadable,"No tuition published; heavy aid model (TADS, BASIC Fund). Niche lists $19,000 (unverified).",https://www.setonpaloalto.org/
+st-frances-cabrini,school,published by school,"TK-5 $15,950; grades 6-8 $16,425.",https://sfcschool.org/admissions/tuition-and-financial-aid
+st-john-the-baptist,school,published by school,Fundraising obligation $435+; service buyout $800.,https://www.sjbs.org/page/tuition
+st-john-vianney,school,published by school,"Up from $13,900 in 2025-26 (+8.6%).",https://sjvsj.org/st-john-vianney-admissions/tuition/
+st-joseph-cupertino,third_party,third-party listing only (unverified),"School's 2026-27 rates are in an image only; Niche figure, no year.",https://www.niche.com/k12/st-joseph-of-cupertino-elementary-school-cupertino-ca/
+st-joseph-mv,school,published by school,Single TK-8 rate (2026-27 Tuition Schedule doc linked from admissions page).,https://www.sjmv.org/admissions
+st-justin,third_party,third-party listing only (unverified),"School site says 'coming soon'; PrivateSchoolReview $10,300 vs Niche $13,900 — unverified.",https://www.privateschoolreview.com/st-justin-elementary-school-profile
+st-lawrence,school_undated,"published by school, year not stated","$600 deposit + $14,800 balance; year not stated (likely 2025-26).",https://saintlawrenceschool.org/tuition-financial-aid
+st-leo,school,published by school,"Up from $15,100 (+6.6%); grades 5-8 +$500; Parish Support Grant for parishioners.",https://stleosj.org/live-pages/admissions/
+st-lucy,school,published by school,"$1,000 enrollment fee; 40 service hours; scrip obligation.",https://www.stlucyschool.org/admissions/
+st-martin-of-tours,third_party,third-party listing only (unverified),School site lists no amounts (all-inclusive model).,https://www.privateschoolreview.com/st-martin-of-tours-school-profile
+st-mary-los-gatos,school,published by school,Single rate.,https://smslg.org/financial-aid/
+st-mary-gilroy,third_party,third-party listing only (unverified),"School's rates are in an image; $12,300 from PrivateSchoolReview.",https://stmarygilroy.org/tuition-and-assistance/
+st-nicholas,school,published by school,"$1,400 enrollment fee; $3,000 entrance fee for new TK/6-8.",https://www.stnicholaslah.com/tuition
+st-patrick,school,published by school,Published as 'cost to educate'; most families receive a Daughters of Charity discount via TADS.,https://www.stpatrickschool.org/tuition
+st-simon,school,published by school,"$850 enrollment fee; $2,000 new middle-school surcharge.",https://stsimon.school/admissions-submenu-parent-only/school-fee/
+st-victor,school_undated,"published by school, year not stated","Single rate, year not stated (likely 2026-27).",https://www.stvictorschool.org/tuition-and-financial-aid

@@ -10,7 +10,7 @@
  * Two headline scores, on purpose:
  *
  *   ENROLLMENT VITALITY: built only from REAL inputs (state enrollment by grade,
- *     Census population). Any input that is still SAMPLE is skipped rather than
+ *     state births by ZIP). Any input that is still SAMPLE is skipped rather than
  *     used, so this score is REAL whenever it exists and can sit next to a name.
  *
  *   COMPOSITE (illustrative): Vitality 50% + Financial 35% + Facilities 15%.
@@ -65,8 +65,8 @@ export const VITALITY: FactorDef[] = [
   { key: "cagr5", label: "5-year enrollment trend (CAGR)", weight: 30, concern: -0.05, healthy: 0.02, format: pct, explain: "Compound annual growth over five school years." },
   { key: "change1", label: "1-year enrollment change", weight: 15, concern: -0.06, healthy: 0.03, format: pct, explain: "This fall vs. last fall." },
   { key: "cohortRetention", label: "Cohort retention", weight: 25, concern: 0.88, healthy: 0.98, format: pctPlain, explain: "Students in each grade last year who appear one grade up this year (3-year average). Computable from state grade-level data." },
-  { key: "entryTrend3", label: "Entry-grade trend (3 yr)", weight: 15, concern: -0.08, healthy: 0.03, format: pct, explain: "Kindergarten (or 9th grade) intake: it sets enrollment for years to come." },
-  { key: "pop5to14Change5", label: "Local school-age population (5 yr)", weight: 15, concern: -0.1, healthy: 0.05, format: pct, explain: "Children aged 5-14 in the school's ZIP code (ACS 5-year)." },
+  { key: "kShareTrend", label: "Kindergarten share of local births (trend)", weight: 15, concern: -0.1, healthy: 0.03, format: pct, explain: "Kindergartners / births five years earlier within 4 miles; annualized change from the first three to the last three years. Shows whether the school is winning or losing families, separate from how many children there are." },
+  { key: "births5Change", label: "Births within 4 miles (5-yr change)", weight: 15, concern: -0.2, healthy: 0.02, format: pct, explain: "CDPH births by mother's ZIP. Sets the kindergarten pool five years later." },
   { key: "capacityUtilization", label: "Capacity utilization", weight: 0, concern: 0.6, healthy: 0.9, format: pctPlain, explain: "Not published for any school; skipped until capacity is known." },
 ];
 
@@ -140,8 +140,8 @@ export function healthOf(m: SchoolMetrics): Health {
     cagr5: { value: m.enrollment.cagr5, provenance: e },
     change1: { value: m.enrollment.change1, provenance: e },
     cohortRetention: { value: m.enrollment.cohortRetention, provenance: e },
-    entryTrend3: { value: m.enrollment.entryTrend3, provenance: e },
-    pop5to14Change5: { value: m.market.pop5to14Change5, provenance: m.market.provenance },
+    kShareTrend: { value: m.market.shareTrend, provenance: m.market.provenance },
+    births5Change: { value: m.market.births5Change, provenance: m.market.provenance },
     capacityUtilization: { value: null, provenance: "SAMPLE" },
   }, true);
   const f = m.finance.provenance;
