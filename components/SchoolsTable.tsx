@@ -1,9 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { ProvenanceBadge } from "./ProvenanceBadge";
 import { SchoolLink } from "./Names";
-import type { MixedProvenance } from "@/lib/data";
 
 export interface SchoolTableRow {
   id: string;
@@ -13,31 +11,36 @@ export interface SchoolTableRow {
   latest: number | null;
   change5: number | null;
   spark: number[];
-  provenance: MixedProvenance;
+  /** tooltip text, e.g. earlier names */
+  title?: string;
 }
 
 type SortKey = "name" | "city" | "type" | "latest" | "change5";
 
-function Sparkline({ values, sample }: { values: number[]; sample: boolean }) {
+/**
+ * Sparkline. One y-scale rule for every row: zero to the school's own peak, so the
+ * height of the drop is proportional to the share of students lost. Start and end
+ * values are printed beside it.
+ */
+function Sparkline({ values }: { values: number[] }) {
   if (values.length < 2) return null;
-  const w = 72, h = 20;
-  const min = Math.min(...values), max = Math.max(...values);
-  const span = max - min || 1;
-  const pts = values.map((v, i) => `${(i / (values.length - 1)) * w},${h - 2 - ((v - min) / span) * (h - 4)}`).join(" ");
+  const w = 64, h = 20;
+  const max = Math.max(...values) || 1;
+  const pts = values.map((v, i) => `${(i / (values.length - 1)) * w},${h - 1 - (v / max) * (h - 2)}`).join(" ");
   return (
-    <svg width={w} height={h} aria-hidden="true" className="inline-block align-middle">
-      <polyline
-        points={pts}
-        fill="none"
-        stroke={sample ? "var(--sample-mark)" : "var(--accent)"}
-        strokeWidth={1.5}
-        strokeDasharray={sample ? "3 2" : undefined}
-      />
-    </svg>
+    <span className="inline-flex items-center gap-2 whitespace-nowrap">
+      <svg width={w} height={h} aria-hidden="true" className="inline-block align-middle">
+        <line x1={0} x2={w} y1={h - 1} y2={h - 1} stroke="var(--border)" />
+        <polyline points={pts} fill="none" stroke="var(--accent)" strokeWidth={1.5} />
+      </svg>
+      <span className="text-xs text-muted">{values[0]} → {values.at(-1)}</span>
+    </span>
   );
 }
 
-export function SchoolsTable({ rows, latestLabel = "Enrollment" }: { rows: SchoolTableRow[]; latestLabel?: string }) {
+export function SchoolsTable({ rows, latestLabel = "Enrollment", changeLabel = "Change", trendLabel = "Trend" }: {
+  rows: SchoolTableRow[]; latestLabel?: string; changeLabel?: string; trendLabel?: string;
+}) {
   const [sort, setSort] = useState<{ key: SortKey; dir: 1 | -1 }>({ key: "name", dir: 1 });
 
   const sorted = useMemo(() => {
@@ -76,32 +79,29 @@ export function SchoolsTable({ rows, latestLabel = "Enrollment" }: { rows: Schoo
   return (
     <div className="relative overflow-x-auto rounded-xl border border-border bg-surface">
       <table className="w-full min-w-[640px] text-sm tabular">
-        <caption className="sr-only">Schools with latest enrollment and five-year change. Column headers sort the table.</caption>
+        <caption className="sr-only">Schools with latest enrollment and change since the base year. Column headers sort the table.</caption>
         <thead className="border-b border-border text-xs text-muted">
           <tr>
             {header("name", "School")}
             {header("city", "City")}
             {header("type", "Type")}
             {header("latest", latestLabel, "right")}
-            {header("change5", "5-yr change", "right")}
-            <th scope="col" className="px-3 py-2 text-left font-medium">Trend</th>
-            <th scope="col" className="px-3 py-2 text-left font-medium">Data</th>
+            {header("change5", changeLabel, "right")}
+            <th scope="col" className="px-3 py-2 text-left font-medium">{trendLabel}</th>
           </tr>
         </thead>
         <tbody>
           {sorted.map((r) => {
-            const sample = r.provenance !== "REAL";
             return (
               <tr key={r.id} className="border-b border-border last:border-0 hover:bg-surface-2">
-                <td className="px-3 py-2"><SchoolLink id={r.id} name={r.name} /></td>
+                <td className="px-3 py-2"><span title={r.title}><SchoolLink id={r.id} name={r.name} /></span></td>
                 <td className="px-3 py-2 text-muted">{r.city}</td>
                 <td className="px-3 py-2 text-muted">{r.type}</td>
                 <td className="px-3 py-2 text-right">{r.latest?.toLocaleString() ?? "—"}</td>
                 <td className="px-3 py-2 text-right">
                   {r.change5 === null ? "—" : `${r.change5 > 0 ? "+" : r.change5 < 0 ? "\u2212" : ""}${Math.abs(r.change5 * 100).toFixed(1)}%`}
                 </td>
-                <td className="px-3 py-2"><Sparkline values={r.spark} sample={sample} /></td>
-                <td className="px-3 py-2"><ProvenanceBadge p={r.provenance} /></td>
+                <td className="px-3 py-2"><Sparkline values={r.spark} /></td>
               </tr>
             );
           })}

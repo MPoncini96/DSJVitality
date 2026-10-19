@@ -9,18 +9,19 @@
  *
  * Two headline scores, on purpose:
  *
- *   ENROLLMENT VITALITY: built only from REAL inputs (state enrollment by grade,
- *     state births by ZIP). Any input that is still SAMPLE is skipped rather than
- *     used, so this score is REAL whenever it exists and can sit next to a name.
+ *   ENROLLMENT VITALITY: for a real school, built only from REAL inputs (state
+ *     enrollment by grade, state births by ZIP). It is the only score a real school
+ *     gets, so a real school never shows two different bands.
  *
- *   COMPOSITE (illustrative): Vitality 50% + Financial 35% + Facilities 15%.
- *     Finance and facilities inputs have no public source, so the composite stays
- *     SAMPLE and is always badged as illustrative.
+ *   COMPOSITE: Vitality 50% + Financial 35% + Facilities 15%. Finance and facilities
+ *     have no public source, so the composite exists only for the fictional demo
+ *     schools, whose every input is simulated.
  *
  * Thresholds are starting points for discussion with the Department of Catholic
  * Schools, not policy.
  */
-import { provenanceOf, type MixedProvenance } from "./data";
+import { BASE_YEAR } from "./config";
+import { isDemoId, provenanceOf, type MixedProvenance } from "./data";
 import type { SchoolMetrics } from "./metrics";
 
 export type Tier = "Stable" | "Watch" | "Turnaround candidate";
@@ -56,13 +57,14 @@ export interface ScoreResult {
   provenance: MixedProvenance;
 }
 
+const BASE_LABEL = `${BASE_YEAR}-${String((BASE_YEAR + 1) % 100).padStart(2, "0")}`;
 const pct = (v: number) => `${v > 0 ? "+" : v < 0 ? "−" : ""}${Math.abs(v * 100).toFixed(1)}%`;
 const pctPlain = (v: number) => `${(v * 100).toFixed(1)}%`;
 const days = (v: number) => `${Math.round(v)} days`;
 const count = (v: number) => String(Math.round(v));
 
 export const VITALITY: FactorDef[] = [
-  { key: "cagr5", label: "5-year enrollment trend (CAGR)", weight: 30, concern: -0.05, healthy: 0.02, format: pct, explain: "Compound annual growth over five school years." },
+  { key: "cagr", label: `Enrollment trend since ${BASE_LABEL} (CAGR)`, weight: 30, concern: -0.05, healthy: 0.02, format: pct, explain: `Compound annual change from ${BASE_LABEL}, the last school year before COVID, to the latest year.` },
   { key: "change1", label: "1-year enrollment change", weight: 15, concern: -0.06, healthy: 0.03, format: pct, explain: "This fall vs. last fall." },
   { key: "cohortRetention", label: "Cohort retention", weight: 25, concern: 0.88, healthy: 0.98, format: pctPlain, explain: "Students in each grade last year who appear one grade up this year (3-year average). Computable from state grade-level data." },
   { key: "kShareTrend", label: "Kindergarten share of local births (trend)", weight: 15, concern: -0.1, healthy: 0.03, format: pct, explain: "Kindergartners / births five years earlier within 4 miles; annualized change from the first three to the last three years. Shows whether the school is winning or losing families, separate from how many children there are." },
@@ -128,22 +130,26 @@ function combine(
 
 export interface Health {
   vitality: ScoreResult;
-  financial: ScoreResult;
-  facilities: ScoreResult;
-  composite: { score: number | null; tier: Tier | null; provenance: MixedProvenance; topFactors: Factor[] };
+  /** null for real schools: no public finance or facilities data exists */
+  financial: ScoreResult | null;
+  facilities: ScoreResult | null;
+  composite: { score: number | null; tier: Tier | null; provenance: MixedProvenance; topFactors: Factor[] } | null;
   quadrant: Quadrant | null;
 }
 
 export function healthOf(m: SchoolMetrics): Health {
+  const demo = isDemoId(m.schoolId);
   const e = m.enrollment.provenance;
   const vitality = combine(VITALITY, {
-    cagr5: { value: m.enrollment.cagr5, provenance: e },
+    cagr: { value: m.enrollment.cagr, provenance: e },
     change1: { value: m.enrollment.change1, provenance: e },
     cohortRetention: { value: m.enrollment.cohortRetention, provenance: e },
     kShareTrend: { value: m.market.shareTrend, provenance: m.market.provenance },
     births5Change: { value: m.market.births5Change, provenance: m.market.provenance },
     capacityUtilization: { value: null, provenance: "SAMPLE" },
-  }, true);
+  }, !demo);
+  // A real school gets Enrollment Vitality only. Simulated finance can't lift or lower it.
+  if (!demo) return { vitality, financial: null, facilities: null, composite: null, quadrant: null };
   const f = m.finance.provenance;
   const financial = combine(FINANCIAL, {
     operatingMargin: { value: m.finance.operatingMargin, provenance: f },
@@ -172,12 +178,12 @@ export function healthOf(m: SchoolMetrics): Health {
     topFactors: all.filter((x) => x.sub !== null).sort((a, b) => b.drag - a.drag).slice(0, 3),
   };
 
-  return { vitality, financial, facilities, composite, quadrant: quadrantOf(m.enrollment.cagr5, financial.score) };
+  return { vitality, financial, facilities, composite, quadrant: quadrantOf(m.enrollment.cagr, financial.score) };
 }
 
 /**
  * Enrollment & Finance Matrix.
- *   x = 5-year enrollment CAGR (split at 0%)
+ *   x = enrollment CAGR since the base year (split at 0%)
  *   y = Financial score (split at 50)
  *   growing + strong  -> Stable
  *   growing + weak    -> Growth opportunity (demand is there; fix the finances)
@@ -186,8 +192,8 @@ export function healthOf(m: SchoolMetrics): Health {
  */
 export const MATRIX_SPLIT = { x: 0, y: 50 };
 
-export function quadrantOf(cagr5: number | null, financial: number | null): Quadrant | null {
-  if (cagr5 === null || financial === null) return null;
-  const up = cagr5 >= MATRIX_SPLIT.x, strong = financial >= MATRIX_SPLIT.y;
+export function quadrantOf(cagr: number | null, financial: number | null): Quadrant | null {
+  if (cagr === null || financial === null) return null;
+  const up = cagr >= MATRIX_SPLIT.x, strong = financial >= MATRIX_SPLIT.y;
   return up ? (strong ? "Stable" : "Growth opportunity") : strong ? "Watch" : "Turnaround candidate";
 }

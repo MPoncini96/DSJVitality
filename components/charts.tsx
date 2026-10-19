@@ -2,10 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import {
-  Bar, BarChart, CartesianGrid, Cell, Legend, Line, LineChart, ReferenceArea, ReferenceLine, ResponsiveContainer,
+  Area, Bar, BarChart, CartesianGrid, Cell, ComposedChart, Legend, Line, LineChart, ReferenceArea, ReferenceLine, ResponsiveContainer,
   Scatter, ScatterChart, Tooltip, XAxis, YAxis, ZAxis,
 } from "recharts";
-import type { MixedProvenance } from "@/lib/data";
 import type { Quadrant } from "@/lib/health";
 import { niceTicks } from "./TrendChart";
 
@@ -23,25 +22,53 @@ const QCOLOR: Record<Quadrant, string> = {
 export interface MatrixPoint {
   id: string;
   name: string;
-  x: number; // cagr5 as a fraction
+  x: number; // enrollment CAGR since the base year, as a fraction
   y: number; // financial score 0-100
   quadrant: Quadrant;
-  provenance: MixedProvenance;
 }
 
+/** X-axis range: the data plus 2 points of padding, but never wider than this. */
+const X_LIMIT: [number, number] = [-12, 10];
+
 /**
- * Enrollment & Finance Matrix. Click a dot to open the school. The financial axis is
- * simulated, which the card badge and the tooltip both say.
+ * Enrollment & Finance Matrix for the demo schools. Click a dot to open the school.
+ * Dots in the turnaround quadrant are labeled; the rest show their name on hover and
+ * in the table below. A school beyond the axis limits is drawn at the edge as an arrow.
  */
-export function MatrixChart({ points, height = 380 }: { points: MatrixPoint[]; height?: number }) {
+export function MatrixChart({ points, height = 400, baseLabel }: { points: MatrixPoint[]; height?: number; baseLabel: string }) {
   const router = useRouter();
-  const data = points.map((p) => ({ ...p, xPct: p.x * 100, label: p.name, clickable: true }));
-  const maxAbs = Math.max(4, ...data.map((d) => Math.abs(d.xPct)));
-  const xr = Math.ceil((maxAbs + 0.5) / 5) * 5;
-  const xTicks = Array.from({ length: (2 * xr) / 5 + 1 }, (_, i) => -xr + i * 5);
+  const xs = points.map((p) => p.x * 100);
+  const lo = Math.max(X_LIMIT[0], Math.floor(Math.min(0, ...xs) - 2));
+  const hi = Math.min(X_LIMIT[1], Math.ceil(Math.max(0, ...xs) + 2));
+  const data = points.map((p) => {
+    const xPct = p.x * 100;
+    const clipped = xPct < lo ? -1 : xPct > hi ? 1 : 0;
+    return { ...p, xPct, xPlot: Math.min(hi, Math.max(lo, xPct)), clipped, label: p.quadrant === "Turnaround candidate" ? p.name.replace("School ", "") : "" };
+  });
+  const step = hi - lo > 12 ? 4 : 2;
+  const xTicks: number[] = [];
+  for (let t = Math.ceil(lo / step) * step; t <= hi; t += step) xTicks.push(t);
+  const Dot = (props: { cx?: number; cy?: number; payload?: (typeof data)[number] }) => {
+    const { cx = 0, cy = 0, payload } = props;
+    if (!payload) return <g />;
+    const fill = QCOLOR[payload.quadrant];
+    return (
+      <g style={{ cursor: "pointer" }}>
+        {payload.clipped ? (
+          <path d={payload.clipped < 0 ? `M ${cx - 8} ${cy} L ${cx + 4} ${cy - 7} L ${cx + 4} ${cy + 7} Z` : `M ${cx + 8} ${cy} L ${cx - 4} ${cy - 7} L ${cx - 4} ${cy + 7} Z`}
+            fill={fill} stroke="var(--surface)" strokeWidth={1.5} />
+        ) : (
+          <circle cx={cx} cy={cy} r={7} fill={fill} stroke="var(--surface)" strokeWidth={2} />
+        )}
+        {payload.label && (
+          <text x={cx + 10} y={cy + 4} fontSize={11} fontWeight={600} fill="var(--text)">{payload.label}</text>
+        )}
+      </g>
+    );
+  };
   return (
     <figure>
-      <div style={{ height }} className="relative" role="img" aria-label="Scatter plot of schools by five-year enrollment trend and financial score, divided into four quadrants">
+      <div style={{ height }} className="relative" role="img" aria-label={`Scatter plot of ${points.length} demo schools by enrollment trend since ${baseLabel} and financial score, in four quadrants`}>
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 text-[11px] font-semibold text-muted">
           <span className="absolute left-[52px] top-5">Watch</span>
           <span className="absolute right-5 top-5">Stable</span>
@@ -49,16 +76,16 @@ export function MatrixChart({ points, height = 380 }: { points: MatrixPoint[]; h
           <span className="absolute bottom-[58px] right-5">Growth opportunity</span>
         </div>
         <ResponsiveContainer width="100%" height="100%">
-          <ScatterChart margin={{ top: 16, right: 16, bottom: 24, left: 0 }}>
+          <ScatterChart margin={{ top: 16, right: 24, bottom: 24, left: 0 }}>
             <CartesianGrid stroke="var(--grid)" />
-            <ReferenceArea x1={-xr} x2={0} y1={0} y2={50} fill="var(--critical)" fillOpacity={0.05} stroke="none" />
-            <ReferenceArea x1={-xr} x2={0} y1={50} y2={100} fill="var(--warning)" fillOpacity={0.05} stroke="none" />
-            <ReferenceArea x1={0} x2={xr} y1={0} y2={50} fill="var(--series-1)" fillOpacity={0.05} stroke="none" />
-            <ReferenceArea x1={0} x2={xr} y1={50} y2={100} fill="var(--good)" fillOpacity={0.05} stroke="none" />
-            <ReferenceLine x={0} stroke="var(--faint)" />
-            <ReferenceLine y={50} stroke="var(--faint)" />
-            <XAxis type="number" dataKey="xPct" domain={[-xr, xr]} ticks={xTicks} tick={axisTick} tickFormatter={(v: number) => `${v > 0 ? "+" : ""}${v}%`}
-              label={{ value: "5-year enrollment trend (CAGR)", position: "bottom", offset: 8, fill: "var(--muted)", fontSize: 11 }} />
+            <ReferenceArea x1={lo} x2={0} y1={0} y2={50} fill="var(--critical)" fillOpacity={0.05} stroke="none" />
+            <ReferenceArea x1={lo} x2={0} y1={50} y2={100} fill="var(--warning)" fillOpacity={0.05} stroke="none" />
+            <ReferenceArea x1={0} x2={hi} y1={0} y2={50} fill="var(--series-1)" fillOpacity={0.05} stroke="none" />
+            <ReferenceArea x1={0} x2={hi} y1={50} y2={100} fill="var(--good)" fillOpacity={0.05} stroke="none" />
+            <ReferenceLine x={0} stroke="var(--muted)" />
+            <ReferenceLine y={50} stroke="var(--muted)" />
+            <XAxis type="number" dataKey="xPlot" domain={[lo, hi]} ticks={xTicks} tick={axisTick} tickFormatter={(v: number) => `${v > 0 ? "+" : ""}${v}%`}
+              label={{ value: `Enrollment trend since ${baseLabel} (% a year)`, position: "bottom", offset: 8, fill: "var(--muted)", fontSize: 11 }} />
             <YAxis type="number" dataKey="y" domain={[0, 100]} ticks={[0, 25, 50, 75, 100]} tick={axisTick} width={40}
               label={{ value: "Financial score", angle: -90, position: "insideLeft", offset: 12, fill: "var(--muted)", fontSize: 11 }} />
             <ZAxis range={[140, 140]} />
@@ -70,13 +97,12 @@ export function MatrixChart({ points, height = 380 }: { points: MatrixPoint[]; h
                 const d = payload[0].payload as (typeof data)[number];
                 return (
                   <div style={{ ...tooltipStyle, padding: "8px 10px" }}>
-                    <div style={{ fontWeight: 600 }}>{d.label}</div>
+                    <div style={{ fontWeight: 600 }}>{d.name}</div>
                     <div>{d.quadrant}</div>
                     <div style={{ color: "var(--muted)" }}>
-                      Trend {d.xPct > 0 ? "+" : ""}{d.xPct.toFixed(1)}%/yr · Financial {d.y}
-                      {d.provenance !== "REAL" ? " · simulated" : ""}
+                      Trend {d.xPct > 0 ? "+" : ""}{d.xPct.toFixed(1)}%/yr{d.clipped ? " (off the axis)" : ""} · Financial {d.y}
                     </div>
-                    {d.clickable && <div style={{ color: "var(--muted)" }}>Click to open</div>}
+                    <div style={{ color: "var(--muted)" }}>Click to open</div>
                   </div>
                 );
               }}
@@ -84,31 +110,34 @@ export function MatrixChart({ points, height = 380 }: { points: MatrixPoint[]; h
             <Scatter
               data={data}
               isAnimationActive={false}
+              shape={Dot}
               onClick={(e) => {
                 const d = (e as unknown as { payload?: (typeof data)[number] }).payload;
-                if (d?.clickable) router.push(`/schools/${d.id}`);
+                if (d) router.push(`/demo/schools/${d.id}`);
               }}
-              style={{ cursor: "pointer" }}
             >
-              {data.map((d) => (
-                <Cell key={d.id} fill={QCOLOR[d.quadrant]} stroke="var(--surface)" strokeWidth={2} />
-              ))}
+              {data.map((d) => <Cell key={d.id} fill={QCOLOR[d.quadrant]} />)}
             </Scatter>
           </ScatterChart>
         </ResponsiveContainer>
       </div>
       <details className="mt-2 text-xs text-muted">
         <summary className="cursor-pointer">View as table</summary>
-        <table className="mt-2 tabular">
-          <thead>
-            <tr><th className="pr-6 text-left font-medium">School</th><th className="pr-6 text-right font-medium">Trend</th><th className="pr-6 text-right font-medium">Financial</th><th className="text-left font-medium">Quadrant</th></tr>
-          </thead>
-          <tbody>
-            {[...data].sort((a, b) => a.y - b.y).map((d) => (
-              <tr key={d.id}><td className="pr-6">{d.label}</td><td className="pr-6 text-right">{d.xPct.toFixed(1)}%</td><td className="pr-6 text-right">{d.y}</td><td>{d.quadrant}</td></tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="relative overflow-x-auto">
+          <table className="mt-2 tabular">
+            <thead>
+              <tr><th className="pr-6 text-left font-medium">School</th><th className="pr-6 text-right font-medium">Trend</th><th className="pr-6 text-right font-medium">Financial</th><th className="text-left font-medium">Quadrant</th></tr>
+            </thead>
+            <tbody>
+              {[...data].sort((a, b) => a.y - b.y).map((d) => (
+                <tr key={d.id}>
+                  <td className="pr-6"><a href={`/demo/schools/${d.id}`} className="underline underline-offset-2">{d.name}</a></td>
+                  <td className="pr-6 text-right">{d.xPct > 0 ? "+" : ""}{d.xPct.toFixed(1)}%</td><td className="pr-6 text-right">{d.y}</td><td>{d.quadrant}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </details>
     </figure>
   );
@@ -184,32 +213,32 @@ export function SimpleLine({
 }
 
 /**
- * Actual enrollment (solid) followed by projected enrollment (dashed, accent). The two
- * series share the latest actual year so the line is continuous.
+ * Actual enrollment (solid line), then a shaded scenario range (low to high). No
+ * single projected line is drawn, on purpose.
  */
-export function ProjectionChart({
-  actual, projected, label,
-}: { actual: { year: number; total: number }[]; projected: { year: number; total: number }[]; label: string }) {
+export function ScenarioChart({
+  actual, range, label,
+}: { actual: { year: number; total: number }[]; range: { year: number; low: number; high: number }[]; label: string }) {
   const last = actual.at(-1);
   const rows = [
-    ...actual.map((a) => ({ year: a.year, actual: a.total, projected: a.year === last?.year ? a.total : undefined })),
-    ...projected.map((p) => ({ year: p.year, actual: undefined, projected: p.total })),
+    ...actual.map((a) => ({ year: a.year, actual: a.total, range: a.year === last?.year ? [a.total, a.total] : undefined })),
+    ...range.map((p) => ({ year: p.year, actual: undefined, range: [p.low, p.high] })),
   ];
-  const ticks = niceTicks([...actual, ...projected].map((r) => r.total));
+  const ticks = niceTicks([...actual.map((r) => r.total), ...range.flatMap((r) => [r.low, r.high])]);
   return (
     <div className="h-64" role="img" aria-label={label}>
       <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={rows} margin={{ top: 8, right: 12, bottom: 0, left: 0 }}>
+        <ComposedChart data={rows} margin={{ top: 8, right: 12, bottom: 0, left: 0 }}>
           <CartesianGrid stroke="var(--grid)" vertical={false} />
           <XAxis dataKey="year" tickFormatter={sy} tick={axisTick} tickLine={false} axisLine={{ stroke: "var(--border)" }} />
           <YAxis tick={axisTick} axisLine={false} tickLine={false} width={48} domain={[ticks[0], ticks.at(-1)!]} ticks={ticks} />
           <Tooltip contentStyle={tooltipStyle} labelFormatter={(y) => `School year ${sy(Number(y))}`}
-            formatter={(v, name) => [Number(v).toLocaleString(), name === "projected" ? "Projected" : "Actual (CDE)"]} />
-          <Legend wrapperStyle={{ fontSize: 12, color: "var(--muted)" }} formatter={(v) => (v === "projected" ? "Projected" : "Actual (CDE)")} />
-          {last && <ReferenceLine x={last.year} stroke="var(--faint)" strokeDasharray="2 3" />}
+            formatter={(v, name) => [Array.isArray(v) ? `${Number(v[0]).toLocaleString()}–${Number(v[1]).toLocaleString()}` : Number(v).toLocaleString(), name === "range" ? "Scenario range" : "Actual"]} />
+          <Legend wrapperStyle={{ fontSize: 12, color: "var(--muted)" }} formatter={(v) => (v === "range" ? "Scenario range (not a forecast)" : "Actual")} />
+          {last && <ReferenceLine x={last.year} stroke="var(--muted)" strokeDasharray="2 3" />}
+          <Area dataKey="range" stroke="var(--accent)" strokeDasharray="4 3" fill="var(--accent)" fillOpacity={0.15} isAnimationActive={false} connectNulls={false} />
           <Line dataKey="actual" stroke="var(--accent)" strokeWidth={2} dot={{ r: 3, fill: "var(--accent)", strokeWidth: 0 }} isAnimationActive={false} connectNulls={false} />
-          <Line dataKey="projected" stroke="var(--accent)" strokeWidth={2} strokeDasharray="6 4" dot={{ r: 3, fill: "var(--surface)", stroke: "var(--accent)", strokeWidth: 1.5 }} isAnimationActive={false} connectNulls={false} />
-        </LineChart>
+        </ComposedChart>
       </ResponsiveContainer>
     </div>
   );

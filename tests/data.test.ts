@@ -3,10 +3,11 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import {
-  anonymousLabels, clearCache, consecutiveDeclines, enrollmentTotals, getBudget, getCash, getDataAudit, getDemographics,
-  getEnrollment, getFacilities, getPipeline, getReceivables, getReenrollment, getSchools, getTuition, getTuitionAssistance,
-  getTurnaround, getTurnaroundActions, median, provenanceOf, systemTrend,
+  clearCache, consecutiveDeclines, enrollmentTotals, getBirths, getBudget, getCash, getDataAudit, getEnrollment, getFacilities,
+  getPipeline, getReceivables, getReenrollment, getSchool, getSchools, getTuition, getTuitionAssistance,
+  getTurnaround, getTurnaroundActions, isDemoId, median, provenanceOf, systemTrend,
 } from "../lib/data";
+import { displayName } from "../lib/names";
 import { Rng } from "../lib/rng";
 
 const DATA = join(__dirname, "..", "data");
@@ -33,6 +34,20 @@ describe("schools", () => {
     }
   });
 
+  it("display names follow CDE, disambiguated, with other names kept for the tooltip", () => {
+    expect(getSchool("st-lawrence")!.name).toBe("St. Lawrence School");
+    expect(getSchool("st-lawrence")!.formerNames).toContain("St. Lawrence Elementary and Middle School");
+    expect(getSchool("st-joseph-mv")!.name).toBe("St. Joseph School (Mountain View)");
+    expect(getSchool("st-joseph-cupertino")!.name).toBe("St. Joseph of Cupertino School");
+  });
+
+  it("the demo system is 25 fictional schools, School A..Y, separate from the real list", () => {
+    const demo = getSchools("demo");
+    expect(demo.map((s) => s.name)).toEqual("ABCDEFGHIJKLMNOPQRSTUVWXY".split("").map((l) => `School ${l}`));
+    expect(demo.every((s) => s.demo && isDemoId(s.id))).toBe(true);
+    expect(getSchools("all").some((s) => s.demo || isDemoId(s.id))).toBe(false);
+  });
+
   it("the one ZIP missing from the directory is marked as geocoder-filled", () => {
     const filled = getSchools("all").filter((s) => s.zipSource === "geocoder");
     expect(filled.map((s) => s.id)).toEqual(["st-mary-los-gatos"]);
@@ -41,20 +56,28 @@ describe("schools", () => {
 
 describe("provenance", () => {
   const datasets = {
-    getEnrollment, getTuition, getBudget, getTuitionAssistance, getPipeline, getFacilities, getDataAudit, getDemographics,
+    getEnrollment, getTuition, getBirths, getBudget, getTuitionAssistance, getPipeline, getFacilities, getDataAudit,
     getReenrollment, getCash, getReceivables, getTurnaround, getTurnaroundActions,
   };
   for (const [name, fn] of Object.entries(datasets)) {
-    it(`${name}: every row is tagged REAL or SAMPLE and covers known schools`, () => {
-      const rows = fn() as { provenance: string; schoolId?: string }[];
+    it(`${name}: SAMPLE rows belong only to demo schools, REAL rows only to real schools`, () => {
+      const rows = fn() as { provenance: string; schoolId: string }[];
       expect(rows.length).toBeGreaterThan(0);
-      const ids = new Set(getSchools("all").map((s) => s.id));
+      const real = new Set(getSchools("all").map((s) => s.id)), demo = new Set(getSchools("demo").map((s) => s.id));
       for (const r of rows) {
-        expect(["REAL", "SAMPLE"]).toContain(r.provenance);
-        if (r.schoolId) expect(ids.has(r.schoolId)).toBe(true);
+        if (r.provenance === "SAMPLE") expect(demo.has(r.schoolId)).toBe(true);
+        else { expect(r.provenance).toBe("REAL"); expect(real.has(r.schoolId)).toBe(true); }
       }
     });
   }
+
+  it("displayName: real names only in REAL contexts; demo names anywhere", () => {
+    const real = getSchool("holy-family")!, demo = getSchools("demo")[0];
+    expect(displayName(real, "REAL")).toBe("Holy Family School");
+    expect(() => displayName(real, "SAMPLE")).toThrow();
+    expect(() => displayName(real, "MIXED")).toThrow();
+    expect(displayName(demo, "SAMPLE")).toBe("School A");
+  });
 
   it("provenanceOf: REAL only when every row is REAL", () => {
     expect(provenanceOf([{ provenance: "REAL" }])).toBe("REAL");
@@ -63,30 +86,24 @@ describe("provenance", () => {
     expect(provenanceOf([])).toBe("SAMPLE");
   });
 
-  it("a REAL row in data/<name>.csv replaces the matching SAMPLE row (and REAL enrollment replaces a school's whole SAMPLE series)", () => {
+  it("refuses a simulated row for a real school, and a REAL row for a demo school", () => {
     const dir = mkdtempSync(join(tmpdir(), "vitality-"));
     mkdirSync(join(dir, "sample"));
     writeFileSync(join(dir, "schools.csv"), readFileSync(join(DATA, "schools.csv")));
-    writeFileSync(
-      join(dir, "sample", "enrollment.csv"),
-      "school_id,year,grade,count,provenance,source\nst-victor,2025,K,10,SAMPLE,gen\nst-victor,2025,1,12,SAMPLE,gen\n"
-    );
-    writeFileSync(join(dir, "enrollment.csv"), "school_id,year,grade,count,provenance,source\nst-victor,2025,K,31,REAL,CDE\n");
+    writeFileSync(join(dir, "sample", "enrollment.csv"), "school_id,year,grade,count,provenance,source\nst-victor,2025,K,10,SAMPLE,gen\n");
     process.env.VITALITY_DATA_DIR = dir;
     clearCache();
-    const rows = getEnrollment();
-    expect(rows.find((r) => r.grade === "K")).toMatchObject({ count: 31, provenance: "REAL" });
-    // Enrollment is grouped by school: once a school has any REAL rows, its SAMPLE rows
-    // are dropped entirely, so the simulated grade 1 does not get stitched onto real data.
-    const [total] = enrollmentTotals(["st-victor"]);
-    expect(total).toMatchObject({ total: 31, provenance: "REAL" });
-    expect(rows.find((r) => r.grade === "1")).toBeUndefined();
+    expect(() => getEnrollment()).toThrow(/simulated row for real school/);
+    writeFileSync(join(dir, "sample", "enrollment.csv"), "school_id,year,grade,count,provenance,source\ndemo-a,2025,K,10,SAMPLE,gen\n");
+    writeFileSync(join(dir, "enrollment.csv"), "school_id,year,grade,count,provenance,source\ndemo-b,2025,K,31,REAL,CDE\n");
+    clearCache();
+    expect(() => getEnrollment()).toThrow(/REAL row for demo school/);
   });
 
   it("rejects a REAL tag inside data/sample/", () => {
     const dir = mkdtempSync(join(tmpdir(), "vitality-"));
     mkdirSync(join(dir, "sample"));
-    writeFileSync(join(dir, "sample", "tuition.csv"), "school_id,year,tuition,provenance,source_url\nst-victor,2025,1,REAL,x\n");
+    writeFileSync(join(dir, "sample", "tuition.csv"), "school_id,year,tuition,provenance,source_url\ndemo-a,2025,1,REAL,x\n");
     process.env.VITALITY_DATA_DIR = dir;
     clearCache();
     expect(() => getTuition()).toThrow(/only SAMPLE rows/);
@@ -102,10 +119,9 @@ describe("REAL enrollment", () => {
       expect(mine.every((r) => r.provenance === "REAL")).toBe(true);
     }
   });
-  it("schools without REAL data keep their SAMPLE series", () => {
-    const rows = getEnrollment().filter((r) => r.schoolId === "archbishop-mitty");
-    expect(rows.length).toBeGreaterThan(0);
-    expect(rows.every((r) => r.provenance === "SAMPLE")).toBe(true);
+  it("real schools without public data get no simulated data at all", () => {
+    expect(getEnrollment().some((r) => r.schoolId === "archbishop-mitty")).toBe(false);
+    expect(getBudget().some((r) => !isDemoId(r.schoolId))).toBe(false);
   });
   it("spot-check against the source file: Holy Family 2025-26 total is 218", () => {
     const t = enrollmentTotals(["holy-family"]).find((x) => x.year === 2025)!;
@@ -141,24 +157,8 @@ describe("derived metrics", () => {
     expect(median([])).toBeNull();
   });
 
-  it("anonymous labels are unique and not in alphabetical order of names", () => {
-    const schools = getSchools("all");
-    const labels = anonymousLabels(schools);
-    expect(new Set(Object.values(labels)).size).toBe(schools.length);
-    const alpha = [...schools].sort((a, b) => a.name.localeCompare(b.name)).map((s) => labels[s.id]);
-    expect(alpha).not.toEqual([...alpha].sort((a, b) => a.localeCompare(b, undefined, { numeric: true })));
-  });
-
   it("seeded RNG is deterministic", () => {
     const a = new Rng(42), b = new Rng(42);
     expect([a.float(), a.float(), a.float()]).toEqual([b.float(), b.float(), b.float()]);
-  });
-});
-
-describe("anonymous labels", () => {
-  it("parish elementary schools get contiguous letters A..Y", () => {
-    const labels = anonymousLabels(getSchools("all"));
-    const parish = getSchools().map((s) => labels[s.id].replace("School ", "")).sort();
-    expect(parish).toEqual("ABCDEFGHIJKLMNOPQRSTUVWXY".split(""));
   });
 });

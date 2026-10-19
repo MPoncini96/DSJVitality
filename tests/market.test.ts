@@ -26,19 +26,28 @@ describe("kindergarten share and projection", () => {
     expect(k).toMatchObject({ k: 18, births: 3702 });
     expect(k.share).toBeCloseTo(18 / 3702, 10);
   });
-  it("projects 2026-27 through 2029-30, the last year births allow", () => {
-    const p = schoolMetrics("holy-family").projection;
-    expect(p.years.map((y) => y.year)).toEqual([2026, 2027, 2028, 2029]);
-    const m = schoolMetrics("holy-family").market;
-    expect(p.years.at(-1)!.k).toBe(Math.round(m.share3! * 3550)); // births 2024
-    expect(p.inputs).toBe("REAL");
-  });
-  it("continuation ratios are capped and small schools are flagged low-confidence", () => {
-    for (const id of parish()) for (const r of schoolMetrics(id).projection.ratios) {
-      expect(r.ratio).toBeGreaterThanOrEqual(0.75);
-      expect(r.ratio).toBeLessThanOrEqual(1.25);
+  it("scenarios run 2026-27 through 2029-30 as a low-high range from REAL inputs", () => {
+    const sc = schoolMetrics("holy-family").scenario;
+    expect(sc.years.map((y) => y.year)).toEqual([2026, 2027, 2028, 2029]);
+    expect(sc.inputs).toBe("REAL");
+    for (const y of sc.years) {
+      expect(y.low).toBeLessThanOrEqual(y.high);
+      expect(y.low).toBe(Math.min(y.trend, y.births));
+      expect(y.high).toBe(Math.max(y.trend, y.births));
     }
-    expect(schoolMetrics("st-lawrence").projection.lowConfidence).toContain("fewer than 100 students");
+  });
+  it("the trend scenario uses the capped CAGR since 2019-20, not a single year", () => {
+    // St. Lawrence: -19%/yr since 2019-20 and -17% last year; the scenario caps the trend at -6%/yr
+    const m = schoolMetrics("st-lawrence");
+    expect(m.enrollment.cagr!).toBeLessThan(-0.06);
+    expect(m.scenario.trendRate).toBe(-0.06);
+    expect(m.scenario.years[0].trend).toBe(Math.round(m.enrollment.latest! * 0.94));
+  });
+  it("trend since 2019-20 spans six school years (Holy Family 281 -> 218)", () => {
+    const e = schoolMetrics("holy-family").enrollment;
+    expect(e.baseYear).toBe(2019);
+    expect(e.changeSinceBase).toBeCloseTo(218 / 281 - 1, 10);
+    expect(e.cagr).toBeCloseTo((218 / 281) ** (1 / 6) - 1, 10);
   });
   it("Enrollment Vitality uses births and kindergarten share, not population or entry trend", () => {
     const keys = VITALITY.map((f) => f.key);
@@ -61,7 +70,7 @@ describe("tuition", () => {
     expect(unverified).toEqual(["st-joseph-cupertino", "st-justin", "st-martin-of-tours", "st-mary-gilroy"]);
     for (const id of unverified) expect(real.some((t) => t.schoolId === id)).toBe(false);
   });
-  it("parish schools never get simulated tuition; unpublished stays blank", () => {
+  it("real schools never get simulated tuition; unpublished stays blank", () => {
     for (const id of parish()) expect(getTuition().some((t) => t.schoolId === id && t.provenance === "SAMPLE")).toBe(false);
     for (const id of ["holy-family", "holy-spirit", "st-christopher", "st-elizabeth-seton"]) {
       expect(getTuition().some((t) => t.schoolId === id)).toBe(false);

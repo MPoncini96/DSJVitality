@@ -20,6 +20,7 @@ export interface Alert {
 export const SEVERITY_ORDER: Record<Severity, number> = { critical: 0, serious: 1, warning: 2 };
 
 const pct = (v: number) => `${v > 0 ? "+" : v < 0 ? "−" : ""}${Math.abs(v * 100).toFixed(1)}%`;
+const signedPctLong = (v: number | null) => (v === null ? "n/a" : pct(v));
 const money = (v: number) => `$${Math.round(v).toLocaleString()}`;
 
 export interface Rule {
@@ -28,83 +29,90 @@ export interface Rule {
   check: (m: SchoolMetrics) => Omit<Alert, "schoolId" | "area"> | null;
 }
 
+/**
+ * Enrollment thresholds. Critical and serious are set high on purpose, so the Radar
+ * headline names the few schools that need a conversation now (about five of 25), and
+ * everything else that used to be flagged becomes a watch item.
+ *   critical: CAGR since the base year <= -6%, or a one-year drop of 12% or more
+ *   serious:  3+ straight years of decline AND CAGR since the base year <= -4.5%
+ *             (the suggested -3% put 7 schools in the headline; -4.5% puts 5)
+ */
+export const THRESHOLDS = {
+  criticalCagr: -0.06,
+  criticalChange1: -0.12,
+  seriousDeclines: 3,
+  seriousCagr: -0.045,
+  watchChange1: -0.05,
+};
+
+const since = (m: SchoolMetrics) => `${m.enrollment.baseYear}-${String((m.enrollment.baseYear + 1) % 100).padStart(2, "0")}`;
+
 export const RULES: Rule[] = [
   {
     area: "Enrollment",
-    description: "Fall enrollment down 5% or more vs. last year (8%+ is critical)",
+    description: `Long decline: enrollment trend since the base year at ${THRESHOLDS.criticalCagr * 100}% a year or worse is critical; ${THRESHOLDS.seriousDeclines}+ straight years of decline with a trend of ${THRESHOLDS.seriousCagr * 100}% or worse is serious; ${THRESHOLDS.seriousDeclines}+ straight years of decline otherwise is a watch item`,
+    check: (m) => {
+      const c = m.enrollment.cagr, n = m.enrollment.consecutiveDeclines;
+      if (c === null) return null;
+      const detail = `${m.enrollment.latest} students now; ${signedPctLong(m.enrollment.changeSinceBase)} since ${since(m)}${n ? `, ${n} straight year${n > 1 ? "s" : ""} of decline` : ""}.`;
+      if (c <= THRESHOLDS.criticalCagr) return { severity: "critical", title: `Enrollment ${pct(c)} a year since ${since(m)}`, detail, provenance: m.enrollment.provenance };
+      if (n >= THRESHOLDS.seriousDeclines && c <= THRESHOLDS.seriousCagr) return { severity: "serious", title: `${n} straight years of decline, ${pct(c)} a year since ${since(m)}`, detail, provenance: m.enrollment.provenance };
+      if (n >= THRESHOLDS.seriousDeclines) return { severity: "warning", title: `${n} straight years of decline`, detail, provenance: m.enrollment.provenance };
+      return null;
+    },
+  },
+  {
+    area: "Enrollment",
+    description: `One-year drop: down ${-THRESHOLDS.criticalChange1 * 100}% or more vs. last year is critical; ${-THRESHOLDS.watchChange1 * 100}% or more is a watch item`,
     check: (m) => {
       const c = m.enrollment.change1;
-      if (c === null || c > -0.05) return null;
-      return { severity: c <= -0.08 ? "critical" : "serious", title: `Enrollment ${pct(c)} vs. last fall`, detail: `${m.enrollment.latest} students this fall.`, provenance: m.enrollment.provenance };
+      if (c === null || c > THRESHOLDS.watchChange1) return null;
+      return { severity: c <= THRESHOLDS.criticalChange1 ? "critical" : "warning", title: `Enrollment ${pct(c)} vs. last year`, detail: `${m.enrollment.latest} students.`, provenance: m.enrollment.provenance };
     },
   },
   {
     area: "Enrollment",
-    description: "Three or more consecutive years of decline (five or more is critical)",
-    check: (m) => {
-      const n = m.enrollment.consecutiveDeclines;
-      if (n < 3) return null;
-      return { severity: n >= 5 ? "critical" : "serious", title: `${n} straight years of decline`, detail: `5-year trend ${m.enrollment.cagr5 === null ? "n/a" : pct(m.enrollment.cagr5)} per year.`, provenance: m.enrollment.provenance };
-    },
-  },
-  {
-    area: "Enrollment",
-    description: "Any grade under 15 students (single-classroom viability)",
+    description: "Any grade under 15 students (single-classroom viability); watch item",
     check: (m) => {
       const t = m.enrollment.thinGrades;
       if (!t.length) return null;
-      return { severity: t.some((g) => g.count < 12) ? "serious" : "warning", title: `${t.length} grade${t.length > 1 ? "s" : ""} under 15 students`, detail: t.map((g) => `Grade ${g.grade}: ${g.count}`).join(", "), provenance: m.enrollment.provenance };
+      return { severity: "warning", title: `${t.length} grade${t.length > 1 ? "s" : ""} under 15 students`, detail: t.map((g) => `Grade ${g.grade}: ${g.count}`).join(", "), provenance: m.enrollment.provenance };
     },
   },
   {
     area: "Enrollment",
-    description: "Re-enrollment rate under 88% (under 85% is serious)",
+    description: "Re-enrollment rate under 88% (internal data; demo schools only); watch item",
     check: (m) => {
       const r = m.reenrollment.rate;
       if (r === null || r >= 0.88) return null;
-      return { severity: r < 0.85 ? "serious" : "warning", title: `Re-enrollment ${(r * 100).toFixed(0)}%`, detail: m.reenrollment.priorRate === null ? "" : `Prior year ${(m.reenrollment.priorRate * 100).toFixed(0)}%.`, provenance: m.reenrollment.provenance };
+      return { severity: "warning", title: `Re-enrollment ${(r * 100).toFixed(0)}%`, detail: m.reenrollment.priorRate === null ? "" : `Prior year ${(m.reenrollment.priorRate * 100).toFixed(0)}%.`, provenance: m.reenrollment.provenance };
     },
   },
   {
     area: "Enrollment",
-    description: "New-family inquiries 10%+ behind the same point last cycle (20%+ is serious)",
+    description: "New-family inquiries 10%+ behind the same point last cycle (internal data; demo schools only); watch item",
     check: (m) => {
       const p = m.pipeline.inquiryPacing;
       if (p === null || p > -0.1) return null;
-      return { severity: p <= -0.2 ? "serious" : "warning", title: `Inquiries ${pct(p)} vs. last cycle`, detail: `${m.pipeline.inquiriesYtd} vs. ${m.pipeline.inquiriesPriorYtd} at the same point.`, provenance: m.pipeline.provenance };
-    },
-  },
-  {
-    area: "Enrollment",
-    description: "Projected enrollment down 10%+ by the last projected year (20%+ is serious); from real births and grade data, skipped when the projection is low-confidence",
-    check: (m) => {
-      const p = m.projection;
-      if (p.change === null || p.change > -0.1 || p.lowConfidence.length) return null;
-      const last = p.years.at(-1)!;
-      return {
-        severity: p.change <= -0.2 ? "serious" : "warning",
-        title: `Projected ${pct(p.change)} by ${last.year}-${String((last.year + 1) % 100).padStart(2, "0")}`,
-        detail: `${last.total} students projected, ${last.k} in kindergarten.`,
-        provenance: p.inputs,
-      };
+      return { severity: "warning", title: `Inquiries ${pct(p)} vs. last cycle`, detail: `${m.pipeline.inquiriesYtd} vs. ${m.pipeline.inquiriesPriorYtd} at the same point.`, provenance: m.pipeline.provenance };
     },
   },
   {
     area: "Finance",
-    description: "Operating deficit in the last closed fiscal year (worse than -4% is critical)",
+    description: "Operating deficit in the last closed fiscal year (-3% or worse is serious, -6% or worse critical)",
     check: (m) => {
       const v = m.finance.operatingMargin;
       if (v === null || v >= 0) return null;
-      return { severity: v < -0.04 ? "critical" : "warning", title: `Operating margin ${pct(v)} (FY${m.finance.closedFy})`, detail: m.finance.revenue && m.finance.expense ? `Deficit of ${money(m.finance.expense - m.finance.revenue)}.` : "", provenance: m.finance.provenance };
+      return { severity: v <= -0.06 ? "critical" : v <= -0.03 ? "serious" : "warning", title: `Operating margin ${pct(v)} (FY${m.finance.closedFy})`, detail: m.finance.revenue && m.finance.expense ? `Deficit of ${money(m.finance.expense - m.finance.revenue)}.` : "", provenance: m.finance.provenance };
     },
   },
   {
     area: "Finance",
-    description: "Under 45 days of cash on hand (under 20 is critical)",
+    description: "Under 45 days of cash on hand (under 30 is serious, under 20 critical)",
     check: (m) => {
       const d = m.finance.daysCash;
       if (d === null || d >= 45) return null;
-      return { severity: d < 20 ? "critical" : "serious", title: `${Math.round(d)} days of cash on hand`, detail: "Latest month-end balance vs. average daily expense.", provenance: m.finance.provenance };
+      return { severity: d < 20 ? "critical" : d < 30 ? "serious" : "warning", title: `${Math.round(d)} days of cash on hand`, detail: "Latest month-end balance vs. average daily expense.", provenance: m.finance.provenance };
     },
   },
   {
@@ -146,11 +154,11 @@ export const RULES: Rule[] = [
   },
   {
     area: "Facilities",
-    description: "Facility condition index above 30%",
+    description: "Facility condition index above 30% (40% or more is serious)",
     check: (m) => {
       const v = m.facilities.fci;
       if (v === null || v <= 0.3) return null;
-      return { severity: "serious", title: `Facility condition index ${(v * 100).toFixed(0)}%`, detail: `${money(m.facilities.deferredCost)} in poor-condition assets.`, provenance: m.facilities.provenance };
+      return { severity: v >= 0.4 ? "serious" : "warning", title: `Facility condition index ${(v * 100).toFixed(0)}%`, detail: `${money(m.facilities.deferredCost)} in poor-condition assets.`, provenance: m.facilities.provenance };
     },
   },
   {
@@ -181,6 +189,8 @@ export const RULES: Rule[] = [
 export function alertsFor(m: SchoolMetrics): Alert[] {
   return RULES.flatMap((r) => {
     const a = r.check(m);
-    return a ? [{ ...a, schoolId: m.schoolId, area: r.area }] : [];
+    // A rule that would rest on simulated data never fires for a real school.
+    if (!a || (!m.schoolId.startsWith("demo-") && a.provenance !== "REAL")) return [];
+    return [{ ...a, schoolId: m.schoolId, area: r.area }];
   }).sort((a, b) => SEVERITY_ORDER[a.severity] - SEVERITY_ORDER[b.severity]);
 }

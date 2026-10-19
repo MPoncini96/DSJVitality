@@ -1,24 +1,22 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import "./globals.css";
+import { SlimBar } from "@/components/SlimBar";
 import { ThemeToggle, themeInitScript } from "@/components/ThemeToggle";
 
 export const metadata: Metadata = {
   title: "School Vitality Prototype",
   description:
-    "Independent prototype dashboard of operational health for Catholic elementary schools in Santa Clara County. Not affiliated with or endorsed by the Diocese of San José.",
+    "Independent prototype dashboard of operational health for Catholic elementary schools in Santa Clara County, built with public data. Not affiliated with or endorsed by the Diocese of San José.",
 };
 
 const NAV = [
-  { href: "/", label: "Radar", ready: true },
-  { href: "/alerts", label: "Alerts", ready: true },
-  { href: "/turnaround", label: "Turnaround", ready: true },
-  { href: "/enrollment", label: "Enrollment", ready: false },
-  { href: "/finance", label: "Finance", ready: false },
-  { href: "/facilities", label: "Facilities", ready: false },
-  { href: "/systems", label: "Systems", ready: false },
-  { href: "/calendar", label: "Calendar", ready: false },
-  { href: "/about", label: "About", ready: false },
+  { href: "/", label: "Radar" },
+  { href: "/alerts", label: "Alerts" },
+  { href: "/turnaround", label: "Turnaround" },
+  { href: "/demo", label: "Demo schools" },
+  { href: "/about", label: "About the data" },
+  { href: "/about-me", label: "Why I built this" },
 ];
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -41,15 +39,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <ul className="flex gap-0.5 text-sm">
                   {NAV.map((n) => (
                     <li key={n.href}>
-                      {n.ready ? (
-                        <Link href={n.href} className="rounded-md px-2 py-1.5 whitespace-nowrap text-text hover:bg-surface-2">
-                          {n.label}
-                        </Link>
-                      ) : (
-                        <span className="cursor-default rounded-md px-2 py-1.5 whitespace-nowrap text-faint" title="Coming next">
-                          {n.label}
-                        </span>
-                      )}
+                      <Link href={n.href} className={`block rounded-md px-2 py-1.5 whitespace-nowrap hover:bg-surface-2 ${n.href === "/about-me" ? "font-semibold text-accent" : "text-text"}`}>
+                        {n.label}
+                      </Link>
                     </li>
                   ))}
                 </ul>
@@ -59,6 +51,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </div>
             </div>
           </header>
+          <SlimBar />
 
           <main id="main" className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
             {children}

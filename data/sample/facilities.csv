@@ -1,304 +1,234 @@
 school_id,asset_id,asset,category,condition,last_inspection,inspection_interval_months,est_replacement_cost,priority,capital_plan_year,provenance
-archbishop-mitty,archbishop-mitty-A01,Fire alarm system,Life safety,4,2026-04-13,24,255000,Low,2035,SAMPLE
-archbishop-mitty,archbishop-mitty-A02,Roof,Envelope,2,2026-03-18,24,924000,High,2028,SAMPLE
-archbishop-mitty,archbishop-mitty-A03,Parking lot / blacktop,Site,4,2026-09-04,12,487000,Low,2034,SAMPLE
-archbishop-mitty,archbishop-mitty-A04,Plumbing (domestic water),Mechanical,4,2025-05-30,36,187000,Low,2035,SAMPLE
-archbishop-mitty,archbishop-mitty-A05,Classroom windows,Envelope,4,2025-06-30,24,372000,Low,2034,SAMPLE
-archbishop-mitty,archbishop-mitty-A06,HVAC system,Mechanical,4,2025-11-22,36,864000,Low,2032,SAMPLE
-archbishop-mitty,archbishop-mitty-A07,Playground equipment,Site,4,2025-04-11,12,303000,Low,2033,SAMPLE
-bellarmine,bellarmine-A01,Roof,Envelope,3,2025-04-06,12,567000,High,2029,SAMPLE
-bellarmine,bellarmine-A02,Fire alarm system,Life safety,3,2025-08-26,36,106000,Medium,2030,SAMPLE
-bellarmine,bellarmine-A03,Gym floor,Interior,4,2025-08-26,12,128000,Low,2034,SAMPLE
-bellarmine,bellarmine-A04,Classroom windows,Envelope,4,2026-08-31,24,474000,Low,2033,SAMPLE
-bellarmine,bellarmine-A05,Access control & cameras,Life safety,4,2025-12-21,12,99000,Low,2036,SAMPLE
-bellarmine,bellarmine-A06,Parking lot / blacktop,Site,4,2025-08-15,24,407000,Low,2035,SAMPLE
-bellarmine,bellarmine-A07,Boiler,Mechanical,3,2026-02-02,36,539000,Medium,2029,SAMPLE
-canyon-heights,canyon-heights-A01,Playground equipment,Site,3,2026-02-09,12,64000,Medium,2029,SAMPLE
-canyon-heights,canyon-heights-A02,Roof,Envelope,3,2026-01-01,12,261000,Medium,2029,SAMPLE
-canyon-heights,canyon-heights-A03,Restrooms (ADA),Interior,5,2025-09-03,36,101000,Low,2032,SAMPLE
-canyon-heights,canyon-heights-A04,Access control & cameras,Life safety,2,2025-04-13,12,92000,High,2028,SAMPLE
-canyon-heights,canyon-heights-A05,Electrical service panel,Electrical,2,2026-09-07,36,119000,High,2027,SAMPLE
-canyon-heights,canyon-heights-A06,HVAC system,Mechanical,4,2026-04-07,12,445000,Low,2035,SAMPLE
-canyon-heights,canyon-heights-A07,Parking lot / blacktop,Site,4,2026-02-01,24,136000,Low,2033,SAMPLE
-canyon-heights,canyon-heights-A08,Plumbing (domestic water),Mechanical,4,2026-03-26,12,204000,Low,2035,SAMPLE
-canyon-heights,canyon-heights-A09,Gym floor,Interior,3,2026-06-21,36,74000,Medium,2030,SAMPLE
-cristo-rey-sj,cristo-rey-sj-A01,Access control & cameras,Life safety,3,2026-01-04,36,154000,Medium,2029,SAMPLE
-cristo-rey-sj,cristo-rey-sj-A02,Boiler,Mechanical,2,2025-12-06,24,179000,High,2028,SAMPLE
-cristo-rey-sj,cristo-rey-sj-A03,Plumbing (domestic water),Mechanical,5,2026-08-18,12,435000,Low,2034,SAMPLE
-cristo-rey-sj,cristo-rey-sj-A04,Electrical service panel,Electrical,3,2025-03-23,12,128000,Medium,2031,SAMPLE
-cristo-rey-sj,cristo-rey-sj-A05,Fire alarm system,Life safety,4,2025-09-13,24,164000,Low,2036,SAMPLE
-cristo-rey-sj,cristo-rey-sj-A06,Gym floor,Interior,4,2025-08-13,12,190000,Low,2033,SAMPLE
-cristo-rey-sj,cristo-rey-sj-A07,Restrooms (ADA),Interior,4,2025-06-28,12,345000,Low,2036,SAMPLE
-cristo-rey-sj,cristo-rey-sj-A08,HVAC system,Mechanical,4,2025-08-29,24,800000,Low,2033,SAMPLE
-cristo-rey-sj,cristo-rey-sj-A09,Parking lot / blacktop,Site,2,2025-05-29,24,380000,High,2028,SAMPLE
-cristo-rey-sj,cristo-rey-sj-A10,Classroom windows,Envelope,4,2026-06-18,24,231000,Low,2034,SAMPLE
-cristo-rey-sj,cristo-rey-sj-A11,Playground equipment,Site,2,2025-09-09,24,142000,High,2028,SAMPLE
-holy-family,holy-family-A01,HVAC system,Mechanical,4,2026-02-14,12,565000,Low,2032,SAMPLE
-holy-family,holy-family-A02,Parking lot / blacktop,Site,5,2025-04-29,24,133000,Low,2035,SAMPLE
-holy-family,holy-family-A03,Restrooms (ADA),Interior,2,2026-08-09,12,219000,High,2028,SAMPLE
-holy-family,holy-family-A04,Access control & cameras,Life safety,4,2025-12-12,12,49000,Low,2034,SAMPLE
-holy-family,holy-family-A05,Roof,Envelope,3,2025-12-17,12,298000,Medium,2029,SAMPLE
-holy-family,holy-family-A06,Gym floor,Interior,2,2025-04-27,12,87000,High,2028,SAMPLE
-holy-family,holy-family-A07,Electrical service panel,Electrical,4,2026-04-07,24,126000,Low,2033,SAMPLE
-holy-family,holy-family-A08,Fire alarm system,Life safety,3,2026-04-14,24,118000,High,2031,SAMPLE
-holy-family,holy-family-A09,Classroom windows,Envelope,2,2025-11-23,12,211000,High,2027,SAMPLE
-holy-family,holy-family-A10,Boiler,Mechanical,2,2026-09-11,36,68000,High,2028,SAMPLE
-holy-family,holy-family-A11,Plumbing (domestic water),Mechanical,5,2026-03-03,36,103000,Low,2035,SAMPLE
-holy-spirit,holy-spirit-A01,HVAC system,Mechanical,5,2026-04-04,24,648000,Low,2032,SAMPLE
-holy-spirit,holy-spirit-A02,Gym floor,Interior,4,2026-05-11,12,41000,Low,2033,SAMPLE
-holy-spirit,holy-spirit-A03,Playground equipment,Site,5,2026-01-27,12,56000,Low,2035,SAMPLE
-holy-spirit,holy-spirit-A04,Electrical service panel,Electrical,3,2025-10-02,36,114000,Medium,2029,SAMPLE
-holy-spirit,holy-spirit-A05,Roof,Envelope,5,2026-07-05,12,450000,Low,2032,SAMPLE
-holy-spirit,holy-spirit-A06,Fire alarm system,Life safety,3,2026-06-05,36,81000,Medium,2029,SAMPLE
-holy-spirit,holy-spirit-A07,Classroom windows,Envelope,5,2025-05-08,36,108000,Low,2034,SAMPLE
-most-holy-trinity,most-holy-trinity-A01,HVAC system,Mechanical,4,2025-08-10,12,756000,Low,2032,SAMPLE
-most-holy-trinity,most-holy-trinity-A02,Parking lot / blacktop,Site,4,2026-01-15,36,109000,Low,2035,SAMPLE
-most-holy-trinity,most-holy-trinity-A03,Fire alarm system,Life safety,3,2025-12-24,12,62000,Medium,2030,SAMPLE
-most-holy-trinity,most-holy-trinity-A04,Access control & cameras,Life safety,3,2026-03-22,36,56000,Medium,2030,SAMPLE
-most-holy-trinity,most-holy-trinity-A05,Boiler,Mechanical,3,2026-08-09,36,173000,Medium,2030,SAMPLE
-most-holy-trinity,most-holy-trinity-A06,Plumbing (domestic water),Mechanical,3,2026-08-23,36,205000,High,2029,SAMPLE
-most-holy-trinity,most-holy-trinity-A07,Electrical service panel,Electrical,5,2025-08-17,24,111000,Low,2035,SAMPLE
-most-holy-trinity,most-holy-trinity-A08,Classroom windows,Envelope,4,2026-08-11,12,294000,Low,2035,SAMPLE
-notre-dame-sj,notre-dame-sj-A01,Playground equipment,Site,4,2025-04-17,12,142000,Low,2034,SAMPLE
-notre-dame-sj,notre-dame-sj-A02,Parking lot / blacktop,Site,2,2025-12-27,36,168000,High,2027,SAMPLE
-notre-dame-sj,notre-dame-sj-A03,HVAC system,Mechanical,3,2025-05-12,24,1290000,Medium,2029,SAMPLE
-notre-dame-sj,notre-dame-sj-A04,Electrical service panel,Electrical,1,2026-06-20,12,326000,High,2027,SAMPLE
-notre-dame-sj,notre-dame-sj-A05,Plumbing (domestic water),Mechanical,3,2025-10-10,12,287000,Medium,2029,SAMPLE
-notre-dame-sj,notre-dame-sj-A06,Access control & cameras,Life safety,5,2025-04-11,36,230000,Low,2033,SAMPLE
-notre-dame-sj,notre-dame-sj-A07,Gym floor,Interior,3,2026-07-29,24,93000,High,2029,SAMPLE
-notre-dame-sj,notre-dame-sj-A08,Restrooms (ADA),Interior,3,2025-12-16,12,414000,Medium,2029,SAMPLE
-notre-dame-sj,notre-dame-sj-A09,Fire alarm system,Life safety,2,2025-06-21,24,245000,High,2027,SAMPLE
-presentation,presentation-A01,Restrooms (ADA),Interior,4,2026-05-12,12,333000,Low,2036,SAMPLE
-presentation,presentation-A02,HVAC system,Mechanical,2,2025-08-06,36,1368000,High,2027,SAMPLE
-presentation,presentation-A03,Access control & cameras,Life safety,3,2025-07-26,12,115000,Medium,2029,SAMPLE
-presentation,presentation-A04,Boiler,Mechanical,4,2025-04-17,12,533000,Low,2034,SAMPLE
-presentation,presentation-A05,Playground equipment,Site,3,2025-09-09,12,190000,Medium,2030,SAMPLE
-presentation,presentation-A06,Fire alarm system,Life safety,4,2025-12-09,12,142000,Low,2035,SAMPLE
-presentation,presentation-A07,Electrical service panel,Electrical,4,2025-10-05,12,268000,Low,2033,SAMPLE
-presentation,presentation-A08,Gym floor,Interior,5,2026-05-26,12,187000,Low,2034,SAMPLE
-presentation,presentation-A09,Parking lot / blacktop,Site,4,2026-01-27,36,239000,Low,2034,SAMPLE
-queen-of-apostles,queen-of-apostles-A01,Fire alarm system,Life safety,2,2025-07-21,12,85000,High,2027,SAMPLE
-queen-of-apostles,queen-of-apostles-A02,Electrical service panel,Electrical,3,2026-09-07,12,107000,High,2029,SAMPLE
-queen-of-apostles,queen-of-apostles-A03,Playground equipment,Site,3,2026-09-03,24,125000,Medium,2029,SAMPLE
-queen-of-apostles,queen-of-apostles-A04,Plumbing (domestic water),Mechanical,4,2026-01-23,12,148000,Low,2036,SAMPLE
-queen-of-apostles,queen-of-apostles-A05,Classroom windows,Envelope,3,2026-01-26,12,273000,Medium,2030,SAMPLE
-queen-of-apostles,queen-of-apostles-A06,Boiler,Mechanical,5,2026-03-14,12,207000,Low,2036,SAMPLE
-queen-of-apostles,queen-of-apostles-A07,Roof,Envelope,5,2025-10-27,12,331000,Low,2035,SAMPLE
-queen-of-apostles,queen-of-apostles-A08,Restrooms (ADA),Interior,4,2026-09-05,24,189000,Low,2035,SAMPLE
-sacred-heart-nativity,sacred-heart-nativity-A01,HVAC system,Mechanical,4,2026-07-09,12,407000,Low,2032,SAMPLE
-sacred-heart-nativity,sacred-heart-nativity-A02,Boiler,Mechanical,3,2026-01-20,12,110000,High,2029,SAMPLE
-sacred-heart-nativity,sacred-heart-nativity-A03,Fire alarm system,Life safety,4,2026-09-08,12,83000,Low,2036,SAMPLE
-sacred-heart-nativity,sacred-heart-nativity-A04,Electrical service panel,Electrical,5,2026-02-05,12,93000,Low,2032,SAMPLE
-sacred-heart-nativity,sacred-heart-nativity-A05,Gym floor,Interior,4,2025-05-21,24,53000,Low,2034,SAMPLE
-sacred-heart-nativity,sacred-heart-nativity-A06,Playground equipment,Site,2,2026-01-27,36,115000,High,2027,SAMPLE
-sacred-heart-nativity,sacred-heart-nativity-A07,Access control & cameras,Life safety,4,2025-10-24,24,102000,Low,2033,SAMPLE
-sacred-heart-nativity,sacred-heart-nativity-A08,Restrooms (ADA),Interior,3,2026-07-02,36,109000,High,2030,SAMPLE
-sacred-heart-nativity,sacred-heart-nativity-A09,Parking lot / blacktop,Site,5,2026-04-08,36,87000,Low,2033,SAMPLE
-sacred-heart-nativity,sacred-heart-nativity-A10,Classroom windows,Envelope,4,2026-08-13,12,190000,Low,2032,SAMPLE
-sacred-heart-nativity,sacred-heart-nativity-A11,Roof,Envelope,4,2026-01-04,12,261000,Low,2035,SAMPLE
-sacred-heart-saratoga,sacred-heart-saratoga-A01,Gym floor,Interior,5,2025-11-30,12,98000,Low,2035,SAMPLE
-sacred-heart-saratoga,sacred-heart-saratoga-A02,HVAC system,Mechanical,5,2026-02-14,24,481000,Low,2033,SAMPLE
-sacred-heart-saratoga,sacred-heart-saratoga-A03,Parking lot / blacktop,Site,2,2025-10-19,12,245000,High,2028,SAMPLE
-sacred-heart-saratoga,sacred-heart-saratoga-A04,Plumbing (domestic water),Mechanical,4,2025-07-19,36,151000,Low,2033,SAMPLE
-sacred-heart-saratoga,sacred-heart-saratoga-A05,Restrooms (ADA),Interior,2,2025-05-05,12,172000,High,2027,SAMPLE
-sacred-heart-saratoga,sacred-heart-saratoga-A06,Boiler,Mechanical,3,2025-11-17,12,114000,High,2031,SAMPLE
-sacred-heart-saratoga,sacred-heart-saratoga-A07,Fire alarm system,Life safety,4,2026-07-23,24,141000,Low,2035,SAMPLE
-sacred-heart-saratoga,sacred-heart-saratoga-A08,Roof,Envelope,2,2026-03-23,12,547000,High,2028,SAMPLE
-sacred-heart-saratoga,sacred-heart-saratoga-A09,Classroom windows,Envelope,5,2026-08-11,24,113000,Low,2036,SAMPLE
-sacred-heart-saratoga,sacred-heart-saratoga-A10,Access control & cameras,Life safety,4,2026-02-02,24,42000,Low,2035,SAMPLE
-sacred-heart-saratoga,sacred-heart-saratoga-A11,Electrical service panel,Electrical,3,2025-10-25,36,40000,Medium,2031,SAMPLE
-st-catherine,st-catherine-A01,Electrical service panel,Electrical,4,2026-09-07,12,78000,Low,2036,SAMPLE
-st-catherine,st-catherine-A02,Boiler,Mechanical,4,2026-08-18,12,61000,Low,2033,SAMPLE
-st-catherine,st-catherine-A03,Playground equipment,Site,3,2026-01-26,12,80000,Medium,2029,SAMPLE
-st-catherine,st-catherine-A04,Classroom windows,Envelope,2,2025-11-17,36,91000,High,2027,SAMPLE
-st-catherine,st-catherine-A05,Gym floor,Interior,4,2026-02-03,36,127000,Low,2033,SAMPLE
-st-catherine,st-catherine-A06,Fire alarm system,Life safety,5,2025-11-23,24,174000,Low,2036,SAMPLE
-st-catherine,st-catherine-A07,Parking lot / blacktop,Site,3,2025-10-29,24,211000,High,2029,SAMPLE
-st-catherine,st-catherine-A08,HVAC system,Mechanical,5,2025-03-28,12,708000,Low,2035,SAMPLE
-st-catherine,st-catherine-A09,Restrooms (ADA),Interior,4,2026-02-08,24,108000,Low,2035,SAMPLE
-st-catherine,st-catherine-A10,Roof,Envelope,3,2026-05-01,12,369000,Medium,2030,SAMPLE
-st-catherine,st-catherine-A11,Plumbing (domestic water),Mechanical,3,2026-07-16,12,113000,Medium,2030,SAMPLE
-st-christopher,st-christopher-A01,Gym floor,Interior,3,2026-06-09,12,77000,Medium,2029,SAMPLE
-st-christopher,st-christopher-A02,Electrical service panel,Electrical,2,2025-09-06,24,143000,High,2027,SAMPLE
-st-christopher,st-christopher-A03,Fire alarm system,Life safety,2,2026-03-27,36,105000,High,2027,SAMPLE
-st-christopher,st-christopher-A04,Parking lot / blacktop,Site,3,2025-05-09,24,168000,Medium,2029,SAMPLE
-st-christopher,st-christopher-A05,Access control & cameras,Life safety,4,2025-04-19,24,48000,Low,2034,SAMPLE
-st-christopher,st-christopher-A06,Classroom windows,Envelope,4,2026-03-08,12,299000,Low,2035,SAMPLE
-st-christopher,st-christopher-A07,Roof,Envelope,3,2026-05-20,12,558000,Medium,2030,SAMPLE
-st-christopher,st-christopher-A08,Boiler,Mechanical,5,2026-02-14,36,245000,Low,2032,SAMPLE
-st-clare,st-clare-A01,Roof,Envelope,3,2025-12-01,36,638000,Medium,2031,SAMPLE
-st-clare,st-clare-A02,Access control & cameras,Life safety,2,2026-03-10,24,79000,High,2028,SAMPLE
-st-clare,st-clare-A03,Parking lot / blacktop,Site,3,2026-03-07,12,156000,High,2030,SAMPLE
-st-clare,st-clare-A04,Plumbing (domestic water),Mechanical,5,2026-07-13,12,142000,Low,2035,SAMPLE
-st-clare,st-clare-A05,Classroom windows,Envelope,3,2026-01-20,36,232000,Medium,2031,SAMPLE
-st-clare,st-clare-A06,Electrical service panel,Electrical,2,2025-12-12,24,43000,High,2028,SAMPLE
-st-clare,st-clare-A07,Gym floor,Interior,3,2026-01-12,24,57000,Medium,2031,SAMPLE
-st-clare,st-clare-A08,Restrooms (ADA),Interior,3,2025-04-12,36,232000,Medium,2030,SAMPLE
-st-clare,st-clare-A09,Playground equipment,Site,2,2026-04-30,36,35000,High,2028,SAMPLE
-st-elizabeth-seton,st-elizabeth-seton-A01,HVAC system,Mechanical,4,2025-07-03,12,263000,Low,2036,SAMPLE
-st-elizabeth-seton,st-elizabeth-seton-A02,Access control & cameras,Life safety,4,2026-01-29,24,41000,Low,2033,SAMPLE
-st-elizabeth-seton,st-elizabeth-seton-A03,Restrooms (ADA),Interior,3,2026-04-13,24,150000,Medium,2029,SAMPLE
-st-elizabeth-seton,st-elizabeth-seton-A04,Gym floor,Interior,4,2026-07-20,24,123000,Low,2032,SAMPLE
-st-elizabeth-seton,st-elizabeth-seton-A05,Fire alarm system,Life safety,2,2026-09-07,36,150000,High,2027,SAMPLE
-st-elizabeth-seton,st-elizabeth-seton-A06,Plumbing (domestic water),Mechanical,5,2025-12-02,24,218000,Low,2036,SAMPLE
-st-elizabeth-seton,st-elizabeth-seton-A07,Parking lot / blacktop,Site,4,2025-09-06,24,114000,Low,2034,SAMPLE
-st-elizabeth-seton,st-elizabeth-seton-A08,Electrical service panel,Electrical,4,2026-02-24,36,76000,Low,2036,SAMPLE
-st-elizabeth-seton,st-elizabeth-seton-A09,Classroom windows,Envelope,3,2025-09-19,36,233000,Medium,2029,SAMPLE
-st-elizabeth-seton,st-elizabeth-seton-A10,Roof,Envelope,2,2025-12-12,12,577000,High,2027,SAMPLE
-st-frances-cabrini,st-frances-cabrini-A01,Roof,Envelope,3,2025-06-28,12,630000,Medium,2029,SAMPLE
-st-frances-cabrini,st-frances-cabrini-A02,Gym floor,Interior,2,2026-05-24,12,135000,High,2028,SAMPLE
-st-frances-cabrini,st-frances-cabrini-A03,Playground equipment,Site,2,2026-06-11,36,74000,High,2028,SAMPLE
-st-frances-cabrini,st-frances-cabrini-A04,Parking lot / blacktop,Site,2,2025-04-03,12,238000,High,2028,SAMPLE
-st-frances-cabrini,st-frances-cabrini-A05,Classroom windows,Envelope,2,2025-07-16,12,115000,High,2027,SAMPLE
-st-frances-cabrini,st-frances-cabrini-A06,HVAC system,Mechanical,3,2025-09-20,12,590000,Medium,2031,SAMPLE
-st-frances-cabrini,st-frances-cabrini-A07,Plumbing (domestic water),Mechanical,4,2026-07-06,36,135000,Low,2035,SAMPLE
-st-frances-cabrini,st-frances-cabrini-A08,Electrical service panel,Electrical,1,2026-04-11,36,82000,High,2027,SAMPLE
-st-frances-cabrini,st-frances-cabrini-A09,Fire alarm system,Life safety,2,2025-12-19,24,49000,High,2027,SAMPLE
-st-frances-cabrini,st-frances-cabrini-A10,Restrooms (ADA),Interior,5,2026-03-15,12,171000,Low,2032,SAMPLE
-st-frances-cabrini,st-frances-cabrini-A11,Access control & cameras,Life safety,4,2026-05-05,24,112000,Low,2032,SAMPLE
-st-francis-hs,st-francis-hs-A01,Gym floor,Interior,5,2025-12-25,24,149000,Low,2035,SAMPLE
-st-francis-hs,st-francis-hs-A02,HVAC system,Mechanical,3,2025-06-14,24,907000,Medium,2031,SAMPLE
-st-francis-hs,st-francis-hs-A03,Access control & cameras,Life safety,3,2025-09-13,12,184000,High,2031,SAMPLE
-st-francis-hs,st-francis-hs-A04,Parking lot / blacktop,Site,2,2026-04-15,12,526000,High,2028,SAMPLE
-st-francis-hs,st-francis-hs-A05,Plumbing (domestic water),Mechanical,5,2025-09-11,12,178000,Low,2033,SAMPLE
-st-francis-hs,st-francis-hs-A06,Playground equipment,Site,3,2026-03-02,12,181000,Medium,2029,SAMPLE
-st-francis-hs,st-francis-hs-A07,Electrical service panel,Electrical,3,2026-02-14,24,329000,Medium,2030,SAMPLE
-st-francis-hs,st-francis-hs-A08,Fire alarm system,Life safety,2,2025-12-15,36,175000,High,2027,SAMPLE
-st-francis-hs,st-francis-hs-A09,Roof,Envelope,4,2025-07-12,36,1264000,Low,2035,SAMPLE
-st-francis-hs,st-francis-hs-A10,Boiler,Mechanical,3,2025-09-14,36,346000,Medium,2029,SAMPLE
-st-john-the-baptist,st-john-the-baptist-A01,Fire alarm system,Life safety,2,2026-02-25,12,162000,High,2028,SAMPLE
-st-john-the-baptist,st-john-the-baptist-A02,Gym floor,Interior,3,2025-10-11,24,144000,High,2029,SAMPLE
-st-john-the-baptist,st-john-the-baptist-A03,Boiler,Mechanical,4,2026-08-17,12,226000,Low,2032,SAMPLE
-st-john-the-baptist,st-john-the-baptist-A04,HVAC system,Mechanical,4,2026-03-24,24,355000,Low,2034,SAMPLE
-st-john-the-baptist,st-john-the-baptist-A05,Electrical service panel,Electrical,3,2025-09-19,24,141000,High,2029,SAMPLE
-st-john-the-baptist,st-john-the-baptist-A06,Parking lot / blacktop,Site,3,2026-01-23,24,192000,Medium,2031,SAMPLE
-st-john-the-baptist,st-john-the-baptist-A07,Playground equipment,Site,5,2026-05-05,12,86000,Low,2032,SAMPLE
-st-john-the-baptist,st-john-the-baptist-A08,Plumbing (domestic water),Mechanical,4,2025-08-17,24,179000,Low,2035,SAMPLE
-st-john-the-baptist,st-john-the-baptist-A09,Roof,Envelope,2,2025-05-20,24,567000,High,2028,SAMPLE
-st-john-vianney,st-john-vianney-A01,Plumbing (domestic water),Mechanical,5,2026-09-09,36,69000,Low,2035,SAMPLE
-st-john-vianney,st-john-vianney-A02,Parking lot / blacktop,Site,4,2025-04-22,12,129000,Low,2035,SAMPLE
-st-john-vianney,st-john-vianney-A03,Roof,Envelope,3,2025-12-25,36,536000,Medium,2030,SAMPLE
-st-john-vianney,st-john-vianney-A04,Classroom windows,Envelope,3,2026-05-19,12,294000,Medium,2031,SAMPLE
-st-john-vianney,st-john-vianney-A05,HVAC system,Mechanical,3,2025-11-09,36,403000,Medium,2031,SAMPLE
-st-john-vianney,st-john-vianney-A06,Access control & cameras,Life safety,5,2026-01-16,12,74000,Low,2034,SAMPLE
-st-john-vianney,st-john-vianney-A07,Playground equipment,Site,1,2026-02-09,12,35000,High,2027,SAMPLE
-st-john-vianney,st-john-vianney-A08,Fire alarm system,Life safety,3,2026-04-28,24,147000,High,2030,SAMPLE
-st-john-vianney,st-john-vianney-A09,Gym floor,Interior,2,2026-01-13,12,71000,High,2028,SAMPLE
-st-joseph-cupertino,st-joseph-cupertino-A01,Fire alarm system,Life safety,4,2025-11-18,24,130000,Low,2036,SAMPLE
-st-joseph-cupertino,st-joseph-cupertino-A02,Access control & cameras,Life safety,3,2025-06-28,12,76000,Medium,2029,SAMPLE
-st-joseph-cupertino,st-joseph-cupertino-A03,Restrooms (ADA),Interior,2,2025-06-29,12,50000,High,2027,SAMPLE
-st-joseph-cupertino,st-joseph-cupertino-A04,Electrical service panel,Electrical,2,2025-10-24,24,111000,High,2027,SAMPLE
-st-joseph-cupertino,st-joseph-cupertino-A05,Playground equipment,Site,5,2026-03-17,24,32000,Low,2035,SAMPLE
-st-joseph-cupertino,st-joseph-cupertino-A06,Classroom windows,Envelope,3,2026-06-11,12,182000,Medium,2030,SAMPLE
-st-joseph-cupertino,st-joseph-cupertino-A07,Roof,Envelope,2,2026-01-18,12,414000,High,2027,SAMPLE
-st-joseph-cupertino,st-joseph-cupertino-A08,Boiler,Mechanical,5,2025-04-27,12,94000,Low,2035,SAMPLE
-st-joseph-cupertino,st-joseph-cupertino-A09,Plumbing (domestic water),Mechanical,4,2026-07-31,12,162000,Low,2033,SAMPLE
-st-joseph-mv,st-joseph-mv-A01,Restrooms (ADA),Interior,2,2025-04-19,36,72000,High,2028,SAMPLE
-st-joseph-mv,st-joseph-mv-A02,Electrical service panel,Electrical,3,2026-03-21,12,97000,Medium,2031,SAMPLE
-st-joseph-mv,st-joseph-mv-A03,Gym floor,Interior,4,2026-06-16,24,67000,Low,2035,SAMPLE
-st-joseph-mv,st-joseph-mv-A04,Parking lot / blacktop,Site,3,2026-02-11,36,242000,Medium,2030,SAMPLE
-st-joseph-mv,st-joseph-mv-A05,Plumbing (domestic water),Mechanical,4,2026-04-05,12,73000,Low,2036,SAMPLE
-st-joseph-mv,st-joseph-mv-A06,Playground equipment,Site,5,2026-04-26,36,133000,Low,2033,SAMPLE
-st-joseph-mv,st-joseph-mv-A07,HVAC system,Mechanical,3,2026-06-05,24,225000,Medium,2031,SAMPLE
-st-joseph-mv,st-joseph-mv-A08,Fire alarm system,Life safety,5,2025-06-10,24,159000,Low,2034,SAMPLE
-st-joseph-mv,st-joseph-mv-A09,Classroom windows,Envelope,3,2025-06-03,36,160000,Medium,2029,SAMPLE
-st-joseph-mv,st-joseph-mv-A10,Access control & cameras,Life safety,4,2025-04-11,12,88000,Low,2036,SAMPLE
-st-joseph-mv,st-joseph-mv-A11,Boiler,Mechanical,5,2026-02-16,36,199000,Low,2033,SAMPLE
-st-justin,st-justin-A01,HVAC system,Mechanical,3,2025-04-27,24,244000,Medium,2031,SAMPLE
-st-justin,st-justin-A02,Plumbing (domestic water),Mechanical,3,2026-04-10,12,174000,High,2029,SAMPLE
-st-justin,st-justin-A03,Classroom windows,Envelope,5,2025-03-29,12,298000,Low,2035,SAMPLE
-st-justin,st-justin-A04,Playground equipment,Site,4,2025-06-10,12,99000,Low,2032,SAMPLE
-st-justin,st-justin-A05,Electrical service panel,Electrical,4,2026-05-08,24,43000,Low,2036,SAMPLE
-st-justin,st-justin-A06,Boiler,Mechanical,4,2026-05-13,12,205000,Low,2033,SAMPLE
-st-justin,st-justin-A07,Parking lot / blacktop,Site,3,2026-02-26,12,126000,Medium,2029,SAMPLE
-st-justin,st-justin-A08,Access control & cameras,Life safety,3,2026-02-09,24,50000,Medium,2029,SAMPLE
-st-justin,st-justin-A09,Fire alarm system,Life safety,4,2026-01-19,12,174000,Low,2033,SAMPLE
-st-justin,st-justin-A10,Gym floor,Interior,5,2025-04-08,24,132000,Low,2034,SAMPLE
-st-lawrence,st-lawrence-A01,Gym floor,Interior,3,2025-04-07,12,103000,Medium,2030,SAMPLE
-st-lawrence,st-lawrence-A02,Parking lot / blacktop,Site,4,2025-04-18,24,78000,Low,2033,SAMPLE
-st-lawrence,st-lawrence-A03,Fire alarm system,Life safety,1,2026-08-20,24,160000,High,2027,SAMPLE
-st-lawrence,st-lawrence-A04,Plumbing (domestic water),Mechanical,2,2025-09-10,12,131000,High,2028,SAMPLE
-st-lawrence,st-lawrence-A05,Electrical service panel,Electrical,2,2025-12-12,12,103000,High,2028,SAMPLE
-st-lawrence,st-lawrence-A06,Access control & cameras,Life safety,3,2026-08-23,12,83000,Medium,2030,SAMPLE
-st-lawrence,st-lawrence-A07,Playground equipment,Site,3,2026-04-10,24,96000,Medium,2031,SAMPLE
-st-lawrence,st-lawrence-A08,Restrooms (ADA),Interior,3,2025-10-21,12,117000,Medium,2030,SAMPLE
-st-leo,st-leo-A01,Roof,Envelope,4,2026-08-16,24,445000,Low,2034,SAMPLE
-st-leo,st-leo-A02,Access control & cameras,Life safety,3,2025-09-05,36,39000,Medium,2031,SAMPLE
-st-leo,st-leo-A03,Restrooms (ADA),Interior,3,2025-08-02,36,216000,Medium,2030,SAMPLE
-st-leo,st-leo-A04,Gym floor,Interior,2,2026-03-12,24,51000,High,2027,SAMPLE
-st-leo,st-leo-A05,Electrical service panel,Electrical,3,2026-05-03,12,49000,High,2030,SAMPLE
-st-leo,st-leo-A06,Parking lot / blacktop,Site,2,2025-07-06,12,206000,High,2027,SAMPLE
-st-leo,st-leo-A07,Plumbing (domestic water),Mechanical,4,2026-03-17,36,220000,Low,2035,SAMPLE
-st-leo,st-leo-A08,Playground equipment,Site,3,2026-06-14,24,93000,Medium,2030,SAMPLE
-st-leo,st-leo-A09,HVAC system,Mechanical,2,2025-06-07,12,425000,High,2028,SAMPLE
-st-leo,st-leo-A10,Fire alarm system,Life safety,3,2026-08-26,12,59000,Medium,2031,SAMPLE
-st-leo,st-leo-A11,Classroom windows,Envelope,3,2026-03-24,12,214000,Medium,2031,SAMPLE
-st-lucy,st-lucy-A01,Fire alarm system,Life safety,4,2026-07-26,12,87000,Low,2035,SAMPLE
-st-lucy,st-lucy-A02,Boiler,Mechanical,3,2026-05-11,36,166000,Medium,2030,SAMPLE
-st-lucy,st-lucy-A03,Classroom windows,Envelope,4,2025-06-24,36,224000,Low,2033,SAMPLE
-st-lucy,st-lucy-A04,HVAC system,Mechanical,4,2026-07-12,24,708000,Low,2034,SAMPLE
-st-lucy,st-lucy-A05,Parking lot / blacktop,Site,4,2025-05-08,12,203000,Low,2035,SAMPLE
-st-lucy,st-lucy-A06,Roof,Envelope,2,2025-03-21,36,636000,High,2027,SAMPLE
-st-lucy,st-lucy-A07,Plumbing (domestic water),Mechanical,1,2026-09-07,12,104000,High,2027,SAMPLE
-st-martin-of-tours,st-martin-of-tours-A01,Classroom windows,Envelope,2,2026-08-05,36,81000,High,2027,SAMPLE
-st-martin-of-tours,st-martin-of-tours-A02,Parking lot / blacktop,Site,3,2026-06-26,12,155000,High,2031,SAMPLE
-st-martin-of-tours,st-martin-of-tours-A03,Restrooms (ADA),Interior,5,2026-08-20,24,66000,Low,2035,SAMPLE
-st-martin-of-tours,st-martin-of-tours-A04,Gym floor,Interior,3,2026-04-27,12,71000,Medium,2029,SAMPLE
-st-martin-of-tours,st-martin-of-tours-A05,Access control & cameras,Life safety,3,2026-02-21,24,111000,High,2031,SAMPLE
-st-martin-of-tours,st-martin-of-tours-A06,Playground equipment,Site,4,2026-02-18,36,87000,Low,2036,SAMPLE
-st-martin-of-tours,st-martin-of-tours-A07,Roof,Envelope,3,2025-06-13,24,582000,High,2030,SAMPLE
-st-martin-of-tours,st-martin-of-tours-A08,HVAC system,Mechanical,4,2026-05-10,36,697000,Low,2035,SAMPLE
-st-martin-of-tours,st-martin-of-tours-A09,Electrical service panel,Electrical,3,2025-08-25,12,110000,Medium,2030,SAMPLE
-st-martin-of-tours,st-martin-of-tours-A10,Plumbing (domestic water),Mechanical,4,2025-07-06,12,144000,Low,2034,SAMPLE
-st-martin-of-tours,st-martin-of-tours-A11,Fire alarm system,Life safety,5,2026-09-03,24,133000,Low,2032,SAMPLE
-st-mary-los-gatos,st-mary-los-gatos-A01,Roof,Envelope,4,2026-01-11,12,373000,Low,2036,SAMPLE
-st-mary-los-gatos,st-mary-los-gatos-A02,Parking lot / blacktop,Site,4,2025-07-29,36,151000,Low,2033,SAMPLE
-st-mary-los-gatos,st-mary-los-gatos-A03,Electrical service panel,Electrical,2,2026-08-11,36,91000,High,2027,SAMPLE
-st-mary-los-gatos,st-mary-los-gatos-A04,Access control & cameras,Life safety,4,2026-07-12,36,31000,Low,2035,SAMPLE
-st-mary-los-gatos,st-mary-los-gatos-A05,Restrooms (ADA),Interior,4,2026-06-01,36,106000,Low,2036,SAMPLE
-st-mary-los-gatos,st-mary-los-gatos-A06,Plumbing (domestic water),Mechanical,3,2026-03-18,36,99000,Medium,2031,SAMPLE
-st-mary-los-gatos,st-mary-los-gatos-A07,HVAC system,Mechanical,2,2026-09-02,12,190000,High,2028,SAMPLE
-st-mary-los-gatos,st-mary-los-gatos-A08,Playground equipment,Site,4,2026-08-08,12,120000,Low,2034,SAMPLE
-st-mary-los-gatos,st-mary-los-gatos-A09,Classroom windows,Envelope,4,2026-01-14,24,184000,Low,2033,SAMPLE
-st-mary-los-gatos,st-mary-los-gatos-A10,Fire alarm system,Life safety,4,2025-10-01,36,179000,Low,2036,SAMPLE
-st-mary-los-gatos,st-mary-los-gatos-A11,Boiler,Mechanical,3,2025-10-13,36,248000,Medium,2031,SAMPLE
-st-mary-gilroy,st-mary-gilroy-A01,Fire alarm system,Life safety,3,2026-01-03,12,158000,Medium,2029,SAMPLE
-st-mary-gilroy,st-mary-gilroy-A02,Boiler,Mechanical,3,2026-02-03,36,148000,Medium,2029,SAMPLE
-st-mary-gilroy,st-mary-gilroy-A03,Gym floor,Interior,2,2026-07-20,24,59000,High,2028,SAMPLE
-st-mary-gilroy,st-mary-gilroy-A04,Playground equipment,Site,3,2026-05-24,12,91000,Medium,2031,SAMPLE
-st-mary-gilroy,st-mary-gilroy-A05,HVAC system,Mechanical,3,2025-06-21,12,174000,High,2029,SAMPLE
-st-mary-gilroy,st-mary-gilroy-A06,Electrical service panel,Electrical,3,2026-03-28,12,65000,Medium,2031,SAMPLE
-st-mary-gilroy,st-mary-gilroy-A07,Roof,Envelope,5,2025-05-18,12,245000,Low,2032,SAMPLE
-st-nicholas,st-nicholas-A01,Plumbing (domestic water),Mechanical,3,2025-10-23,12,72000,High,2029,SAMPLE
-st-nicholas,st-nicholas-A02,HVAC system,Mechanical,4,2026-07-19,12,783000,Low,2036,SAMPLE
-st-nicholas,st-nicholas-A03,Gym floor,Interior,3,2025-12-31,12,114000,Medium,2029,SAMPLE
-st-nicholas,st-nicholas-A04,Restrooms (ADA),Interior,4,2025-12-27,36,101000,Low,2035,SAMPLE
-st-nicholas,st-nicholas-A05,Classroom windows,Envelope,4,2025-07-23,24,254000,Low,2032,SAMPLE
-st-nicholas,st-nicholas-A06,Parking lot / blacktop,Site,2,2025-11-29,12,112000,High,2027,SAMPLE
-st-nicholas,st-nicholas-A07,Fire alarm system,Life safety,1,2025-06-26,24,89000,High,2027,SAMPLE
-st-nicholas,st-nicholas-A08,Access control & cameras,Life safety,4,2026-01-15,24,65000,Low,2036,SAMPLE
-st-patrick,st-patrick-A01,Classroom windows,Envelope,3,2026-07-06,12,257000,Medium,2030,SAMPLE
-st-patrick,st-patrick-A02,Roof,Envelope,2,2025-05-13,24,507000,High,2027,SAMPLE
-st-patrick,st-patrick-A03,Gym floor,Interior,5,2026-06-15,36,147000,Low,2032,SAMPLE
-st-patrick,st-patrick-A04,Fire alarm system,Life safety,4,2026-06-06,36,147000,Low,2036,SAMPLE
-st-patrick,st-patrick-A05,Playground equipment,Site,4,2026-06-29,36,83000,Low,2032,SAMPLE
-st-patrick,st-patrick-A06,Access control & cameras,Life safety,2,2026-03-07,36,34000,High,2028,SAMPLE
-st-patrick,st-patrick-A07,Boiler,Mechanical,3,2026-03-10,12,182000,Medium,2031,SAMPLE
-st-simon,st-simon-A01,Fire alarm system,Life safety,4,2025-11-27,36,148000,Low,2034,SAMPLE
-st-simon,st-simon-A02,Gym floor,Interior,5,2025-12-18,24,126000,Low,2035,SAMPLE
-st-simon,st-simon-A03,Playground equipment,Site,4,2026-04-18,36,102000,Low,2033,SAMPLE
-st-simon,st-simon-A04,Access control & cameras,Life safety,3,2025-03-23,12,107000,Medium,2029,SAMPLE
-st-simon,st-simon-A05,Boiler,Mechanical,2,2025-11-23,24,181000,High,2028,SAMPLE
-st-simon,st-simon-A06,Plumbing (domestic water),Mechanical,4,2025-10-16,36,101000,Low,2036,SAMPLE
-st-simon,st-simon-A07,Classroom windows,Envelope,3,2026-04-23,12,154000,High,2031,SAMPLE
-st-simon,st-simon-A08,Electrical service panel,Electrical,4,2026-08-18,24,124000,Low,2036,SAMPLE
-st-simon,st-simon-A09,Roof,Envelope,4,2025-03-23,12,430000,Low,2032,SAMPLE
-st-simon,st-simon-A10,HVAC system,Mechanical,5,2026-08-11,12,666000,Low,2036,SAMPLE
-st-victor,st-victor-A01,Classroom windows,Envelope,3,2026-02-04,36,235000,Medium,2030,SAMPLE
-st-victor,st-victor-A02,HVAC system,Mechanical,5,2026-04-03,12,578000,Low,2035,SAMPLE
-st-victor,st-victor-A03,Boiler,Mechanical,3,2026-02-25,24,167000,Medium,2031,SAMPLE
-st-victor,st-victor-A04,Parking lot / blacktop,Site,2,2026-04-30,36,91000,High,2027,SAMPLE
-st-victor,st-victor-A05,Gym floor,Interior,2,2026-03-09,12,147000,High,2028,SAMPLE
-st-victor,st-victor-A06,Fire alarm system,Life safety,4,2026-08-22,36,114000,Low,2035,SAMPLE
-st-victor,st-victor-A07,Playground equipment,Site,3,2026-05-13,12,88000,Medium,2031,SAMPLE
-st-victor,st-victor-A08,Roof,Envelope,3,2026-02-09,12,283000,Medium,2030,SAMPLE
+demo-a,demo-a-A01,Parking lot / blacktop,Site,2,2025-04-03,12,66000,High,2028,SAMPLE
+demo-a,demo-a-A02,Roof,Envelope,1,2026-08-30,36,147000,High,2027,SAMPLE
+demo-a,demo-a-A03,HVAC system,Mechanical,2,2025-08-12,12,271000,High,2028,SAMPLE
+demo-a,demo-a-A04,Playground equipment,Site,4,2025-08-21,36,56000,Low,2034,SAMPLE
+demo-a,demo-a-A05,Classroom windows,Envelope,3,2026-08-02,12,189000,High,2031,SAMPLE
+demo-a,demo-a-A06,Electrical service panel,Electrical,4,2025-12-01,12,125000,Low,2033,SAMPLE
+demo-a,demo-a-A07,Boiler,Mechanical,4,2025-10-06,24,68000,Low,2033,SAMPLE
+demo-a,demo-a-A08,Plumbing (domestic water),Mechanical,4,2025-04-23,12,148000,Low,2035,SAMPLE
+demo-a,demo-a-A09,Access control & cameras,Life safety,3,2026-05-27,12,90000,High,2029,SAMPLE
+demo-b,demo-b-A01,Parking lot / blacktop,Site,1,2026-08-10,36,67000,High,2027,SAMPLE
+demo-b,demo-b-A02,Gym floor,Interior,2,2026-05-10,24,65000,High,2027,SAMPLE
+demo-b,demo-b-A03,Restrooms (ADA),Interior,1,2025-07-27,24,72000,High,2027,SAMPLE
+demo-b,demo-b-A04,Roof,Envelope,2,2026-03-23,24,206000,High,2027,SAMPLE
+demo-b,demo-b-A05,Classroom windows,Envelope,5,2025-05-03,24,205000,Low,2036,SAMPLE
+demo-b,demo-b-A06,Plumbing (domestic water),Mechanical,5,2026-06-02,12,125000,Low,2035,SAMPLE
+demo-b,demo-b-A07,HVAC system,Mechanical,4,2025-04-02,12,302000,Low,2034,SAMPLE
+demo-b,demo-b-A08,Electrical service panel,Electrical,4,2026-01-29,12,145000,Low,2036,SAMPLE
+demo-b,demo-b-A09,Boiler,Mechanical,3,2026-05-06,12,157000,High,2031,SAMPLE
+demo-b,demo-b-A10,Fire alarm system,Life safety,3,2026-03-15,36,146000,High,2030,SAMPLE
+demo-b,demo-b-A11,Access control & cameras,Life safety,3,2026-08-30,24,112000,Medium,2030,SAMPLE
+demo-c,demo-c-A01,Restrooms (ADA),Interior,2,2025-08-17,12,28000,High,2027,SAMPLE
+demo-c,demo-c-A02,HVAC system,Mechanical,1,2025-05-04,36,256000,High,2027,SAMPLE
+demo-c,demo-c-A03,Electrical service panel,Electrical,4,2025-06-13,36,108000,Low,2033,SAMPLE
+demo-c,demo-c-A04,Plumbing (domestic water),Mechanical,5,2025-06-02,12,195000,Low,2036,SAMPLE
+demo-c,demo-c-A05,Playground equipment,Site,4,2026-05-20,24,91000,Low,2036,SAMPLE
+demo-c,demo-c-A06,Gym floor,Interior,3,2025-11-04,24,88000,Medium,2030,SAMPLE
+demo-c,demo-c-A07,Roof,Envelope,3,2026-06-12,12,430000,Medium,2030,SAMPLE
+demo-c,demo-c-A08,Classroom windows,Envelope,4,2025-12-30,24,91000,Low,2035,SAMPLE
+demo-c,demo-c-A09,Fire alarm system,Life safety,4,2026-03-24,12,98000,Low,2032,SAMPLE
+demo-c,demo-c-A10,Access control & cameras,Life safety,4,2025-09-16,12,91000,Low,2034,SAMPLE
+demo-d,demo-d-A01,Restrooms (ADA),Interior,2,2025-06-01,12,52000,High,2027,SAMPLE
+demo-d,demo-d-A02,HVAC system,Mechanical,1,2026-02-19,12,173000,High,2027,SAMPLE
+demo-d,demo-d-A03,Roof,Envelope,1,2026-06-23,36,117000,High,2027,SAMPLE
+demo-d,demo-d-A04,Gym floor,Interior,5,2025-04-06,12,61000,Low,2033,SAMPLE
+demo-d,demo-d-A05,Plumbing (domestic water),Mechanical,3,2026-01-30,12,130000,Medium,2029,SAMPLE
+demo-d,demo-d-A06,Parking lot / blacktop,Site,5,2026-01-17,12,259000,Low,2032,SAMPLE
+demo-d,demo-d-A07,Electrical service panel,Electrical,4,2025-06-23,12,60000,Low,2034,SAMPLE
+demo-d,demo-d-A08,Fire alarm system,Life safety,3,2026-04-04,12,129000,Medium,2031,SAMPLE
+demo-e,demo-e-A01,Playground equipment,Site,1,2025-05-12,24,28000,High,2027,SAMPLE
+demo-e,demo-e-A02,HVAC system,Mechanical,1,2026-06-28,24,58000,High,2027,SAMPLE
+demo-e,demo-e-A03,Electrical service panel,Electrical,1,2025-11-10,12,20000,High,2027,SAMPLE
+demo-e,demo-e-A04,Roof,Envelope,1,2025-08-20,12,133000,High,2027,SAMPLE
+demo-e,demo-e-A05,Boiler,Mechanical,3,2026-06-16,12,84000,Medium,2029,SAMPLE
+demo-e,demo-e-A06,Restrooms (ADA),Interior,4,2026-01-17,12,137000,Low,2033,SAMPLE
+demo-e,demo-e-A07,Gym floor,Interior,3,2026-05-18,36,49000,High,2029,SAMPLE
+demo-e,demo-e-A08,Plumbing (domestic water),Mechanical,3,2026-06-15,24,90000,Medium,2029,SAMPLE
+demo-e,demo-e-A09,Access control & cameras,Life safety,4,2026-03-31,12,30000,Low,2034,SAMPLE
+demo-e,demo-e-A10,Fire alarm system,Life safety,5,2026-05-09,12,140000,Low,2032,SAMPLE
+demo-f,demo-f-A01,Boiler,Mechanical,2,2026-01-19,12,69000,High,2027,SAMPLE
+demo-f,demo-f-A02,Electrical service panel,Electrical,1,2025-08-16,36,23000,High,2027,SAMPLE
+demo-f,demo-f-A03,Roof,Envelope,2,2026-04-01,36,126000,High,2027,SAMPLE
+demo-f,demo-f-A04,Parking lot / blacktop,Site,4,2025-07-27,36,52000,Low,2033,SAMPLE
+demo-f,demo-f-A05,HVAC system,Mechanical,4,2025-07-02,12,570000,Low,2035,SAMPLE
+demo-f,demo-f-A06,Classroom windows,Envelope,4,2025-08-28,24,109000,Low,2033,SAMPLE
+demo-f,demo-f-A07,Plumbing (domestic water),Mechanical,4,2025-05-21,12,134000,Low,2034,SAMPLE
+demo-f,demo-f-A08,Playground equipment,Site,3,2025-09-28,12,75000,Medium,2031,SAMPLE
+demo-f,demo-f-A09,Access control & cameras,Life safety,4,2026-07-03,24,53000,Low,2032,SAMPLE
+demo-g,demo-g-A01,Boiler,Mechanical,1,2026-08-24,24,36000,High,2027,SAMPLE
+demo-g,demo-g-A02,Parking lot / blacktop,Site,2,2025-06-16,12,16000,High,2028,SAMPLE
+demo-g,demo-g-A03,HVAC system,Mechanical,1,2026-03-31,36,169000,High,2027,SAMPLE
+demo-g,demo-g-A04,Playground equipment,Site,3,2026-03-05,12,125000,Medium,2031,SAMPLE
+demo-g,demo-g-A05,Classroom windows,Envelope,5,2026-08-18,12,271000,Low,2032,SAMPLE
+demo-g,demo-g-A06,Plumbing (domestic water),Mechanical,4,2025-08-31,24,197000,Low,2035,SAMPLE
+demo-g,demo-g-A07,Access control & cameras,Life safety,4,2026-01-06,12,72000,Low,2032,SAMPLE
+demo-g,demo-g-A08,Fire alarm system,Life safety,4,2026-04-22,24,48000,Low,2036,SAMPLE
+demo-h,demo-h-A01,Electrical service panel,Electrical,2,2025-05-24,12,70000,High,2027,SAMPLE
+demo-h,demo-h-A02,Gym floor,Interior,2,2025-10-23,12,86000,High,2028,SAMPLE
+demo-h,demo-h-A03,Parking lot / blacktop,Site,2,2026-03-25,36,126000,High,2028,SAMPLE
+demo-h,demo-h-A04,Roof,Envelope,1,2026-02-05,24,451000,High,2027,SAMPLE
+demo-h,demo-h-A05,HVAC system,Mechanical,3,2025-04-11,36,605000,Medium,2030,SAMPLE
+demo-h,demo-h-A06,Classroom windows,Envelope,5,2025-03-31,12,275000,Low,2033,SAMPLE
+demo-h,demo-h-A07,Boiler,Mechanical,3,2026-03-11,12,193000,Medium,2030,SAMPLE
+demo-h,demo-h-A08,Access control & cameras,Life safety,3,2025-06-18,12,75000,High,2029,SAMPLE
+demo-h,demo-h-A09,Fire alarm system,Life safety,4,2025-09-29,12,68000,Low,2032,SAMPLE
+demo-i,demo-i-A01,HVAC system,Mechanical,1,2025-11-27,12,163000,High,2027,SAMPLE
+demo-i,demo-i-A02,Roof,Envelope,2,2025-05-18,12,198000,High,2027,SAMPLE
+demo-i,demo-i-A03,Plumbing (domestic water),Mechanical,4,2026-05-27,24,159000,Low,2033,SAMPLE
+demo-i,demo-i-A04,Gym floor,Interior,3,2026-04-04,12,86000,Medium,2030,SAMPLE
+demo-i,demo-i-A05,Parking lot / blacktop,Site,5,2025-08-30,24,102000,Low,2034,SAMPLE
+demo-i,demo-i-A06,Electrical service panel,Electrical,4,2026-04-20,36,151000,Low,2036,SAMPLE
+demo-i,demo-i-A07,Boiler,Mechanical,5,2026-09-07,24,99000,Low,2035,SAMPLE
+demo-i,demo-i-A08,Restrooms (ADA),Interior,4,2025-10-03,24,183000,Low,2035,SAMPLE
+demo-i,demo-i-A09,Access control & cameras,Life safety,4,2025-04-24,36,100000,Low,2032,SAMPLE
+demo-j,demo-j-A01,Electrical service panel,Electrical,2,2026-06-26,12,48000,High,2027,SAMPLE
+demo-j,demo-j-A02,Roof,Envelope,2,2025-10-17,12,178000,High,2027,SAMPLE
+demo-j,demo-j-A03,Classroom windows,Envelope,4,2025-06-04,12,190000,Low,2032,SAMPLE
+demo-j,demo-j-A04,Restrooms (ADA),Interior,4,2026-04-22,24,105000,Low,2033,SAMPLE
+demo-j,demo-j-A05,HVAC system,Mechanical,5,2026-04-30,36,601000,Low,2035,SAMPLE
+demo-j,demo-j-A06,Gym floor,Interior,5,2025-07-30,12,56000,Low,2036,SAMPLE
+demo-j,demo-j-A07,Parking lot / blacktop,Site,4,2025-10-15,12,79000,Low,2034,SAMPLE
+demo-j,demo-j-A08,Access control & cameras,Life safety,4,2025-07-03,12,86000,Low,2034,SAMPLE
+demo-j,demo-j-A09,Fire alarm system,Life safety,3,2026-04-21,12,45000,Medium,2029,SAMPLE
+demo-k,demo-k-A01,Boiler,Mechanical,2,2025-12-29,12,41000,High,2028,SAMPLE
+demo-k,demo-k-A02,Gym floor,Interior,1,2026-09-09,24,73000,High,2027,SAMPLE
+demo-k,demo-k-A03,Restrooms (ADA),Interior,2,2026-04-10,36,71000,High,2028,SAMPLE
+demo-k,demo-k-A04,Electrical service panel,Electrical,4,2025-09-25,12,48000,Low,2032,SAMPLE
+demo-k,demo-k-A05,Classroom windows,Envelope,4,2026-09-05,36,297000,Low,2034,SAMPLE
+demo-k,demo-k-A06,Roof,Envelope,4,2026-07-10,12,541000,Low,2034,SAMPLE
+demo-k,demo-k-A07,HVAC system,Mechanical,5,2026-01-10,12,307000,Low,2036,SAMPLE
+demo-k,demo-k-A08,Fire alarm system,Life safety,4,2026-03-02,12,73000,Low,2034,SAMPLE
+demo-l,demo-l-A01,Playground equipment,Site,1,2026-07-20,24,82000,High,2027,SAMPLE
+demo-l,demo-l-A02,Restrooms (ADA),Interior,2,2025-05-18,36,66000,High,2027,SAMPLE
+demo-l,demo-l-A03,Electrical service panel,Electrical,2,2025-05-29,12,49000,High,2028,SAMPLE
+demo-l,demo-l-A04,Gym floor,Interior,4,2025-09-02,12,94000,Low,2033,SAMPLE
+demo-l,demo-l-A05,Plumbing (domestic water),Mechanical,4,2026-08-16,36,113000,Low,2036,SAMPLE
+demo-l,demo-l-A06,Boiler,Mechanical,3,2026-06-06,36,166000,Medium,2031,SAMPLE
+demo-l,demo-l-A07,Classroom windows,Envelope,4,2026-01-02,36,188000,Low,2034,SAMPLE
+demo-l,demo-l-A08,HVAC system,Mechanical,3,2026-06-08,36,478000,Medium,2031,SAMPLE
+demo-l,demo-l-A09,Access control & cameras,Life safety,5,2026-01-27,36,104000,Low,2033,SAMPLE
+demo-m,demo-m-A01,Restrooms (ADA),Interior,2,2026-06-10,12,43000,High,2028,SAMPLE
+demo-m,demo-m-A02,Plumbing (domestic water),Mechanical,2,2026-07-09,24,61000,High,2027,SAMPLE
+demo-m,demo-m-A03,Roof,Envelope,2,2025-05-05,12,140000,High,2027,SAMPLE
+demo-m,demo-m-A04,Gym floor,Interior,2,2025-09-15,12,46000,High,2027,SAMPLE
+demo-m,demo-m-A05,Parking lot / blacktop,Site,2,2025-08-05,36,137000,High,2027,SAMPLE
+demo-m,demo-m-A06,Boiler,Mechanical,3,2025-08-03,12,99000,Medium,2030,SAMPLE
+demo-m,demo-m-A07,HVAC system,Mechanical,3,2025-08-07,12,495000,Medium,2030,SAMPLE
+demo-m,demo-m-A08,Playground equipment,Site,3,2025-08-02,12,103000,Medium,2029,SAMPLE
+demo-m,demo-m-A09,Electrical service panel,Electrical,5,2025-08-07,24,158000,Low,2036,SAMPLE
+demo-m,demo-m-A10,Fire alarm system,Life safety,4,2025-05-02,12,51000,Low,2032,SAMPLE
+demo-n,demo-n-A01,Restrooms (ADA),Interior,1,2026-09-01,24,43000,High,2027,SAMPLE
+demo-n,demo-n-A02,Boiler,Mechanical,2,2026-01-05,24,39000,High,2027,SAMPLE
+demo-n,demo-n-A03,Plumbing (domestic water),Mechanical,1,2026-05-15,36,92000,High,2027,SAMPLE
+demo-n,demo-n-A04,Parking lot / blacktop,Site,4,2025-04-16,12,211000,Low,2036,SAMPLE
+demo-n,demo-n-A05,Classroom windows,Envelope,5,2026-01-23,24,217000,Low,2035,SAMPLE
+demo-n,demo-n-A06,Playground equipment,Site,5,2025-03-28,12,68000,Low,2034,SAMPLE
+demo-n,demo-n-A07,HVAC system,Mechanical,5,2026-04-05,24,648000,Low,2035,SAMPLE
+demo-n,demo-n-A08,Access control & cameras,Life safety,3,2025-10-29,12,102000,Medium,2029,SAMPLE
+demo-n,demo-n-A09,Fire alarm system,Life safety,4,2025-04-01,24,140000,Low,2035,SAMPLE
+demo-o,demo-o-A01,Parking lot / blacktop,Site,1,2025-07-05,24,120000,High,2027,SAMPLE
+demo-o,demo-o-A02,Classroom windows,Envelope,2,2025-09-10,12,149000,High,2028,SAMPLE
+demo-o,demo-o-A03,Gym floor,Interior,2,2025-12-06,12,108000,High,2028,SAMPLE
+demo-o,demo-o-A04,Plumbing (domestic water),Mechanical,1,2026-04-27,12,114000,High,2027,SAMPLE
+demo-o,demo-o-A05,Playground equipment,Site,1,2026-03-01,36,64000,High,2027,SAMPLE
+demo-o,demo-o-A06,HVAC system,Mechanical,2,2025-10-02,24,172000,High,2027,SAMPLE
+demo-o,demo-o-A07,Boiler,Mechanical,3,2026-06-15,12,156000,High,2031,SAMPLE
+demo-o,demo-o-A08,Electrical service panel,Electrical,4,2025-07-12,24,113000,Low,2034,SAMPLE
+demo-o,demo-o-A09,Roof,Envelope,4,2025-10-03,12,596000,Low,2035,SAMPLE
+demo-o,demo-o-A10,Access control & cameras,Life safety,4,2025-10-02,12,53000,Low,2035,SAMPLE
+demo-o,demo-o-A11,Fire alarm system,Life safety,3,2025-09-12,36,176000,Medium,2029,SAMPLE
+demo-p,demo-p-A01,Gym floor,Interior,1,2025-04-17,12,61000,High,2027,SAMPLE
+demo-p,demo-p-A02,Restrooms (ADA),Interior,1,2026-03-29,12,135000,High,2027,SAMPLE
+demo-p,demo-p-A03,Roof,Envelope,5,2025-11-23,24,552000,Low,2034,SAMPLE
+demo-p,demo-p-A04,HVAC system,Mechanical,3,2025-12-14,24,847000,Medium,2031,SAMPLE
+demo-p,demo-p-A05,Plumbing (domestic water),Mechanical,5,2026-03-17,36,125000,Low,2032,SAMPLE
+demo-p,demo-p-A06,Electrical service panel,Electrical,3,2025-10-03,12,93000,Medium,2030,SAMPLE
+demo-p,demo-p-A07,Classroom windows,Envelope,4,2025-07-20,12,248000,Low,2035,SAMPLE
+demo-p,demo-p-A08,Parking lot / blacktop,Site,5,2026-07-02,12,211000,Low,2032,SAMPLE
+demo-p,demo-p-A09,Fire alarm system,Life safety,3,2025-05-11,12,122000,Medium,2029,SAMPLE
+demo-q,demo-q-A01,Parking lot / blacktop,Site,2,2026-02-04,12,37000,High,2028,SAMPLE
+demo-q,demo-q-A02,Playground equipment,Site,1,2026-03-27,24,52000,High,2027,SAMPLE
+demo-q,demo-q-A03,Gym floor,Interior,2,2025-06-10,12,61000,High,2028,SAMPLE
+demo-q,demo-q-A04,Electrical service panel,Electrical,2,2026-05-10,36,36000,High,2028,SAMPLE
+demo-q,demo-q-A05,Restrooms (ADA),Interior,2,2026-03-01,36,87000,High,2027,SAMPLE
+demo-q,demo-q-A06,Boiler,Mechanical,2,2026-04-12,36,90000,High,2028,SAMPLE
+demo-q,demo-q-A07,Classroom windows,Envelope,5,2025-04-25,36,95000,Low,2032,SAMPLE
+demo-q,demo-q-A08,Roof,Envelope,4,2026-04-04,12,231000,Low,2034,SAMPLE
+demo-q,demo-q-A09,HVAC system,Mechanical,4,2026-05-21,36,338000,Low,2036,SAMPLE
+demo-q,demo-q-A10,Fire alarm system,Life safety,4,2025-05-25,12,119000,Low,2034,SAMPLE
+demo-r,demo-r-A01,HVAC system,Mechanical,2,2026-05-19,12,744000,High,2028,SAMPLE
+demo-r,demo-r-A02,Boiler,Mechanical,2,2025-11-10,24,193000,High,2028,SAMPLE
+demo-r,demo-r-A03,Plumbing (domestic water),Mechanical,4,2026-03-22,12,44000,Low,2034,SAMPLE
+demo-r,demo-r-A04,Roof,Envelope,4,2025-11-17,36,639000,Low,2036,SAMPLE
+demo-r,demo-r-A05,Parking lot / blacktop,Site,3,2026-09-11,36,96000,Medium,2029,SAMPLE
+demo-r,demo-r-A06,Gym floor,Interior,3,2025-07-05,36,98000,Medium,2029,SAMPLE
+demo-r,demo-r-A07,Playground equipment,Site,3,2025-05-12,36,79000,Medium,2030,SAMPLE
+demo-r,demo-r-A08,Electrical service panel,Electrical,4,2026-04-02,12,76000,Low,2034,SAMPLE
+demo-r,demo-r-A09,Classroom windows,Envelope,3,2026-05-25,36,175000,High,2029,SAMPLE
+demo-r,demo-r-A10,Access control & cameras,Life safety,3,2025-08-03,12,81000,High,2030,SAMPLE
+demo-s,demo-s-A01,Playground equipment,Site,2,2025-05-31,12,49000,High,2027,SAMPLE
+demo-s,demo-s-A02,Electrical service panel,Electrical,1,2026-05-08,24,57000,High,2027,SAMPLE
+demo-s,demo-s-A03,Boiler,Mechanical,2,2026-02-19,36,53000,High,2027,SAMPLE
+demo-s,demo-s-A04,HVAC system,Mechanical,2,2025-11-23,36,247000,High,2027,SAMPLE
+demo-s,demo-s-A05,Classroom windows,Envelope,3,2025-11-27,36,108000,Medium,2030,SAMPLE
+demo-s,demo-s-A06,Roof,Envelope,5,2026-03-19,12,333000,Low,2034,SAMPLE
+demo-s,demo-s-A07,Plumbing (domestic water),Mechanical,5,2025-06-13,36,146000,Low,2034,SAMPLE
+demo-s,demo-s-A08,Fire alarm system,Life safety,4,2025-12-26,24,87000,Low,2032,SAMPLE
+demo-s,demo-s-A09,Access control & cameras,Life safety,5,2026-05-07,36,27000,Low,2036,SAMPLE
+demo-t,demo-t-A01,HVAC system,Mechanical,2,2025-06-23,12,431000,High,2027,SAMPLE
+demo-t,demo-t-A02,Electrical service panel,Electrical,4,2026-03-02,36,143000,Low,2034,SAMPLE
+demo-t,demo-t-A03,Playground equipment,Site,3,2026-06-16,12,133000,Medium,2031,SAMPLE
+demo-t,demo-t-A04,Roof,Envelope,4,2026-02-07,24,431000,Low,2033,SAMPLE
+demo-t,demo-t-A05,Classroom windows,Envelope,4,2026-04-01,24,251000,Low,2032,SAMPLE
+demo-t,demo-t-A06,Restrooms (ADA),Interior,4,2026-08-26,12,59000,Low,2032,SAMPLE
+demo-t,demo-t-A07,Gym floor,Interior,4,2026-07-29,12,72000,Low,2032,SAMPLE
+demo-t,demo-t-A08,Parking lot / blacktop,Site,5,2025-09-15,24,84000,Low,2036,SAMPLE
+demo-t,demo-t-A09,Fire alarm system,Life safety,4,2025-08-01,24,106000,Low,2033,SAMPLE
+demo-t,demo-t-A10,Access control & cameras,Life safety,4,2025-05-10,12,66000,Low,2033,SAMPLE
+demo-u,demo-u-A01,Roof,Envelope,2,2026-04-18,12,139000,High,2028,SAMPLE
+demo-u,demo-u-A02,Classroom windows,Envelope,2,2026-01-28,24,64000,High,2027,SAMPLE
+demo-u,demo-u-A03,Gym floor,Interior,2,2025-05-10,36,40000,High,2028,SAMPLE
+demo-u,demo-u-A04,HVAC system,Mechanical,2,2025-06-23,24,226000,High,2027,SAMPLE
+demo-u,demo-u-A05,Playground equipment,Site,4,2026-06-19,24,129000,Low,2036,SAMPLE
+demo-u,demo-u-A06,Electrical service panel,Electrical,4,2025-06-25,24,136000,Low,2035,SAMPLE
+demo-u,demo-u-A07,Parking lot / blacktop,Site,4,2026-01-01,36,158000,Low,2035,SAMPLE
+demo-u,demo-u-A08,Plumbing (domestic water),Mechanical,3,2025-12-25,36,102000,Medium,2030,SAMPLE
+demo-u,demo-u-A09,Fire alarm system,Life safety,5,2026-07-07,12,93000,Low,2034,SAMPLE
+demo-u,demo-u-A10,Access control & cameras,Life safety,5,2025-07-19,24,62000,Low,2035,SAMPLE
+demo-v,demo-v-A01,Roof,Envelope,2,2025-12-26,12,212000,High,2028,SAMPLE
+demo-v,demo-v-A02,Gym floor,Interior,2,2025-12-04,36,69000,High,2028,SAMPLE
+demo-v,demo-v-A03,Classroom windows,Envelope,1,2026-07-11,24,150000,High,2027,SAMPLE
+demo-v,demo-v-A04,Boiler,Mechanical,2,2025-11-22,12,187000,High,2027,SAMPLE
+demo-v,demo-v-A05,Playground equipment,Site,2,2025-08-20,36,127000,High,2028,SAMPLE
+demo-v,demo-v-A06,Plumbing (domestic water),Mechanical,3,2026-03-09,12,70000,Medium,2031,SAMPLE
+demo-v,demo-v-A07,Restrooms (ADA),Interior,3,2026-07-30,36,187000,High,2029,SAMPLE
+demo-v,demo-v-A08,HVAC system,Mechanical,4,2025-08-14,12,869000,Low,2035,SAMPLE
+demo-v,demo-v-A09,Access control & cameras,Life safety,5,2026-08-10,12,42000,Low,2035,SAMPLE
+demo-v,demo-v-A10,Fire alarm system,Life safety,4,2026-05-12,36,120000,Low,2035,SAMPLE
+demo-w,demo-w-A01,Restrooms (ADA),Interior,2,2026-01-03,12,127000,High,2027,SAMPLE
+demo-w,demo-w-A02,Electrical service panel,Electrical,1,2025-04-30,24,109000,High,2027,SAMPLE
+demo-w,demo-w-A03,Classroom windows,Envelope,2,2025-12-23,12,156000,High,2028,SAMPLE
+demo-w,demo-w-A04,Parking lot / blacktop,Site,2,2025-10-02,24,59000,High,2028,SAMPLE
+demo-w,demo-w-A05,Roof,Envelope,4,2026-06-29,12,627000,Low,2034,SAMPLE
+demo-w,demo-w-A06,Boiler,Mechanical,5,2025-06-20,12,103000,Low,2035,SAMPLE
+demo-w,demo-w-A07,Playground equipment,Site,3,2025-11-05,12,44000,Medium,2031,SAMPLE
+demo-w,demo-w-A08,Plumbing (domestic water),Mechanical,3,2025-09-13,12,220000,Medium,2029,SAMPLE
+demo-w,demo-w-A09,HVAC system,Mechanical,3,2025-06-29,12,515000,Medium,2031,SAMPLE
+demo-w,demo-w-A10,Access control & cameras,Life safety,4,2025-10-06,24,109000,Low,2032,SAMPLE
+demo-x,demo-x-A01,Classroom windows,Envelope,1,2025-12-25,12,154000,High,2027,SAMPLE
+demo-x,demo-x-A02,Boiler,Mechanical,5,2026-06-25,24,103000,Low,2032,SAMPLE
+demo-x,demo-x-A03,Playground equipment,Site,4,2025-10-22,12,69000,Low,2036,SAMPLE
+demo-x,demo-x-A04,Electrical service panel,Electrical,3,2026-03-04,36,136000,Medium,2031,SAMPLE
+demo-x,demo-x-A05,Restrooms (ADA),Interior,3,2026-06-07,36,176000,Medium,2029,SAMPLE
+demo-x,demo-x-A06,Roof,Envelope,5,2025-06-26,24,330000,Low,2035,SAMPLE
+demo-x,demo-x-A07,Access control & cameras,Life safety,3,2026-08-22,12,74000,Medium,2030,SAMPLE
+demo-y,demo-y-A01,Gym floor,Interior,2,2026-01-29,36,70000,High,2028,SAMPLE
+demo-y,demo-y-A02,Classroom windows,Envelope,2,2026-07-26,12,213000,High,2027,SAMPLE
+demo-y,demo-y-A03,Playground equipment,Site,2,2025-09-21,24,116000,High,2027,SAMPLE
+demo-y,demo-y-A04,Electrical service panel,Electrical,3,2025-06-07,12,93000,Medium,2031,SAMPLE
+demo-y,demo-y-A05,Roof,Envelope,3,2026-08-01,36,228000,Medium,2030,SAMPLE
+demo-y,demo-y-A06,Restrooms (ADA),Interior,4,2025-10-21,36,143000,Low,2036,SAMPLE
+demo-y,demo-y-A07,HVAC system,Mechanical,4,2026-01-27,12,381000,Low,2035,SAMPLE
+demo-y,demo-y-A08,Fire alarm system,Life safety,3,2025-05-29,12,87000,Medium,2031,SAMPLE
+demo-y,demo-y-A09,Access control & cameras,Life safety,4,2026-02-24,12,111000,Low,2033,SAMPLE

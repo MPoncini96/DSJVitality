@@ -14,7 +14,12 @@ export type Governance = "parish_elementary" | "diocesan_high" | "order_or_indep
 
 export interface School {
   id: string;
+  /** Display name (current CDE name, disambiguated). For demo schools, "School A" etc. */
   name: string;
+  /** true for the fictional demo schools that carry all simulated data */
+  demo: boolean;
+  /** other names the school appears under (directory, earlier CDE files) */
+  formerNames: string[];
   address: string;
   city: string;
   zip: string;

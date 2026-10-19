@@ -1,23 +1,24 @@
 school_id,action_id,area,action,owner_role,due,status,metric,provenance
-st-joseph-cupertino,st-joseph-cupertino-T1,Marketing,Inquiry follow-up within 48 hours; log every inquiry in the shared pipeline,Director of Enrollment,2026-12-17,Not started,Inquiry-to-tour rate,SAMPLE
-st-joseph-cupertino,st-joseph-cupertino-T2,Enrollment,TK/pre-K feeder outreach with parish ministries and local preschools,Director of Enrollment,2027-03-10,Not started,K applications,SAMPLE
-st-joseph-cupertino,st-joseph-cupertino-T3,Enrollment,Personal re-enrollment conversations with every returning family before the deposit deadline,Principal,2026-11-12,Not started,Re-enrollment rate,SAMPLE
-st-joseph-cupertino,st-joseph-cupertino-T4,Finance,Monthly budget-vs-actual review with pastor and principal,Business Manager,2027-01-06,Not started,Expense variance YTD,SAMPLE
-st-joseph-cupertino,st-joseph-cupertino-T5,Finance,Bring tuition-assistance discount rate inside the diocesan guideline band,Business Manager,2027-01-08,Not started,Discount rate,SAMPLE
-st-joseph-cupertino,st-joseph-cupertino-T6,Finance,Collections plan for balances over 60 days (payment plans through TADS),Business Manager,2026-10-28,Not started,Receivables 60+ days,SAMPLE
-st-justin,st-justin-T1,Marketing,Inquiry follow-up within 48 hours; log every inquiry in the shared pipeline,Director of Enrollment,2026-09-25,Done,Inquiry-to-tour rate,SAMPLE
-st-justin,st-justin-T2,Systems,Clean family records in TADS before the assistance cycle opens,Office Manager,2027-03-21,On track,Record completeness,SAMPLE
-st-justin,st-justin-T3,Finance,Monthly budget-vs-actual review with pastor and principal,Business Manager,2026-08-16,At risk,Expense variance YTD,SAMPLE
-st-justin,st-justin-T4,Finance,Collections plan for balances over 60 days (payment plans through TADS),Business Manager,2027-01-08,On track,Receivables 60+ days,SAMPLE
-st-justin,st-justin-T5,Enrollment,Personal re-enrollment conversations with every returning family before the deposit deadline,Principal,2027-02-28,Not started,Re-enrollment rate,SAMPLE
-st-justin,st-justin-T6,Enrollment,TK/pre-K feeder outreach with parish ministries and local preschools,Director of Enrollment,2026-10-02,At risk,K applications,SAMPLE
-st-frances-cabrini,st-frances-cabrini-T1,Enrollment,Personal re-enrollment conversations with every returning family before the deposit deadline,Principal,2026-09-06,Done,Re-enrollment rate,SAMPLE
-st-frances-cabrini,st-frances-cabrini-T2,Systems,Clean family records in TADS before the assistance cycle opens,Office Manager,2027-03-25,On track,Record completeness,SAMPLE
-st-frances-cabrini,st-frances-cabrini-T3,Facilities,Fund and schedule life-safety repairs before any discretionary capital,Pastor,2026-09-18,At risk,Life-safety items open,SAMPLE
-st-frances-cabrini,st-frances-cabrini-T4,Finance,Monthly budget-vs-actual review with pastor and principal,Business Manager,2026-12-20,Not started,Expense variance YTD,SAMPLE
-st-frances-cabrini,st-frances-cabrini-T5,Enrollment,TK/pre-K feeder outreach with parish ministries and local preschools,Director of Enrollment,2026-09-11,Done,K applications,SAMPLE
-holy-family,holy-family-T1,Facilities,Fund and schedule life-safety repairs before any discretionary capital,Pastor,2026-12-13,Not started,Life-safety items open,SAMPLE
-holy-family,holy-family-T2,Systems,Clean family records in TADS before the assistance cycle opens,Office Manager,2026-11-30,On track,Record completeness,SAMPLE
-holy-family,holy-family-T3,Marketing,Inquiry follow-up within 48 hours; log every inquiry in the shared pipeline,Director of Enrollment,2026-08-11,At risk,Inquiry-to-tour rate,SAMPLE
-holy-family,holy-family-T4,Enrollment,Personal re-enrollment conversations with every returning family before the deposit deadline,Principal,2027-04-08,On track,Re-enrollment rate,SAMPLE
-holy-family,holy-family-T5,Finance,Collections plan for balances over 60 days (payment plans through TADS),Business Manager,2027-03-05,On track,Receivables 60+ days,SAMPLE
+demo-i,demo-i-T1,Finance,Bring tuition-assistance discount rate inside the guideline band,Business Manager,2027-02-16,Not started,Discount rate,SAMPLE
+demo-i,demo-i-T2,Systems,Clean family records in TADS before the assistance cycle opens,Office Manager,2027-04-12,Not started,Record completeness,SAMPLE
+demo-i,demo-i-T3,Finance,Collections plan for balances over 60 days (payment plans through TADS),Business Manager,2026-08-19,Not started,Receivables 60+ days,SAMPLE
+demo-i,demo-i-T4,Enrollment,TK/pre-K feeder outreach with parish ministries and local preschools,Director of Enrollment,2026-12-01,Not started,K applications,SAMPLE
+demo-i,demo-i-T5,Facilities,Fund and schedule life-safety repairs before any discretionary capital,Pastor,2027-03-11,Not started,Life-safety items open,SAMPLE
+demo-i,demo-i-T6,Finance,Monthly budget-vs-actual review with pastor and principal,Business Manager,2026-11-21,Not started,Expense variance YTD,SAMPLE
+demo-q,demo-q-T1,Enrollment,TK/pre-K feeder outreach with parish ministries and local preschools,Director of Enrollment,2027-02-16,On track,K applications,SAMPLE
+demo-q,demo-q-T2,Marketing,Inquiry follow-up within 48 hours; log every inquiry in the shared pipeline,Director of Enrollment,2027-01-05,On track,Inquiry-to-tour rate,SAMPLE
+demo-q,demo-q-T3,Systems,Clean family records in TADS before the assistance cycle opens,Office Manager,2026-08-28,Done,Record completeness,SAMPLE
+demo-q,demo-q-T4,Facilities,Fund and schedule life-safety repairs before any discretionary capital,Pastor,2027-01-17,On track,Life-safety items open,SAMPLE
+demo-q,demo-q-T5,Enrollment,Personal re-enrollment conversations with every returning family before the deposit deadline,Principal,2026-10-09,On track,Re-enrollment rate,SAMPLE
+demo-u,demo-u-T1,Finance,Bring tuition-assistance discount rate inside the guideline band,Business Manager,2027-03-30,On track,Discount rate,SAMPLE
+demo-u,demo-u-T2,Enrollment,TK/pre-K feeder outreach with parish ministries and local preschools,Director of Enrollment,2027-02-27,Not started,K applications,SAMPLE
+demo-u,demo-u-T3,Enrollment,Personal re-enrollment conversations with every returning family before the deposit deadline,Principal,2026-11-22,On track,Re-enrollment rate,SAMPLE
+demo-u,demo-u-T4,Finance,Monthly budget-vs-actual review with pastor and principal,Business Manager,2027-01-26,On track,Expense variance YTD,SAMPLE
+demo-u,demo-u-T5,Systems,Clean family records in TADS before the assistance cycle opens,Office Manager,2027-01-26,At risk,Record completeness,SAMPLE
+demo-u,demo-u-T6,Marketing,Inquiry follow-up within 48 hours; log every inquiry in the shared pipeline,Director of Enrollment,2026-08-26,Done,Inquiry-to-tour rate,SAMPLE
+demo-b,demo-b-T1,Enrollment,TK/pre-K feeder outreach with parish ministries and local preschools,Director of Enrollment,2027-03-14,At risk,K applications,SAMPLE
+demo-b,demo-b-T2,Systems,Clean family records in TADS before the assistance cycle opens,Office Manager,2026-12-28,Not started,Record completeness,SAMPLE
+demo-b,demo-b-T3,Finance,Collections plan for balances over 60 days (payment plans through TADS),Business Manager,2026-12-25,Not started,Receivables 60+ days,SAMPLE
+demo-b,demo-b-T4,Facilities,Fund and schedule life-safety repairs before any discretionary capital,Pastor,2027-01-17,At risk,Life-safety items open,SAMPLE
+demo-b,demo-b-T5,Finance,Monthly budget-vs-actual review with pastor and principal,Business Manager,2027-03-10,On track,Expense variance YTD,SAMPLE
+demo-b,demo-b-T6,Enrollment,Personal re-enrollment conversations with every returning family before the deposit deadline,Principal,2027-02-21,On track,Re-enrollment rate,SAMPLE

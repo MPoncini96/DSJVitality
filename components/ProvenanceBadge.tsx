@@ -2,43 +2,33 @@ import type { MixedProvenance } from "@/lib/data";
 
 export type BadgeKind = MixedProvenance | "PROJECTED" | "UNVERIFIED";
 
-const TEXT: Record<BadgeKind, { label: string; title: string }> = {
-  PROJECTED: { label: "PROJECTED", title: "A forecast computed from real public data. Not a reported figure." },
-  UNVERIFIED: { label: "UNVERIFIED", title: "From a third-party listing (e.g. Niche); not confirmed on the school's own site. Not used in any calculation." },
-  REAL: { label: "REAL", title: "From a public source. See /about for the citation." },
-  SAMPLE: { label: "SIMULATED", title: "Simulated data (fixed seed). Not real figures for any school." },
-  MIXED: { label: "PARTLY SIMULATED", title: "Combines public data with simulated data." },
-};
-
-/** Provenance badge. Shape + text + color, so it never relies on color alone. */
-export function ProvenanceBadge({ p, className = "", compact = false }: { p: BadgeKind; className?: string; compact?: boolean }) {
-  const t = TEXT[p];
-  const real = p === "REAL";
-  if (p === "PROJECTED" || p === "UNVERIFIED") {
-    return (
-      <span title={t.title}
-        className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10.5px] font-semibold tracking-wide whitespace-nowrap ${p === "PROJECTED" ? "border-accent text-accent" : "border-dotted border-faint text-muted"} ${className}`}>
-        <span aria-hidden="true">{p === "PROJECTED" ? "↗" : "?"}</span>
-        {compact ? <span className="sr-only">{t.label}</span> : t.label}
-        <span className="sr-only">: {t.title}</span>
-      </span>
-    );
-  }
+/**
+ * One convention for provenance:
+ *   REAL        renders normally, with its source cited in the card. No badge.
+ *   SIMULATED   hatched card background plus one small "Simulated" tag in the card header.
+ *   PROJECTED / UNVERIFIED  a small text note, not a pill.
+ */
+export function SimTag({ className = "" }: { className?: string }) {
   return (
-    <span
-      title={t.title}
-      className={
-        "inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10.5px] font-semibold tracking-wide whitespace-nowrap " +
-        (real
-          ? "border-real-border bg-real-bg text-real-fg"
-          : "border-dashed border-sample-border bg-sample-bg text-sample-fg") +
-        " " +
-        className
-      }
-    >
-      <span aria-hidden="true">{real ? "✓" : "◇"}</span>
-      {compact ? <span className="sr-only">{t.label}</span> : t.label}
-      <span className="sr-only">: {t.title}</span>
+    <span title="Simulated data for a fictional school (fixed seed). Not a real figure for any school."
+      className={`inline-flex items-center gap-1 rounded border border-dashed border-sample-border bg-sample-bg px-1.5 py-px text-[11px] font-semibold text-sample-fg ${className}`}>
+      <span aria-hidden="true">◇</span>Simulated
     </span>
   );
+}
+
+const NOTE: Record<"PROJECTED" | "UNVERIFIED", { text: string; title: string }> = {
+  PROJECTED: { text: "Scenario, not a forecast", title: "A range computed from real public data. Not a reported figure and not a prediction." },
+  UNVERIFIED: { text: "Unverified", title: "From a third-party listing; not confirmed on the school's own site. Not used in any calculation." },
+};
+
+export function ProvenanceNote({ p, className = "" }: { p: "PROJECTED" | "UNVERIFIED"; className?: string }) {
+  return <span title={NOTE[p].title} className={`text-xs italic text-muted ${className}`}>{NOTE[p].text}</span>;
+}
+
+/** Card-header marker for a given provenance; nothing for REAL. */
+export function ProvenanceBadge({ p, className = "" }: { p: BadgeKind; className?: string }) {
+  if (p === "REAL") return null;
+  if (p === "PROJECTED" || p === "UNVERIFIED") return <ProvenanceNote p={p} className={className} />;
+  return <SimTag className={className} />;
 }

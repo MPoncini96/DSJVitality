@@ -7,10 +7,11 @@ import {
   getFacilities, getPipeline, getReceivables, getReenrollment, getSchool, getTuition, getTuitionAssistance, getTuitionUnverified,
   latestEnrollmentYear, provenanceOf, type MixedProvenance,
 } from "./data";
+import { BASE_YEAR, DEMO_AS_OF, SCENARIO_CAGR_CAP } from "./config";
 import type { Provenance, UnverifiedTuition } from "./types";
 
-/** The date the Radar is "as of". SAMPLE data is generated relative to this date. */
-export const AS_OF = "2026-10-01";
+/** Simulated internal data (demo schools only) is a snapshot as of this date. */
+const AS_OF = DEMO_AS_OF;
 const AS_OF_DATE = new Date(`${AS_OF}T00:00:00Z`);
 const DAY = 86400000;
 
@@ -21,7 +22,12 @@ export interface EnrollmentMetrics {
   latestYear: number;
   latest: number | null;
   series: { year: number; total: number }[];
-  cagr5: number | null;
+  /** first year of the long trend (BASE_YEAR, 2019-20) */
+  baseYear: number;
+  /** compound annual change from the base year to the latest year */
+  cagr: number | null;
+  /** total change from the base year to the latest year */
+  changeSinceBase: number | null;
   change1: number | null;
   consecutiveDeclines: number;
   entryGrade: string;
@@ -62,20 +68,20 @@ export interface MarketMetrics {
   provenance: MixedProvenance;
 }
 
-/** Enrollment projected forward from REAL inputs; labeled PROJECTED, never REAL. */
-export interface ProjectionMetrics {
-  /** first projected school year */
-  from: number | null;
-  years: { year: number; k: number; total: number }[];
-  /** grade-to-grade continuation ratios used (3-year pooled) */
-  ratios: { grade: string; ratio: number }[];
-  /** last projected total vs. the latest actual total */
-  change: number | null;
+/**
+ * Enrollment scenarios, not a forecast. Two simple scenarios bracket a range:
+ *   trend:  latest x (1 + CAGR since the base year, capped) ^ years ahead
+ *   births: latest x average over grades K-8 of births(cohort) / births(today's cohort),
+ *           i.e. today's enrollment carried along the local births curve
+ * low = the lower of the two each year, high = the higher. Shown as a range only.
+ */
+export interface ScenarioMetrics {
+  years: { year: number; low: number; high: number; trend: number; births: number }[];
+  /** the capped CAGR the trend scenario uses */
+  trendRate: number | null;
   method: string;
   /** provenance of the inputs (REAL when enrollment and births are REAL) */
   inputs: MixedProvenance;
-  /** reasons to treat this projection with extra caution */
-  lowConfidence: string[];
 }
 
 export interface FinanceMetrics {
@@ -142,7 +148,7 @@ export interface SchoolMetrics {
   enrollment: EnrollmentMetrics;
   reenrollment: ReenrollmentMetrics;
   market: MarketMetrics;
-  projection: ProjectionMetrics;
+  scenario: ScenarioMetrics;
   finance: FinanceMetrics;
   facilities: FacilitiesMetrics;
   systems: SystemsMetrics;
@@ -172,7 +178,8 @@ function enrollmentMetrics(schoolId: string): EnrollmentMetrics {
     if (den > 0) retention.push(num / den);
   }
 
-  const cagr5 = t.get(L) && t.get(L - 5) ? (t.get(L)! / t.get(L - 5)!) ** (1 / 5) - 1 : null;
+  const span = L - BASE_YEAR;
+  const cagr = span > 0 && t.get(L) && t.get(BASE_YEAR) ? (t.get(L)! / t.get(BASE_YEAR)!) ** (1 / span) - 1 : null;
   const e = (y: number) => count(y, entryGrade);
   const entryTrend3 = e(L) && e(L - 3) ? (e(L)! / e(L - 3)!) ** (1 / 3) - 1 : null;
   const isElementary = topGrade !== "12";
@@ -181,7 +188,9 @@ function enrollmentMetrics(schoolId: string): EnrollmentMetrics {
     latestYear: L,
     latest: t.get(L) ?? null,
     series: totals.map((x) => ({ year: x.year, total: x.total })),
-    cagr5,
+    baseYear: BASE_YEAR,
+    cagr,
+    changeSinceBase: t.get(L) && t.get(BASE_YEAR) ? t.get(L)! / t.get(BASE_YEAR)! - 1 : null,
     change1: t.get(L) && t.get(L - 1) ? t.get(L)! / t.get(L - 1)! - 1 : null,
     consecutiveDeclines: consecutiveDeclines(totals),
     entryGrade,
@@ -236,53 +245,35 @@ function marketMetrics(schoolId: string, enrollment: EnrollmentMetrics): MarketM
   };
 }
 
-/**
- * Cohort-survival projection:
- *   K(y)       = recent kindergarten share x births in y - 5
- *   grade g(y) = grade g-1 (y-1) x pooled continuation ratio for g over the last 3 transitions
- * Runs as far as births allow (births 2024 -> kindergarten 2029-30).
- */
-const RATIO_CAP: [number, number] = [0.75, 1.25];
-
-function projectionMetrics(enrollment: EnrollmentMetrics, market: MarketMetrics): ProjectionMetrics {
-  const empty: ProjectionMetrics = { from: null, years: [], ratios: [], change: null, method: "", inputs: market.provenance, lowConfidence: [] };
-  if (enrollment.entryGrade !== "K" || market.share3 === null || market.latestBirthYear === null) return empty;
-  const L = enrollment.latestYear;
-  const grades = ["K", "1", "2", "3", "4", "5", "6", "7", "8"];
-  const count = (y: number, g: string) => enrollment.byGrade.find((r) => r.year === y && r.grade === g)?.count;
-  const ratios = grades.slice(1).map((g, i) => {
-    let num = 0, den = 0;
-    for (let y = L; y > L - 3; y--) {
-      const now = count(y, g), before = count(y - 1, grades[i]);
-      if (now !== undefined && before !== undefined) { num += now; den += before; }
+function scenarioMetrics(enrollment: EnrollmentMetrics, market: MarketMetrics): ScenarioMetrics {
+  const inputs = provenanceOf([enrollment.provenance, market.provenance].map((p) => ({ provenance: p === "REAL" ? ("REAL" as const) : ("SAMPLE" as const) })));
+  const method =
+    `Trend: latest enrollment grown at the ${enrollment.baseYear}-${String((enrollment.baseYear + 1) % 100).padStart(2, "0")} to latest annual rate, capped at ` +
+    `${SCENARIO_CAGR_CAP[0] * 100}% to +${SCENARIO_CAGR_CAP[1] * 100}% a year. Births: latest enrollment scaled by the change in births for the ` +
+    "children who will fill grades K-8 that year. The range runs from the lower to the higher scenario.";
+  const empty: ScenarioMetrics = { years: [], trendRate: null, method, inputs };
+  const L = enrollment.latestYear, latest = enrollment.latest;
+  if (latest === null || enrollment.cagr === null || market.latestBirthYear === null) return empty;
+  const rate = Math.min(SCENARIO_CAGR_CAP[1], Math.max(SCENARIO_CAGR_CAP[0], enrollment.cagr));
+  const b = new Map(market.births.map((x) => [x.year, x.births]));
+  // A child in grade k in school year y was born in about y - 5 - k.
+  const cohortIndex = (y: number) => {
+    const r: number[] = [];
+    for (let k = 0; k <= 8; k++) {
+      const now = b.get(y - 5 - k), base = b.get(L - 5 - k);
+      if (now && base) r.push(now / base);
     }
-    // Small grades swing wildly (5 -> 20 students is a ratio of 4), so ratios are capped to a
-    // plausible range; capping is reported so the page can say the projection is low-confidence.
-    const r = den ? num / den : 1;
-    return { grade: g, ratio: Math.min(RATIO_CAP[1], Math.max(RATIO_CAP[0], r)), capped: r < RATIO_CAP[0] || r > RATIO_CAP[1] };
-  });
-  const births = new Map(market.births.map((x) => [x.year, x.births]));
-  let prev = grades.map((g) => count(L, g) ?? 0);
-  const years: ProjectionMetrics["years"] = [];
-  for (let y = L + 1; births.has(y - 5); y++) {
-    const next = grades.map((_, i) => (i === 0 ? market.share3! * births.get(y - 5)! : prev[i - 1] * ratios[i - 1].ratio));
-    years.push({ year: y, k: Math.round(next[0]), total: Math.round(next.reduce((a, c) => a + c, 0)) });
-    prev = next;
-  }
-  const latest = enrollment.latest;
-  return {
-    from: years[0]?.year ?? null,
-    years,
-    ratios: ratios.map((r) => ({ grade: r.grade, ratio: Math.round(r.ratio * 1000) / 1000 })),
-    lowConfidence: [
-      ...(latest !== null && latest < 100 ? ["fewer than 100 students"] : []),
-      ...(ratios.some((r) => r.capped) ? [`continuation ratio capped for grade ${ratios.filter((r) => r.capped).map((r) => r.grade).join(", ")}`] : []),
-      ...(market.kShare.length < 5 ? ["fewer than 5 years of kindergarten data"] : []),
-    ],
-    change: latest && years.length ? years.at(-1)!.total / latest - 1 : null,
-    method: "Kindergarten = 3-year average share of local births x births five years earlier; other grades = prior grade x 3-year continuation ratio (capped at 0.75–1.25).",
-    inputs: provenanceOf([{ provenance: enrollment.provenance === "REAL" ? "REAL" : "SAMPLE" }, { provenance: market.provenance === "REAL" ? "REAL" : "SAMPLE" }]),
+    return r.length === 9 ? r.reduce((a, x) => a + x, 0) / 9 : null;
   };
+  const years: ScenarioMetrics["years"] = [];
+  for (let y = L + 1; y - 5 <= market.latestBirthYear; y++) {
+    const idx = cohortIndex(y);
+    if (idx === null) break;
+    const trend = latest * (1 + rate) ** (y - L);
+    const births = latest * idx;
+    years.push({ year: y, trend: Math.round(trend), births: Math.round(births), low: Math.round(Math.min(trend, births)), high: Math.round(Math.max(trend, births)) });
+  }
+  return { years, trendRate: rate, method, inputs };
 }
 
 function financeMetrics(schoolId: string, enrollment: EnrollmentMetrics): FinanceMetrics {
@@ -445,7 +436,7 @@ export function schoolMetrics(schoolId: string): SchoolMetrics {
     enrollment,
     reenrollment: reenrollmentMetrics(schoolId),
     market,
-    projection: projectionMetrics(enrollment, market),
+    scenario: scenarioMetrics(enrollment, market),
     finance: financeMetrics(schoolId, enrollment),
     facilities: facilitiesMetrics(schoolId),
     systems: systemsMetrics(schoolId),

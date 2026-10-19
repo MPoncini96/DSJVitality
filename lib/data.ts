@@ -2,18 +2,17 @@
  * The single typed data-access layer. Every page reads data through here, so
  * moving from CSV files to Postgres later means rewriting this file only.
  *
- * Swap mechanism (SAMPLE -> REAL):
- *   data/sample/<name>.csv   generated SAMPLE rows (scripts/generate_sample.ts)
- *   data/<name>.csv          REAL rows (from scripts that pull public sources)
- * Both are loaded; a REAL row replaces the SAMPLE row with the same key. So REAL
- * data can arrive one school (or one year) at a time and the badges follow.
+ * Two separate systems share the same file layout:
+ *   data/<name>.csv          REAL rows for the real schools (public sources)
+ *   data/sample/<name>.csv   SAMPLE rows for the fictional demo schools (School A..Y)
+ * A SAMPLE row may only belong to a demo school and a REAL row only to a real one;
+ * loading fails otherwise. So simulated values can never end up next to a real name.
  */
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { parseCsv } from "./csv";
-import { Rng } from "./rng";
 import type {
-  BudgetCategory, BudgetRow, CashRow, DataAuditRow, DemographicsRow, EnrollmentRow, FacilityRow, Feed,
+  BudgetCategory, BudgetRow, CashRow, DataAuditRow, EnrollmentRow, FacilityRow, Feed,
   Governance, PipelineRow, Provenance, ReceivableRow, ReenrollmentRow, School, TuitionAssistanceRow, TuitionRow,
   BirthsRow, StaffingRow, TurnaroundAction, TurnaroundPhase, TurnaroundRow, UnverifiedTuition,
 } from "./types";
@@ -51,14 +50,19 @@ function loadMerged<T extends { provenance: Provenance }>(
   const samplePath = join(dataDir(), "sample", `${name}.csv`);
   const realPath = join(dataDir(), `${name}.csv`);
   const merged = new Map<string, T>();
+  const owner = (row: T) => (row as { schoolId?: string }).schoolId;
   for (const r of readCsv(samplePath)) {
     const row = map(r, samplePath);
     if (row.provenance !== "SAMPLE") throw new Error(`${samplePath}: only SAMPLE rows belong in data/sample/`);
+    const id = owner(row);
+    if (id !== undefined && !isDemoId(id)) throw new Error(`${samplePath}: simulated row for real school "${id}"; simulated data belongs to demo schools only`);
     merged.set(key(row), row);
   }
   for (const r of readCsv(realPath)) {
     const row = map(r, realPath);
     if (row.provenance !== "REAL") throw new Error(`${realPath}: only REAL rows belong outside data/sample/`);
+    const id = owner(row);
+    if (id !== undefined && isDemoId(id)) throw new Error(`${realPath}: REAL row for demo school "${id}"`);
     merged.set(key(row), row);
   }
   let rows = [...merged.values()];
@@ -76,15 +80,43 @@ export function clearCache() {
 }
 
 // ---------------------------------------------------------------- schools
-export type SchoolScope = "default" | "all";
+/** "default" = the 25 parish elementary schools; "all" = all 33 in the directory; "demo" = the 25 fictional schools. */
+export type SchoolScope = "default" | "all" | "demo";
+
+export const isDemoId = (id: string) => id.startsWith("demo-");
+
+/**
+ * Display names. The directory and the CDE file don't always agree; these follow the
+ * current CDE name, disambiguated where two schools share one. Every other name the
+ * school has appeared under is kept in `formerNames` (shown as a tooltip).
+ */
+export const NAME_OVERRIDES: Record<string, string> = {
+  "st-lawrence": "St. Lawrence School",
+  "st-joseph-mv": "St. Joseph School (Mountain View)",
+  "st-joseph-cupertino": "St. Joseph of Cupertino School",
+};
+
+function otherNames(): Map<string, string[]> {
+  const m = new Map<string, string[]>();
+  for (const r of readCsv(join(dataDir(), "match_review.csv"))) {
+    m.set(r.school_id, [r.directory_name, r.cde_name, ...(r.former_cde_names ? r.former_cde_names.split(/\s*;\s*/) : [])].filter(Boolean));
+  }
+  return m;
+}
 
 export function getSchools(scope: SchoolScope = "default"): School[] {
+  if (scope === "demo") return getDemoSchools();
   const memo = `${dataDir()}::schools`;
   let all = cache.get(memo) as School[] | undefined;
   if (!all) {
-    all = readCsv(join(dataDir(), "schools.csv")).map((r) => ({
+    const others = otherNames();
+    all = readCsv(join(dataDir(), "schools.csv")).map((r) => {
+      const name = NAME_OVERRIDES[r.id] ?? r.name;
+      return {
       id: r.id,
-      name: r.name,
+      name,
+      demo: false,
+      formerNames: [...new Set([r.name, ...(others.get(r.id) ?? [])])].filter((n) => n !== name),
       address: r.address,
       city: r.city,
       zip: r.zip,
@@ -101,14 +133,32 @@ export function getSchools(scope: SchoolScope = "default"): School[] {
       geocodeNote: r.geocode_note,
       sourceUrl: r.source_url,
       retrieved: r.retrieved,
-    }));
+      };
+    });
     cache.set(memo, all);
   }
   return scope === "all" ? all : all.filter((s) => s.governance === "parish_elementary");
 }
 
+/** The fictional demo schools. Only their names and ids exist; nothing locates them. */
+export function getDemoSchools(): School[] {
+  const memo = `${dataDir()}::demo_schools`;
+  const hit = cache.get(memo) as School[] | undefined;
+  if (hit) return hit;
+  const rows = readCsv(join(dataDir(), "sample", "demo_schools.csv")).map((r): School => {
+    if (!isDemoId(r.id)) throw new Error(`demo_schools.csv: id "${r.id}" must start with demo-`);
+    return {
+      id: r.id, name: r.name, demo: true, formerNames: [], address: "", city: "Fictional school", zip: "", zipSource: "source",
+      phone: "", website: "", grades: "K-8", parish: "", governance: "parish_elementary", governanceBasis: "fictional",
+      lat: NaN, lng: NaN, geocodeMatch: "", geocodeNote: "", sourceUrl: "", retrieved: "",
+    };
+  });
+  cache.set(memo, rows);
+  return rows;
+}
+
 export function getSchool(id: string): School | undefined {
-  return getSchools("all").find((s) => s.id === id);
+  return (isDemoId(id) ? getDemoSchools() : getSchools("all")).find((s) => s.id === id);
 }
 
 // ---------------------------------------------------------------- datasets
@@ -148,6 +198,15 @@ export function getTuitionUnverified(): UnverifiedTuition[] {
   return readCsv(join(dataDir(), "tuition_unverified.csv")).map((r) => ({
     schoolId: r.school_id, schoolYear: r.school_year, tuition: num(r.tuition), parishRate: r.parish_rate ? num(r.parish_rate) : null,
     notes: r.notes, sourceUrl: r.source_url,
+  }));
+}
+
+/** How each real school was matched to the CDE file, and anything in the file that needs a second look. */
+export function getMatchReview(): { schoolId: string; directoryName: string; cdeName: string; formerCdeNames: string[]; cdsCode: string; district: string; years: string; matchBasis: string; issues: string[]; needsReview: boolean }[] {
+  return readCsv(join(dataDir(), "match_review.csv")).map((r) => ({
+    schoolId: r.school_id, directoryName: r.directory_name, cdeName: r.cde_name,
+    formerCdeNames: r.former_cde_names ? r.former_cde_names.split(/\s*;\s*/) : [], cdsCode: r.cds_code, district: r.public_district,
+    years: r.years, matchBasis: r.match_basis, issues: r.issues ? r.issues.split(/\s*\|\s*/) : [], needsReview: r.needs_review === "yes",
   }));
 }
 
@@ -221,13 +280,6 @@ export const getDataAudit = () =>
       completenessPct: num(r.completeness_pct), issues: num(r.issues), provenance: asProvenance(r.provenance, f),
     }),
     (x) => `${x.schoolId}|${x.feed}`
-  );
-
-export const getDemographics = () =>
-  loadMerged<DemographicsRow>(
-    "demographics",
-    (r, f) => ({ zip: r.zip, year: num(r.year), pop5to14: num(r.pop_5_14), medianHouseholdIncome: num(r.median_household_income), provenance: asProvenance(r.provenance, f), source: r.source }),
-    (x) => `${x.zip}|${x.year}`
   );
 
 export const getReenrollment = () =>
@@ -364,27 +416,9 @@ export function median(values: number[]): number | null {
   return v.length % 2 ? v[m] : (v[m - 1] + v[m]) / 2;
 }
 
-/**
- * Stable anonymous labels ("School A", "School B", ...). The order is a seeded
- * shuffle, not alphabetical, so letters can't be mapped back to names. Parish
- * elementary schools come first (A..Y), so the default view uses contiguous letters
- * and a school keeps the same letter in every view.
- */
-export function anonymousLabels(schools: School[]): Record<string, string> {
-  const byId = [...schools].sort((a, b) => a.id.localeCompare(b.id));
-  const rng = new Rng(7177);
-  const order = [
-    ...rng.shuffle(byId.filter((s) => s.governance === "parish_elementary")),
-    ...rng.shuffle(byId.filter((s) => s.governance !== "parish_elementary")),
-  ];
-  const label = (i: number) =>
-    i < 26 ? String.fromCharCode(65 + i) : String.fromCharCode(65 + Math.floor(i / 26) - 1) + String.fromCharCode(65 + (i % 26));
-  return Object.fromEntries(order.map((s, i) => [s.id, `School ${label(i)}`]));
-}
-
 /** Latest school year present in the enrollment data. */
 export function latestEnrollmentYear(): number {
-  return Math.max(...getEnrollment().map((r) => r.year));
+  return Math.max(...getEnrollment().filter((r) => r.provenance === "REAL").map((r) => r.year));
 }
 
 export const schoolYearLabel = (y: number) => `${y}-${String((y + 1) % 100).padStart(2, "0")}`;

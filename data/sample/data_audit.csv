@@ -1,166 +1,126 @@
 school_id,feed,last_refresh,row_count,completeness_pct,issues,provenance
-archbishop-mitty,TADS,2026-09-19,2987,89.9,9,SAMPLE
-archbishop-mitty,Power BI,2026-06-15,10726,96.5,4,SAMPLE
-archbishop-mitty,SharePoint,2026-09-19,1260,82.4,11,SAMPLE
-archbishop-mitty,Workday,2026-08-04,243,96.9,3,SAMPLE
-archbishop-mitty,QuickBooks,2026-09-20,34539,100,0,SAMPLE
-bellarmine,TADS,2026-09-13,4633,92.7,9,SAMPLE
-bellarmine,Power BI,2026-09-25,18091,97.8,2,SAMPLE
-bellarmine,SharePoint,2026-09-14,2064,82.6,14,SAMPLE
-bellarmine,Workday,2026-09-11,314,86.8,9,SAMPLE
-bellarmine,QuickBooks,2026-09-10,51851,93.1,5,SAMPLE
-canyon-heights,TADS,2026-09-26,433,90.2,6,SAMPLE
-canyon-heights,Power BI,2026-09-12,1557,93.3,7,SAMPLE
-canyon-heights,SharePoint,2026-09-25,179,83,12,SAMPLE
-canyon-heights,Workday,2026-09-30,36,92.5,7,SAMPLE
-canyon-heights,QuickBooks,2026-09-10,5354,99.2,0,SAMPLE
-cristo-rey-sj,TADS,2026-09-22,2422,94,6,SAMPLE
-cristo-rey-sj,Power BI,2026-09-16,8832,92.2,10,SAMPLE
-cristo-rey-sj,SharePoint,2026-09-19,1169,80.2,18,SAMPLE
-cristo-rey-sj,Workday,2026-09-25,184,95.8,2,SAMPLE
-cristo-rey-sj,QuickBooks,2026-07-10,28307,96.2,3,SAMPLE
-holy-family,TADS,2026-09-15,736,94.2,5,SAMPLE
-holy-family,Power BI,2026-09-23,2435,92,9,SAMPLE
-holy-family,SharePoint,2026-09-13,320,89.6,11,SAMPLE
-holy-family,Workday,2026-09-29,55,94,7,SAMPLE
-holy-family,QuickBooks,2026-09-27,8800,94,6,SAMPLE
-holy-spirit,TADS,2026-09-15,1197,91.3,7,SAMPLE
-holy-spirit,Power BI,2026-09-10,5042,100,0,SAMPLE
-holy-spirit,SharePoint,2026-09-13,605,90.2,11,SAMPLE
-holy-spirit,Workday,2026-09-21,109,95.2,3,SAMPLE
-holy-spirit,QuickBooks,2026-09-23,16756,93.4,5,SAMPLE
-most-holy-trinity,TADS,2026-09-18,561,93.5,5,SAMPLE
-most-holy-trinity,Power BI,2026-09-12,2061,91,9,SAMPLE
-most-holy-trinity,SharePoint,2026-09-14,242,81.9,16,SAMPLE
-most-holy-trinity,Workday,2026-09-30,46,97.9,0,SAMPLE
-most-holy-trinity,QuickBooks,2026-09-22,7285,93,3,SAMPLE
-notre-dame-sj,TADS,2026-09-29,3092,100,0,SAMPLE
-notre-dame-sj,Power BI,2026-09-12,11986,99.5,0,SAMPLE
-notre-dame-sj,SharePoint,2026-09-17,1430,74.8,24,SAMPLE
-notre-dame-sj,Workday,2026-09-25,256,91.8,7,SAMPLE
-notre-dame-sj,QuickBooks,2026-09-16,38462,87.1,11,SAMPLE
-presentation,TADS,2026-09-24,4852,94,6,SAMPLE
-presentation,Power BI,2026-09-30,17912,97.3,2,SAMPLE
-presentation,SharePoint,2026-06-20,2167,80.4,15,SAMPLE
-presentation,Workday,2026-10-01,367,95.2,5,SAMPLE
-presentation,QuickBooks,2026-09-10,65392,88,11,SAMPLE
-queen-of-apostles,TADS,2026-09-11,668,98.7,2,SAMPLE
-queen-of-apostles,Power BI,2026-10-01,2604,91.9,5,SAMPLE
-queen-of-apostles,SharePoint,2026-09-15,323,81,12,SAMPLE
-queen-of-apostles,Workday,2026-09-16,52,95.2,5,SAMPLE
-queen-of-apostles,QuickBooks,2026-09-12,9183,92.9,5,SAMPLE
-sacred-heart-nativity,TADS,2026-10-01,1047,100,2,SAMPLE
-sacred-heart-nativity,Power BI,2026-09-24,3912,95.1,5,SAMPLE
-sacred-heart-nativity,SharePoint,2026-09-10,452,87.6,10,SAMPLE
-sacred-heart-nativity,Workday,2026-09-20,88,93.3,5,SAMPLE
-sacred-heart-nativity,QuickBooks,2026-09-29,11559,100,0,SAMPLE
-sacred-heart-saratoga,TADS,2026-09-18,666,95.5,3,SAMPLE
-sacred-heart-saratoga,Power BI,2026-09-25,2623,97.2,0,SAMPLE
-sacred-heart-saratoga,SharePoint,2026-09-28,303,79.4,18,SAMPLE
-sacred-heart-saratoga,Workday,2026-09-10,56,90.6,8,SAMPLE
-sacred-heart-saratoga,QuickBooks,2026-09-28,8363,96,8,SAMPLE
-st-catherine,TADS,2026-09-29,921,91.2,6,SAMPLE
-st-catherine,Power BI,2026-09-19,3705,91.4,10,SAMPLE
-st-catherine,SharePoint,2026-09-14,396,87.3,11,SAMPLE
-st-catherine,Workday,2026-09-26,81,93.7,9,SAMPLE
-st-catherine,QuickBooks,2026-09-24,11004,100,2,SAMPLE
-st-christopher,TADS,2026-10-01,1679,91.5,5,SAMPLE
-st-christopher,Power BI,2026-09-20,5788,92.3,9,SAMPLE
-st-christopher,SharePoint,2026-09-14,758,86.3,9,SAMPLE
-st-christopher,Workday,2026-09-20,122,90.1,10,SAMPLE
-st-christopher,QuickBooks,2026-09-17,19957,93.3,7,SAMPLE
-st-clare,TADS,2026-10-01,556,99.6,1,SAMPLE
-st-clare,Power BI,2026-09-14,2337,99.7,1,SAMPLE
-st-clare,SharePoint,2026-09-18,252,86.7,14,SAMPLE
-st-clare,Workday,2026-09-14,47,94.8,0,SAMPLE
-st-clare,QuickBooks,2026-09-30,7936,90.4,9,SAMPLE
-st-elizabeth-seton,TADS,2026-09-13,547,89.4,10,SAMPLE
-st-elizabeth-seton,Power BI,2026-09-12,2192,96,2,SAMPLE
-st-elizabeth-seton,SharePoint,2026-08-07,229,87.5,9,SAMPLE
-st-elizabeth-seton,Workday,2026-09-19,46,97.5,3,SAMPLE
-st-elizabeth-seton,QuickBooks,2026-09-25,7335,95.1,4,SAMPLE
-st-frances-cabrini,TADS,2026-09-10,1116,96.8,3,SAMPLE
-st-frances-cabrini,Power BI,2026-09-20,3744,91.3,6,SAMPLE
-st-frances-cabrini,SharePoint,2026-09-13,487,90,8,SAMPLE
-st-frances-cabrini,Workday,2026-09-23,82,100,2,SAMPLE
-st-frances-cabrini,QuickBooks,2026-09-15,14636,91.5,4,SAMPLE
-st-francis-hs,TADS,2026-09-14,1371,89.9,11,SAMPLE
-st-francis-hs,Power BI,2026-09-15,6275,87.8,6,SAMPLE
-st-francis-hs,SharePoint,2026-09-13,658,89.3,9,SAMPLE
-st-francis-hs,Workday,2026-09-13,118,100,4,SAMPLE
-st-francis-hs,QuickBooks,2026-09-14,18134,97,1,SAMPLE
-st-john-the-baptist,TADS,2026-09-27,642,94.6,4,SAMPLE
-st-john-the-baptist,Power BI,2026-09-24,2369,92.4,2,SAMPLE
-st-john-the-baptist,SharePoint,2026-09-18,291,87.5,12,SAMPLE
-st-john-the-baptist,Workday,2026-09-16,47,94.7,0,SAMPLE
-st-john-the-baptist,QuickBooks,2026-09-19,7585,96.6,3,SAMPLE
-st-john-vianney,TADS,2026-06-24,1179,99.1,3,SAMPLE
-st-john-vianney,Power BI,2026-09-28,4316,100,0,SAMPLE
-st-john-vianney,SharePoint,2026-09-20,521,82.3,16,SAMPLE
-st-john-vianney,Workday,2026-09-16,93,90.5,8,SAMPLE
-st-john-vianney,QuickBooks,2026-10-01,13298,96.5,1,SAMPLE
-st-joseph-cupertino,TADS,2026-09-26,228,100,0,SAMPLE
-st-joseph-cupertino,Power BI,2026-09-24,951,94.4,3,SAMPLE
-st-joseph-cupertino,SharePoint,2026-09-14,102,85.3,14,SAMPLE
-st-joseph-cupertino,Workday,2026-09-17,20,97.5,2,SAMPLE
-st-joseph-cupertino,QuickBooks,2026-09-29,3359,97.8,1,SAMPLE
-st-joseph-mv,TADS,2026-07-30,379,99.7,0,SAMPLE
-st-joseph-mv,Power BI,2026-09-24,1491,92.6,5,SAMPLE
-st-joseph-mv,SharePoint,2026-10-01,162,79,18,SAMPLE
-st-joseph-mv,Workday,2026-09-14,30,91.7,11,SAMPLE
-st-joseph-mv,QuickBooks,2026-09-24,4562,92.6,8,SAMPLE
-st-justin,TADS,2026-09-20,494,100,1,SAMPLE
-st-justin,Power BI,2026-09-13,1806,95.6,5,SAMPLE
-st-justin,SharePoint,2026-09-24,216,82.5,15,SAMPLE
-st-justin,Workday,2026-09-24,41,90.8,7,SAMPLE
-st-justin,QuickBooks,2026-10-01,6347,93.4,8,SAMPLE
-st-lawrence,TADS,2026-09-14,200,97.8,3,SAMPLE
-st-lawrence,Power BI,2026-06-15,731,87.4,13,SAMPLE
-st-lawrence,SharePoint,2026-09-26,78,86.2,12,SAMPLE
-st-lawrence,Workday,2026-09-29,15,100,0,SAMPLE
-st-lawrence,QuickBooks,2026-09-13,2453,100,0,SAMPLE
-st-leo,TADS,2026-09-25,644,89.4,10,SAMPLE
-st-leo,Power BI,2026-09-20,2696,100,0,SAMPLE
-st-leo,SharePoint,2026-09-19,271,76.1,20,SAMPLE
-st-leo,Workday,2026-09-23,51,94.7,3,SAMPLE
-st-leo,QuickBooks,2026-09-12,8163,96.4,0,SAMPLE
-st-lucy,TADS,2026-09-11,703,89.8,8,SAMPLE
-st-lucy,Power BI,2026-09-28,2528,94.7,5,SAMPLE
-st-lucy,SharePoint,2026-09-19,339,84.6,13,SAMPLE
-st-lucy,Workday,2026-09-19,52,99.8,1,SAMPLE
-st-lucy,QuickBooks,2026-09-26,9472,97,0,SAMPLE
-st-martin-of-tours,TADS,2026-09-17,1018,95.5,6,SAMPLE
-st-martin-of-tours,Power BI,2026-09-30,3565,94.4,6,SAMPLE
-st-martin-of-tours,SharePoint,2026-09-27,428,82.8,14,SAMPLE
-st-martin-of-tours,Workday,2026-09-20,68,96.5,7,SAMPLE
-st-martin-of-tours,QuickBooks,2026-09-18,11680,95.6,4,SAMPLE
-st-mary-los-gatos,TADS,2026-09-24,438,100,2,SAMPLE
-st-mary-los-gatos,Power BI,2026-09-26,1668,97,5,SAMPLE
-st-mary-los-gatos,SharePoint,2026-09-16,187,80.4,13,SAMPLE
-st-mary-los-gatos,Workday,2026-09-25,33,100,0,SAMPLE
-st-mary-los-gatos,QuickBooks,2026-09-22,5847,98.6,1,SAMPLE
-st-mary-gilroy,TADS,2026-09-10,544,93.1,6,SAMPLE
-st-mary-gilroy,Power BI,2026-09-22,2002,100,0,SAMPLE
-st-mary-gilroy,SharePoint,2026-09-22,227,78.2,16,SAMPLE
-st-mary-gilroy,Workday,2026-09-15,44,93.3,8,SAMPLE
-st-mary-gilroy,QuickBooks,2026-09-14,7395,99.6,0,SAMPLE
-st-nicholas,TADS,2026-07-03,694,93.5,2,SAMPLE
-st-nicholas,Power BI,2026-09-27,2548,91.9,3,SAMPLE
-st-nicholas,SharePoint,2026-09-28,301,80.9,17,SAMPLE
-st-nicholas,Workday,2026-09-20,60,91.7,3,SAMPLE
-st-nicholas,QuickBooks,2026-09-26,8355,92.8,7,SAMPLE
-st-patrick,TADS,2026-09-19,466,91.6,8,SAMPLE
-st-patrick,Power BI,2026-09-24,1836,92.5,8,SAMPLE
-st-patrick,SharePoint,2026-09-15,208,85.6,11,SAMPLE
-st-patrick,Workday,2026-09-28,43,100,1,SAMPLE
-st-patrick,QuickBooks,2026-09-12,6401,97.8,1,SAMPLE
-st-simon,TADS,2026-09-26,1721,92.1,7,SAMPLE
-st-simon,Power BI,2026-07-05,5786,93.7,6,SAMPLE
-st-simon,SharePoint,2026-09-13,748,87.3,10,SAMPLE
-st-simon,Workday,2026-09-13,123,93.9,5,SAMPLE
-st-simon,QuickBooks,2026-09-10,19126,100,0,SAMPLE
-st-victor,TADS,2026-09-24,565,90.7,3,SAMPLE
-st-victor,Power BI,2026-09-23,2442,100,5,SAMPLE
-st-victor,SharePoint,2026-07-01,252,81.2,15,SAMPLE
-st-victor,Workday,2026-09-29,47,96.5,5,SAMPLE
-st-victor,QuickBooks,2026-09-24,7910,85.4,8,SAMPLE
+demo-a,TADS,2026-09-14,515,86.5,12,SAMPLE
+demo-a,Power BI,2026-09-27,1696,100,1,SAMPLE
+demo-a,SharePoint,2026-09-23,218,86.3,11,SAMPLE
+demo-a,Workday,2026-09-16,33,95.2,5,SAMPLE
+demo-a,QuickBooks,2026-09-22,5679,96.1,3,SAMPLE
+demo-b,TADS,2026-09-14,289,86.6,7,SAMPLE
+demo-b,Power BI,2026-09-30,1076,97,2,SAMPLE
+demo-b,SharePoint,2026-09-13,128,82.9,11,SAMPLE
+demo-b,Workday,2026-09-11,23,99.3,0,SAMPLE
+demo-b,QuickBooks,2026-09-10,3998,96.5,4,SAMPLE
+demo-c,TADS,2026-09-10,596,90.3,9,SAMPLE
+demo-c,Power BI,2026-09-18,2236,92.6,7,SAMPLE
+demo-c,SharePoint,2026-07-28,283,85.9,9,SAMPLE
+demo-c,Workday,2026-09-10,51,93.4,10,SAMPLE
+demo-c,QuickBooks,2026-09-17,7791,99.9,0,SAMPLE
+demo-d,TADS,2026-09-20,474,91.8,8,SAMPLE
+demo-d,Power BI,2026-09-26,1819,90.9,7,SAMPLE
+demo-d,SharePoint,2026-09-10,183,81,15,SAMPLE
+demo-d,Workday,2026-09-16,36,87.2,11,SAMPLE
+demo-d,QuickBooks,2026-09-25,5249,90.9,9,SAMPLE
+demo-e,TADS,2026-09-26,1591,96,3,SAMPLE
+demo-e,Power BI,2026-09-25,5532,100,2,SAMPLE
+demo-e,SharePoint,2026-09-28,664,89.4,10,SAMPLE
+demo-e,Workday,2026-09-27,106,98.4,0,SAMPLE
+demo-e,QuickBooks,2026-09-11,19341,95.9,3,SAMPLE
+demo-f,TADS,2026-09-28,603,95,5,SAMPLE
+demo-f,Power BI,2026-09-24,2184,95.6,4,SAMPLE
+demo-f,SharePoint,2026-09-20,257,78.3,20,SAMPLE
+demo-f,Workday,2026-09-10,52,93.9,7,SAMPLE
+demo-f,QuickBooks,2026-09-14,7650,95.2,3,SAMPLE
+demo-g,TADS,2026-09-20,402,94.3,2,SAMPLE
+demo-g,Power BI,2026-09-21,1505,100,0,SAMPLE
+demo-g,SharePoint,2026-07-02,160,85.1,13,SAMPLE
+demo-g,Workday,2026-09-22,29,92.9,3,SAMPLE
+demo-g,QuickBooks,2026-09-29,4833,100,0,SAMPLE
+demo-h,TADS,2026-09-11,1411,94.9,5,SAMPLE
+demo-h,Power BI,2026-09-24,4967,92.3,5,SAMPLE
+demo-h,SharePoint,2026-09-25,597,81.6,16,SAMPLE
+demo-h,Workday,2026-06-18,109,92.6,4,SAMPLE
+demo-h,QuickBooks,2026-09-18,15914,87,9,SAMPLE
+demo-i,TADS,2026-09-20,584,94.5,4,SAMPLE
+demo-i,Power BI,2026-09-16,2427,96.7,3,SAMPLE
+demo-i,SharePoint,2026-09-26,264,84.4,13,SAMPLE
+demo-i,Workday,2026-09-23,53,96.2,2,SAMPLE
+demo-i,QuickBooks,2026-09-20,7138,94.9,3,SAMPLE
+demo-j,TADS,2026-09-27,948,100,0,SAMPLE
+demo-j,Power BI,2026-09-25,3293,97.5,3,SAMPLE
+demo-j,SharePoint,2026-09-19,395,79.5,18,SAMPLE
+demo-j,Workday,2026-07-10,66,96.1,1,SAMPLE
+demo-j,QuickBooks,2026-09-11,11212,95.2,6,SAMPLE
+demo-k,TADS,2026-09-12,768,97.2,2,SAMPLE
+demo-k,Power BI,2026-09-18,2861,97.4,1,SAMPLE
+demo-k,SharePoint,2026-09-24,314,82.5,13,SAMPLE
+demo-k,Workday,2026-09-17,54,97.9,0,SAMPLE
+demo-k,QuickBooks,2026-09-22,8936,95.2,5,SAMPLE
+demo-l,TADS,2026-09-25,279,98,2,SAMPLE
+demo-l,Power BI,2026-09-22,1101,90.2,4,SAMPLE
+demo-l,SharePoint,2026-09-16,132,83.7,12,SAMPLE
+demo-l,Workday,2026-09-17,22,97.6,4,SAMPLE
+demo-l,QuickBooks,2026-09-14,3378,99.8,0,SAMPLE
+demo-m,TADS,2026-09-28,324,100,3,SAMPLE
+demo-m,Power BI,2026-09-12,1232,95.5,6,SAMPLE
+demo-m,SharePoint,2026-09-24,128,85.2,12,SAMPLE
+demo-m,Workday,2026-09-12,25,93.8,2,SAMPLE
+demo-m,QuickBooks,2026-09-22,3970,90.8,9,SAMPLE
+demo-n,TADS,2026-09-12,788,90.2,5,SAMPLE
+demo-n,Power BI,2026-09-23,2803,99.2,0,SAMPLE
+demo-n,SharePoint,2026-09-15,305,85.4,11,SAMPLE
+demo-n,Workday,2026-09-14,63,99.8,0,SAMPLE
+demo-n,QuickBooks,2026-09-13,9188,97.3,2,SAMPLE
+demo-o,TADS,2026-09-14,831,96.3,4,SAMPLE
+demo-o,Power BI,2026-09-16,2868,93.8,5,SAMPLE
+demo-o,SharePoint,2026-09-22,368,83.5,13,SAMPLE
+demo-o,Workday,2026-09-30,66,99.3,0,SAMPLE
+demo-o,QuickBooks,2026-09-13,10971,94.4,7,SAMPLE
+demo-p,TADS,2026-09-19,749,96.2,3,SAMPLE
+demo-p,Power BI,2026-09-18,2551,97.6,3,SAMPLE
+demo-p,SharePoint,2026-09-18,296,77.1,22,SAMPLE
+demo-p,Workday,2026-09-30,51,94.6,5,SAMPLE
+demo-p,QuickBooks,2026-09-29,8060,100,2,SAMPLE
+demo-q,TADS,2026-09-16,450,92.6,8,SAMPLE
+demo-q,Power BI,2026-09-26,1790,87.6,5,SAMPLE
+demo-q,SharePoint,2026-09-25,222,81,18,SAMPLE
+demo-q,Workday,2026-09-10,36,91.8,6,SAMPLE
+demo-q,QuickBooks,2026-09-22,6644,91,6,SAMPLE
+demo-r,TADS,2026-09-25,970,89.3,13,SAMPLE
+demo-r,Power BI,2026-09-14,3252,97.3,3,SAMPLE
+demo-r,SharePoint,2026-09-11,404,84.1,9,SAMPLE
+demo-r,Workday,2026-06-10,75,100,2,SAMPLE
+demo-r,QuickBooks,2026-09-14,11357,100,0,SAMPLE
+demo-s,TADS,2026-09-28,774,97.2,2,SAMPLE
+demo-s,Power BI,2026-09-22,2610,87.1,7,SAMPLE
+demo-s,SharePoint,2026-09-10,311,81.4,16,SAMPLE
+demo-s,Workday,2026-09-17,52,100,0,SAMPLE
+demo-s,QuickBooks,2026-09-15,8515,98,0,SAMPLE
+demo-t,TADS,2026-09-29,718,97.6,1,SAMPLE
+demo-t,Power BI,2026-09-30,2588,89.6,5,SAMPLE
+demo-t,SharePoint,2026-09-12,315,83.8,14,SAMPLE
+demo-t,Workday,2026-09-23,59,98.5,6,SAMPLE
+demo-t,QuickBooks,2026-09-10,8687,95,2,SAMPLE
+demo-u,TADS,2026-09-24,195,85.2,13,SAMPLE
+demo-u,Power BI,2026-09-23,752,90.1,6,SAMPLE
+demo-u,SharePoint,2026-09-19,88,82.8,13,SAMPLE
+demo-u,Workday,2026-09-29,17,92.8,2,SAMPLE
+demo-u,QuickBooks,2026-09-19,2737,87.2,9,SAMPLE
+demo-v,TADS,2026-09-24,289,94.7,7,SAMPLE
+demo-v,Power BI,2026-09-30,1067,93.3,4,SAMPLE
+demo-v,SharePoint,2026-09-12,120,82,14,SAMPLE
+demo-v,Workday,2026-09-12,24,91.8,3,SAMPLE
+demo-v,QuickBooks,2026-10-01,3839,91.4,9,SAMPLE
+demo-w,TADS,2026-09-11,1223,98.4,2,SAMPLE
+demo-w,Power BI,2026-09-16,3915,89.4,4,SAMPLE
+demo-w,SharePoint,2026-09-22,445,86,12,SAMPLE
+demo-w,Workday,2026-09-27,90,87.3,14,SAMPLE
+demo-w,QuickBooks,2026-09-19,13176,93,7,SAMPLE
+demo-x,TADS,2026-09-11,234,89.4,8,SAMPLE
+demo-x,Power BI,2026-09-20,875,94,6,SAMPLE
+demo-x,SharePoint,2026-09-30,103,83.5,18,SAMPLE
+demo-x,Workday,2026-09-20,17,83.5,12,SAMPLE
+demo-x,QuickBooks,2026-09-27,3275,96.3,4,SAMPLE
+demo-y,TADS,2026-09-18,271,92.1,3,SAMPLE
+demo-y,Power BI,2026-06-22,1205,94.4,3,SAMPLE
+demo-y,SharePoint,2026-09-30,124,95.1,4,SAMPLE
+demo-y,Workday,2026-06-14,25,90.5,9,SAMPLE
+demo-y,QuickBooks,2026-09-12,3849,94.8,3,SAMPLE

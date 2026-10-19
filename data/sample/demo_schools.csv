@@ -1,0 +1,26 @@
+id,name,size_band,provenance
+demo-a,School A,medium,SAMPLE
+demo-b,School B,small,SAMPLE
+demo-c,School C,medium,SAMPLE
+demo-d,School D,medium,SAMPLE
+demo-e,School E,large,SAMPLE
+demo-f,School F,medium,SAMPLE
+demo-g,School G,medium,SAMPLE
+demo-h,School H,large,SAMPLE
+demo-i,School I,medium,SAMPLE
+demo-j,School J,medium,SAMPLE
+demo-k,School K,medium,SAMPLE
+demo-l,School L,small,SAMPLE
+demo-m,School M,small,SAMPLE
+demo-n,School N,large,SAMPLE
+demo-o,School O,medium,SAMPLE
+demo-p,School P,medium,SAMPLE
+demo-q,School Q,medium,SAMPLE
+demo-r,School R,medium,SAMPLE
+demo-s,School S,medium,SAMPLE
+demo-t,School T,medium,SAMPLE
+demo-u,School U,small,SAMPLE
+demo-v,School V,small,SAMPLE
+demo-w,School W,medium,SAMPLE
+demo-x,School X,small,SAMPLE
+demo-y,School Y,small,SAMPLE

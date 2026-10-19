@@ -2,7 +2,8 @@ import { describe, expect, it } from "vitest";
 import { getSchools } from "../lib/data";
 import { FINANCIAL, VITALITY, healthOf, quadrantOf, subScore, tierOf } from "../lib/health";
 import { schoolMetrics, type SchoolMetrics } from "../lib/metrics";
-import { RULES, alertsFor } from "../lib/radar";
+import { RULES, SEVERITY_ORDER, alertsFor } from "../lib/radar";
+import { demoView, rankUrgent, realView } from "../lib/system";
 
 describe("subScore", () => {
   it("interpolates between concern (0) and healthy (100) and clamps", () => {
@@ -38,10 +39,10 @@ describe("tiers and quadrants", () => {
   });
 });
 
-describe("healthOf on real metrics objects", () => {
+describe("healthOf: real schools get Enrollment Vitality only", () => {
   const ids = getSchools().map((s) => s.id);
 
-  it("Enrollment Vitality is REAL for every parish school and skips SAMPLE inputs", () => {
+  it("Enrollment Vitality is REAL for every parish school", () => {
     for (const id of ids) {
       const v = healthOf(schoolMetrics(id)).vitality;
       expect(v.provenance).toBe("REAL");
@@ -49,15 +50,13 @@ describe("healthOf on real metrics objects", () => {
     }
   });
 
-  it("every parish school gets scores in 0-100, and SAMPLE inputs make the composite non-REAL", () => {
+  it("no composite, financial, facilities score or quadrant for a real school, so it can't show two bands", () => {
     for (const id of ids) {
       const h = healthOf(schoolMetrics(id));
-      for (const s of [h.vitality.score, h.financial.score, h.facilities.score, h.composite.score]) {
-        expect(s).not.toBeNull();
-        expect(s!).toBeGreaterThanOrEqual(0);
-        expect(s!).toBeLessThanOrEqual(100);
-      }
-      expect(h.composite.provenance).not.toBe("REAL");
+      expect(h.composite).toBeNull();
+      expect(h.financial).toBeNull();
+      expect(h.facilities).toBeNull();
+      expect(h.quadrant).toBeNull();
     }
   });
 
@@ -67,43 +66,91 @@ describe("healthOf on real metrics objects", () => {
     const total = h.vitality.factors.reduce((a, f) => a + f.effectiveWeight, 0);
     expect(total).toBeCloseTo(1, 6);
   });
+});
+
+describe("healthOf: demo schools get the full composite", () => {
+  const ids = getSchools("demo").map((s) => s.id);
+
+  it("every demo school gets scores in 0-100", () => {
+    for (const id of ids) {
+      const h = healthOf(schoolMetrics(id));
+      for (const s of [h.vitality.score, h.financial!.score, h.facilities!.score, h.composite!.score]) {
+        expect(s).not.toBeNull();
+        expect(s!).toBeGreaterThanOrEqual(0);
+        expect(s!).toBeLessThanOrEqual(100);
+      }
+      expect(h.composite!.provenance).toBe("SAMPLE");
+    }
+  });
+
+  it("simulated FCI stays in 8-45%, so a Facilities score of 100 can't happen", () => {
+    for (const id of ids) {
+      const m = schoolMetrics(id);
+      expect(m.facilities.fci!).toBeGreaterThanOrEqual(0.075);
+      expect(m.facilities.fci!).toBeLessThanOrEqual(0.455);
+      expect(healthOf(m).facilities!.score!).toBeLessThan(100);
+    }
+  });
 
   it("missing inputs are skipped, not treated as zero", () => {
     const m = structuredClone(schoolMetrics(ids[0])) as SchoolMetrics;
     m.finance.daysCash = null;
     const h = healthOf(m);
-    expect(h.financial.skipped).toContain("Days cash on hand");
-    expect(h.financial.score).not.toBeNull();
+    expect(h.financial!.skipped).toContain("Days cash on hand");
+    expect(h.financial!.score).not.toBeNull();
   });
 
   it("top factors are the ones losing the most points", () => {
-    const h = healthOf(schoolMetrics(ids[0]));
-    const drags = h.composite.topFactors.map((f) => f.drag);
+    const drags = healthOf(schoolMetrics(ids[0])).composite!.topFactors.map((f) => f.drag);
     expect(drags).toEqual([...drags].sort((a, b) => b - a));
   });
 });
 
 describe("radar rules", () => {
   it("each rule fires on a constructed bad case and stays quiet on a healthy one", () => {
-    const base = structuredClone(schoolMetrics(getSchools()[0].id)) as SchoolMetrics;
+    const base = structuredClone(schoolMetrics(getSchools("demo")[0].id)) as SchoolMetrics;
     const healthy = structuredClone(base);
-    Object.assign(healthy.enrollment, { change1: 0.02, consecutiveDeclines: 0, thinGrades: [] });
+    Object.assign(healthy.enrollment, { change1: 0.02, cagr: 0.01, consecutiveDeclines: 0, thinGrades: [] });
     Object.assign(healthy.reenrollment, { rate: 0.95 });
     Object.assign(healthy.pipeline, { inquiryPacing: 0.05 });
     Object.assign(healthy.finance, { operatingMargin: 0.03, daysCash: 120, expenseVarianceYtd: 0, receivables60PlusPct: 0.01, taDependency: 0.1 });
     Object.assign(healthy.facilities, { lifeSafetyOpen: [], fci: 0.1, overdueInspections: 0 });
     Object.assign(healthy.systems, { staleFeeds: [], feeds: healthy.systems.feeds.map((f) => ({ ...f, completenessPct: 99 })) });
-    Object.assign(healthy.projection, { change: 0.02 });
     expect(alertsFor(healthy)).toHaveLength(0);
 
     const bad = structuredClone(healthy);
-    Object.assign(bad.enrollment, { change1: -0.1, consecutiveDeclines: 5, thinGrades: [{ grade: "7", count: 10 }] });
+    Object.assign(bad.enrollment, { change1: -0.13, cagr: -0.07, consecutiveDeclines: 5, thinGrades: [{ grade: "7", count: 10 }] });
     bad.finance.daysCash = 10;
-    Object.assign(bad.projection, { change: -0.25, lowConfidence: [], years: [{ year: 2029, k: 10, total: 100 }] });
     bad.facilities.lifeSafetyOpen = [{ asset: "Fire alarm system", condition: 1 }, { asset: "Access control & cameras", condition: 2 }];
     const a = alertsFor(bad);
     expect(a.filter((x) => x.severity === "critical").length).toBeGreaterThanOrEqual(4);
     expect(a[0].severity).toBe("critical");
+  });
+
+  it("serious needs both 3+ straight declines and a trend at or below the serious line", () => {
+    const m = structuredClone(schoolMetrics(getSchools("demo")[0].id)) as SchoolMetrics;
+    Object.assign(m.enrollment, { change1: -0.01, cagr: -0.05, consecutiveDeclines: 3, thinGrades: [] });
+    expect(alertsFor(m).find((a) => a.area === "Enrollment")!.severity).toBe("serious");
+    Object.assign(m.enrollment, { cagr: -0.02 });
+    expect(alertsFor(m).find((a) => a.area === "Enrollment")!.severity).toBe("warning");
+  });
+
+  it("the Radar headline names 6 or fewer real schools with critical or serious items", () => {
+    const urgent = rankUrgent(realView());
+    expect(urgent.length).toBeGreaterThan(0);
+    expect(urgent.length).toBeLessThanOrEqual(6);
+    // ranked by severity, then by the size of the decline
+    const sev = urgent.map((v) => SEVERITY_ORDER[v.alerts[0].severity]);
+    expect(sev).toEqual([...sev].sort((a, b) => a - b));
+  });
+
+  it("real schools get only REAL alerts, and no alert quotes a projected figure", () => {
+    for (const v of realView()) for (const a of v.alerts) {
+      expect(a.provenance).toBe("REAL");
+      expect(a.area).toBe("Enrollment");
+      expect(`${a.title} ${a.detail}`).not.toMatch(/project|scenario|forecast|2029-30/i);
+    }
+    for (const v of demoView()) for (const a of v.alerts) expect(`${a.title} ${a.detail}`).not.toMatch(/project|scenario/i);
   });
 
   it("every rule has a description shown to users", () => {

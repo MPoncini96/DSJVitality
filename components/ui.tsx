@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
 import { ProvenanceBadge, type BadgeKind } from "./ProvenanceBadge";
-import type { MixedProvenance } from "@/lib/data";
 import type { Severity } from "@/lib/radar";
 import type { Quadrant, Tier } from "@/lib/health";
 
@@ -9,8 +8,9 @@ export function Card({
 }: { title?: ReactNode; p?: BadgeKind; children: ReactNode; className?: string; action?: ReactNode; id?: string }) {
   const sample = p === "SAMPLE" || p === "MIXED";
   return (
-    <section aria-labelledby={id} className={`rounded-xl border border-border bg-surface p-5 ${sample ? "sample-edge" : ""} ${className}`}>
-      {(title || p) && (
+    <section aria-labelledby={id} data-simulated={sample ? "true" : undefined}
+      className={`min-w-0 rounded-xl border border-border bg-surface p-5 ${sample ? "sample-edge" : ""} ${className}`}>
+      {(title || (p && p !== "REAL")) && (
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
           {title && <h2 id={id} className="text-sm font-semibold">{title}</h2>}
           <div className="flex items-center gap-2">
@@ -27,7 +27,7 @@ export function Card({
 export function Stat({ label, value, sub, p }: { label: string; value: ReactNode; sub?: ReactNode; p: BadgeKind }) {
   const sample = p === "SAMPLE" || p === "MIXED";
   return (
-    <div className={`rounded-xl border border-border bg-surface p-4 ${sample ? "sample-edge" : ""}`}>
+    <div data-simulated={sample ? "true" : undefined} className={`rounded-xl border border-border bg-surface p-4 ${sample ? "sample-edge" : ""}`}>
       <div className="flex items-start justify-between gap-2">
         <div className="text-xs font-medium text-muted">{label}</div>
         <ProvenanceBadge p={p} />
@@ -41,7 +41,7 @@ export function Stat({ label, value, sub, p }: { label: string; value: ReactNode
 const SEV: Record<Severity, { icon: string; label: string; color: string }> = {
   critical: { icon: "▲", label: "Critical", color: "var(--critical)" },
   serious: { icon: "◆", label: "Serious", color: "var(--serious)" },
-  warning: { icon: "●", label: "Watch", color: "var(--warning)" },
+  warning: { icon: "●", label: "Watch item", color: "var(--warning)" },
 };
 
 /** Severity pill: icon + label + color, never color alone. */
@@ -70,20 +70,12 @@ export function TierPill({ t }: { t: Tier | Quadrant | null }) {
   if (!t) return <span className="text-faint">—</span>;
   const c = QUADRANT_COLOR[t as Quadrant];
   return (
-    <span
+    <span data-band={t}
       className="inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] font-semibold whitespace-nowrap text-text"
       style={{ borderColor: c, background: `color-mix(in srgb, ${c} 14%, transparent)` }}
     >
       <span aria-hidden="true" style={{ color: c }}>{QUADRANT_ICON[t as Quadrant]}</span>
       {t}
-    </span>
-  );
-}
-
-export function Illustrative() {
-  return (
-    <span className="rounded border border-dashed border-sample-border px-1.5 py-0.5 text-[10.5px] font-semibold tracking-wide text-sample-fg">
-      ILLUSTRATIVE
     </span>
   );
 }
@@ -98,15 +90,12 @@ export function PageHeader({ title, sub, children }: { title: string; sub?: Reac
   );
 }
 
-export function SampleBanner() {
+/** Sits at the top of every page about the fictional demo system. */
+export function DemoNote({ children }: { children?: ReactNode }) {
   return (
-    <div role="note" className="sample-edge rounded-xl border border-sample-border bg-sample-bg px-4 py-3 text-sm text-sample-fg">
-      <strong className="font-semibold">Enrollment, births and published tuition are real; other numbers are simulated.</strong>{" "}
-      Enrollment and staffing come from the California Department of Education, births from the California Department of
-      Public Health, and tuition from each school&apos;s own site. Budgets, assistance, re-enrollment, admissions, facilities and
-      data audits are simulated to show how the dashboard works and are not real figures for any school.{" "}
-      <ProvenanceBadge p="SAMPLE" /> is simulated; <ProvenanceBadge p="REAL" /> comes from a cited public source. A ◇ next
-      to a school name means that flag rests at least partly on simulated data.
+    <div role="note" data-simulated="true" className="sample-edge rounded-xl border border-sample-border bg-sample-bg px-4 py-3 text-sm text-sample-fg">
+      <strong className="font-semibold">Demo system: fictional schools, simulated data.</strong>{" "}
+      {children ?? <>School A through School Y are invented. They are not stand-ins for any real school, and none of their numbers describe a real school. They show how the dashboard works once internal data (budgets, assistance, facilities, admissions) is connected.</>}
     </div>
   );
 }
