@@ -23,7 +23,7 @@ for (const n of ["St. Lawrence School", "St. Joseph School (Mountain View)", "St
 const cores = [...names].map((n) => n.replace(/\s*\(.*\)\s*/, "").replace(/ (School|Schools|Catholic School|Elementary|Elementary and Middle School)$/, "").trim()).filter((n) => n.length > 6 && !/^St\.? Joseph$/.test(n));
 const realNames = [...new Set([...names, ...cores])].filter(Boolean);
 
-const paths = ["/", "/alerts", "/alerts?view=demo", "/turnaround", "/demo", "/about", "/about-me",
+const paths = ["/", "/alerts", "/alerts?view=demo", "/turnaround", "/strategies", "/demo", "/about", "/about-me",
   ...schools.filter((s) => s.governance === "parish_elementary").map((s) => `/schools/${s.id}`),
   ..."abcdefghijklmnopqrstuvwxy".split("").map((l) => `/demo/schools/demo-${l}`)];
 

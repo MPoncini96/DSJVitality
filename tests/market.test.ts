@@ -86,3 +86,19 @@ describe("tuition", () => {
     expect(t).toMatchObject({ provenance: "REAL", yearStated: false, year: 2025 });
   });
 });
+
+describe("strategies", () => {
+  it("bright spots and patterns come from REAL data only, and sources resolve", async () => {
+    const { BRIGHT_SPOTS, PATTERNS, LEVERS, SOURCES } = await import("../lib/strategies");
+    const ids = new Set(SOURCES.map((s) => s.id));
+    for (const l of LEVERS) for (const s of l.strategies) for (const id of s.sources) expect(ids.has(id)).toBe(true);
+    for (const p of PATTERNS) for (const k of p.levers) expect(LEVERS.some((l) => l.key === k)).toBe(true);
+    const holding = parish().filter((id) => BRIGHT_SPOTS[0].test(schoolMetrics(id))).sort();
+    expect(holding).toEqual(["st-john-the-baptist", "st-leo", "st-simon", "st-victor"]);
+    for (const id of parish()) {
+      const m = schoolMetrics(id);
+      expect(m.enrollment.provenance).toBe("REAL");
+      expect(m.market.provenance).toBe("REAL");
+    }
+  });
+});

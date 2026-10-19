@@ -9,7 +9,8 @@ export const metadata = { title: "Why I built this · School Vitality Prototype"
 const DUTIES: { duty: string; where: { label: string; href: string }[]; note?: string }[] = [
   { duty: "Monthly enrollment reports for the Department of Catholic Schools", where: [{ label: "Radar", href: "/" }, { label: "Enrollment tab on each school", href: "/schools/holy-family#enrollment" }] },
   { duty: "Enrollment & Finance Matrix", where: [{ label: "Matrix (Radar, demo section)", href: "/#matrix-h" }] },
-  { duty: "Turnaround Program: identify, plan, monitor, exit", where: [{ label: "Turnaround", href: "/turnaround" }] },
+  { duty: "Turnaround Program: identify, plan, monitor, exit", where: [{ label: "Turnaround", href: "/turnaround" }, { label: "Enrollment strategies", href: "/strategies" }] },
+  { duty: "Share what works across schools", where: [{ label: "Bright spots", href: "/strategies#bright-h" }] },
   { duty: "TADS and data integrity across schools", where: [{ label: "Data quality tab", href: "/schools/holy-family#data" }, { label: "Demo data feeds", href: "/demo/schools/demo-a#data" }] },
   { duty: "Facilities guidelines and capital planning", where: [{ label: "Facilities tab (demo)", href: "/demo/schools/demo-a#facilities" }] },
   { duty: "Dashboards for pastors, principals and the Chancery", where: [{ label: "The whole site", href: "/" }], note: "Built in Next.js to show the logic; the same data model and formulas port directly to Power BI." },

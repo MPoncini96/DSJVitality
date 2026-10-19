@@ -13,6 +13,7 @@ import { CDE_PUBLISHED } from "@/lib/config";
 import { GOVERNANCE_LABEL, getMatchReview, getSchools, getStaffing, getTuitionReview, isDemoId } from "@/lib/data";
 import { money, schoolYear, signedPct } from "@/lib/format";
 import { displayName } from "@/lib/names";
+import { BRIGHT_SPOTS, PATTERNS, leverByKey } from "@/lib/strategies";
 import { realView } from "@/lib/system";
 
 export function generateStaticParams() {
@@ -40,6 +41,8 @@ export default async function SchoolPage({ params }: { params: Promise<{ id: str
   const match = getMatchReview().find((r) => r.schoolId === id);
   const tReview = getTuitionReview().find((r) => r.schoolId === id);
   const gradesL = e.byGrade.filter((g) => g.year === L);
+  const bright = getMatchReview().find((r) => r.schoolId === id)?.needsReview ? [] : BRIGHT_SPOTS.filter((b) => b.test(m));
+  const patterns = PATTERNS.filter((p) => p.test(m));
   const firstStaffEnr = staff[0] ? e.series.find((x) => x.year === staff[0].year)?.total : undefined;
 
   const overview = (
@@ -58,6 +61,21 @@ export default async function SchoolPage({ params }: { params: Promise<{ id: str
         <VitalityCard v={v} />
         <AlertsCard alerts={v.alerts} demo={false} />
       </div>
+      <Card title="What the data suggests" id="pat-h" action={<Link href="/strategies" className="text-xs text-accent underline underline-offset-2">Strategies →</Link>}>
+        {bright.length === 0 && patterns.length === 0 ? <p className="text-sm text-muted">No bright spot or loss pattern stands out in the public data.</p> : (
+          <ul className="space-y-2 text-sm">
+            {bright.map((b) => (
+              <li key={b.key}><span className="font-medium" style={{ color: "var(--good)" }}><span aria-hidden="true">✓ </span>Bright spot:</span> {b.title.toLowerCase()}.{" "}
+                <Link href={`/strategies#bs-${b.key}`} className="text-accent underline underline-offset-2">Worth sharing with other schools</Link></li>
+            ))}
+            {patterns.map((p) => (
+              <li key={p.key}><span className="font-medium">Pattern:</span> {p.title.toLowerCase()}. <span className="text-muted">Strategies to look at:</span>{" "}
+                {p.levers.map((k, i) => <span key={k}>{i > 0 && ", "}<Link href={`/strategies#lever-${k}`} className="text-accent underline underline-offset-2">{leverByKey(k).title.toLowerCase()}</Link></span>)}</li>
+            ))}
+          </ul>
+        )}
+        <p className="mt-3 text-xs text-muted">Read from state enrollment and births data only. A starting point for a conversation with the pastor and principal, not a diagnosis.</p>
+      </Card>
       <Card title="About this school" id="loc-h">
         <dl className="grid gap-x-6 gap-y-2 text-sm sm:grid-cols-2">
           <div><dt className="text-xs text-muted">Type</dt><dd>{GOVERNANCE_LABEL[school.governance]} <span className="text-xs text-muted">({school.governanceBasis})</span></dd></div>

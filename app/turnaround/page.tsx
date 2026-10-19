@@ -10,7 +10,7 @@ export const metadata = { title: "Turnaround Program · School Vitality Prototyp
 const STEPS = [
   { name: "Identify", text: "The Matrix and Radar flag a school: shrinking enrollment with weak finances, or a critical alert that persists two months." },
   { name: "Assess", text: "Site visit with pastor and principal. Confirm the numbers, find the causes, agree on what success looks like." },
-  { name: "Plan", text: "Four to six actions, each with an owner, a due date and one metric. Shared with the Department of Catholic Schools." },
+  { name: "Plan", text: "Four to six actions from the strategies page, each with an owner, a due date and one metric. Shared with the Department of Catholic Schools." },
   { name: "Implement", text: "Monthly check-ins. Actions at risk get help early: coaching, marketing support, a bridge budget." },
   { name: "Monitor", text: "Actions done; watch the metrics through one full enrollment cycle." },
   { name: "Exit", text: "Proposed criteria: composite score of 60+ in two consecutive reviews, enrollment flat or growing, operating margin of zero or better." },
@@ -151,7 +151,8 @@ export default function Turnaround() {
       </section>
 
       <p className="text-xs text-muted">
-        The Matrix itself is on the <Link href="/" className="underline underline-offset-2">Radar</Link>, in the demo section.
+        The Matrix itself is on the <Link href="/" className="underline underline-offset-2">Radar</Link>, in the demo section. Plans draw on the{" "}
+        <Link href="/strategies" className="underline underline-offset-2">enrollment strategies</Link>.
       </p>
     </div>
   );
